@@ -7,22 +7,22 @@ export enum EnonicAiEvents {
     DATA_SENT = 'EnonicAiDataSentEvent',
 }
 
-type TranslationStartedDetail = {
+type StartedDetail = {
     path: string;
 };
 
-type TranslationCompletedDetail = {
+type CompletedDetail = {
     path: string;
     value: string;
 };
 
 type EventHandler<T extends Event = Event> = (event: T) => void;
 
-export function dispatchStarted(detail: TranslationStartedDetail): void {
+export function dispatchStarted(detail: StartedDetail): void {
     window.dispatchEvent(new CustomEvent(EnonicAiEvents.STARTED, {detail}));
 }
 
-export function dispatchCompleted(detail: TranslationCompletedDetail): void {
+export function dispatchCompleted(detail: CompletedDetail): void {
     window.dispatchEvent(new CustomEvent(EnonicAiEvents.COMPLETED, {detail}));
 }
 

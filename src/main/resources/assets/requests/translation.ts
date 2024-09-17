@@ -17,21 +17,8 @@ export async function postTranslation(text: string): Promise<Optional<string>> {
             throw new Error(`Generation request finished with reason "${finishReason}"`);
         }
 
-        return parseTranslation(content);
+        return content;
     } catch (error) {
         console.error('Error translating text:', error);
     }
-}
-
-function parseTranslation(content: string): string {
-    try {
-        const {translation} = JSON.parse(content) as {translation: string};
-        if (typeof translation === 'string') {
-            return translation;
-        }
-    } catch (error) {
-        // ignore
-    }
-
-    return content;
 }

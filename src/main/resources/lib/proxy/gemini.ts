@@ -1,11 +1,9 @@
-import type {Content, GenerateContentRequest, POSSIBLE_ROLES, ResponseSchema} from '@google/generative-ai';
+import type {Content, GenerateContentRequest, POSSIBLE_ROLES} from '@google/generative-ai';
 
 import type {ModelResponseGenerateData} from '../../types/shared/model';
 import {ERRORS} from '../errors';
 import {generate} from '../google/api/generate';
-import {fieldsToSchema} from '../google/schema';
 import {logDebug, LogDebugGroups} from '../logger';
-import {MODES_DATA} from '../shared/modes';
 import {TRANSLATION_INSTRUCTIONS} from '../shared/prompts';
 import {ModelProxy, ModelProxyConfig} from './model';
 
@@ -19,20 +17,16 @@ export class GeminiProxy implements ModelProxy {
     }
 
     private static createRequestParams(config: ModelProxyConfig): GenerateContentRequest {
-        const {temperature, topP} = MODES_DATA[config.mode].gemini;
-        const responseMimeType = 'application/json';
         const contents = GeminiProxy.createContents(config);
-        const responseSchema = GeminiProxy.createResponseSchema(config);
         const systemInstruction = GeminiProxy.createTextContent('system', TRANSLATION_INSTRUCTIONS);
 
         return {
             contents,
             generationConfig: {
                 candidateCount: 1,
-                temperature,
-                topP,
-                responseMimeType,
-                responseSchema,
+                temperature: 0.5,
+                topP: 0.9,
+                responseMimeType: 'text/plain',
             },
             systemInstruction,
         };
@@ -58,13 +52,6 @@ export class GeminiProxy implements ModelProxy {
             role,
             parts: [{text}],
         };
-    }
-
-    private static createResponseSchema({schema, model}: ModelProxyConfig): ResponseSchema | undefined {
-        const isSchemaSupported = model.startsWith('gemini-1.5-pro');
-        const hasSchema = schema != null && schema.fields.length > 0;
-
-        return isSchemaSupported && hasSchema ? fieldsToSchema(schema.fields) : undefined;
     }
 
     private static extractText(content: Content | undefined): string {

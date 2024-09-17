@@ -28,14 +28,8 @@ export type FinishReason =
 // ------------------------------------
 export type ModelRequestData = ModelRequestGenerateData;
 export type ModelRequestGenerateData = OperationData<'generate'> & {
-    mode: string;
     instructions?: string;
     messages: Message[];
-    schema?: ResponseSchema;
-};
-
-export type ResponseSchema = {
-    fields: SchemaField[];
 };
 
 export type SchemaField<T extends string = string> = {

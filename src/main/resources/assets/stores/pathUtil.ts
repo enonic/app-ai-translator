@@ -10,21 +10,6 @@ export const pathElementEqual = (element1: PathElement, element2: PathElement, c
     );
 };
 
-export const pathsEqual = (path1: Path, path2: Path): boolean => {
-    return (
-        (!path1 && !path2) ||
-        (path1?.elements.length === path2?.elements.length &&
-            path1.elements.every((element, index) => pathElementEqual(element, path2.elements[index])))
-    );
-};
-
-export const startsWith = (path: Path, prefix: Path): boolean => {
-    return (
-        path.elements.length > prefix.elements.length &&
-        prefix.elements.every((element, index) => pathElementEqual(element, path.elements[index]))
-    );
-};
-
 export const toPathElement = (value: string): PathElement => {
     const valArr = value.split('[');
 
@@ -49,11 +34,6 @@ function pathElementToString(element: PathElement): string {
     return element.index == undefined || element.index === 0 ? text : `${text}[${element.index}]`;
 }
 
-export function getPathLabel(path: Path): string {
-    const lastElement = path.elements[path.elements.length - 1];
-    return lastElement.label || lastElement.name;
-}
-
 export function clonePath(path: Path): Path {
     const cloned = path.elements.map(element => {
         return {
@@ -65,24 +45,3 @@ export function clonePath(path: Path): Path {
 
     return {elements: cloned};
 }
-
-export function pathToPrettifiedString(path: Path): string {
-    return path.elements.map(pathElementToPrettifiedString).join('/');
-}
-
-function pathElementToPrettifiedString(element: PathElement): string {
-    const text = element.label || element.name;
-    return element.index == undefined || element.index === 0 ? text : `${text}[${element.index}]`;
-}
-
-export const isChildPath = (child: Path, parent: Path): boolean => {
-    return startsWith(child, parent) && child.elements.length === parent.elements.length + 1;
-};
-
-export const isRootPath = (path: Path): boolean => {
-    return path.elements.length === 1;
-};
-
-export const getParentPath = (path: Path): Optional<Path> => {
-    return path.elements.length > 1 ? {elements: path.elements.slice(0, -1)} : null;
-};
