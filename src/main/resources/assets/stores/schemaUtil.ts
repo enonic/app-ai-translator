@@ -1,5 +1,4 @@
 import {
-    FormItemSetWithPath,
     FormItemWithPath,
     FormOptionSetOptionWithPath,
     FormOptionSetWithPath,
@@ -28,15 +27,6 @@ export const isFormOptionSetOption = (item: FormItem): item is FormOptionSetOpti
     !isFormOptionSet(item);
 
 export const isInputWithPath = (item: FormItemWithPath): item is InputWithPath => isInput(item) && isPath(item);
-
-export const isFormItemSetWithPath = (item: FormItemWithPath): item is FormItemSetWithPath =>
-    isFormItemSet(item) && isPath(item);
-
-export const isFormOptionSetWithPath = (item: FormItemWithPath): item is FormOptionSetWithPath =>
-    isFormOptionSet(item) && isPath(item);
-
-export const isFormOptionSetOptionWithPath = (item: FormItemWithPath): item is FormOptionSetOptionWithPath =>
-    isFormOptionSetOption(item) && isPath(item);
 
 export function getFormItemsWithPaths(formItems: FormItem[]): FormItemWithPath[] {
     const result: FormItemWithPath[] = [];
@@ -133,28 +123,4 @@ function getFormOptionSetOptionPathEntries(
     };
 
     return [optionFormItemWithPath, ...getPathsOfMentionableItems(option.items, {elements: pathElements})];
-}
-
-export function isOrContainsEditableInput(formItem: FormItem): boolean {
-    if (isInput(formItem)) {
-        return isInputToEdit(formItem);
-    }
-
-    if (isFieldSet(formItem)) {
-        return formItem.FieldSet.items.some(isOrContainsEditableInput);
-    }
-
-    if (isFormItemSet(formItem)) {
-        return formItem.FormItemSet.items.some(isOrContainsEditableInput);
-    }
-
-    if (isFormOptionSet(formItem)) {
-        return formItem.FormOptionSet.options.some(option => option.items.some(isOrContainsEditableInput));
-    }
-
-    if (isFormOptionSetOption(formItem)) {
-        return formItem.items.some(isOrContainsEditableInput);
-    }
-
-    return false;
 }

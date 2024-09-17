@@ -6,16 +6,8 @@ import {EventData} from './data/EventData';
 import {FormItemSetWithPath, FormItemWithPath, FormOptionSetWithPath, InputWithPath} from './data/FormItemWithPath';
 import {Path, PathElement} from './data/Path';
 import {FormItemSet, FormOptionSet, Schema} from './data/Schema';
-import {clonePath, isChildPath, isRootPath, pathFromString, pathToString} from './pathUtil';
-import {
-    getFormItemsWithPaths,
-    isFormItemSet,
-    isFormOptionSet,
-    isInput,
-    isInputWithPath,
-    isOrContainsEditableInput,
-} from './schemaUtil';
-import scope from './scope';
+import {clonePath, pathFromString, pathToString} from './pathUtil';
+import {getFormItemsWithPaths, isFormItemSet, isFormOptionSet, isInput, isInputWithPath} from './schemaUtil';
 
 export type Data = {
     persisted: Optional<ContentData>;
@@ -39,7 +31,6 @@ export interface DataEntry {
 
 addGlobalDataSentHandler((event: CustomEvent<EventData>) => {
     putEventDataToStore(event.detail);
-    console.log('Store:', store.get());
 });
 
 export default store;
@@ -57,7 +48,6 @@ export const setCustomPrompt = (customPrompt: string): void => store.setKey('cus
 export const getCustomPrompt = (): Optional<string> => store.get().customPrompt;
 
 function putEventDataToStore(eventData: EventData): void {
-    console.log('Event data:', eventData);
     if (!eventData['payload']) {
         return;
     }
@@ -83,15 +73,6 @@ export const allFormItemsWithPaths = computed(store, store => {
 
     const data = getPersistedData();
     return data ? getDataPathsToEditableItems(schemaPaths, data) : [];
-});
-
-export const scopedPaths = computed([allFormItemsWithPaths, scope], (allFormItems, scope) => {
-    const scopePath = scope ? pathFromString(scope) : null;
-    const items: FormItemWithPath[] = scopePath
-        ? allFormItems.filter(path => isChildPath(path, scopePath))
-        : allFormItems.filter(isRootPath);
-
-    return items.filter(isOrContainsEditableInput);
 });
 
 function makePathsToFormItems(): FormItemWithPath[] {
@@ -218,15 +199,6 @@ function doGetPropertyArrayByPath(properties: PropertyArray[], path: Path): Opti
     return doGetPropertyArrayByPath(value.set, {elements: pathElements});
 }
 
-export function setValueByPath(value: PropertyValue, path: Path, data: ContentData): void {
-    const array = getPropertyArrayByPath(path, data);
-
-    if (array) {
-        const index = path.elements[path.elements.length - 1]?.index ?? 0;
-        array.values[index] = value;
-    }
-}
-
 export const getLanguage = (): string => getPersistedData()?.language ?? navigator?.language ?? 'en';
 
 export function getPathType(path: InputWithPath | undefined): 'html' | 'text' {
@@ -240,17 +212,6 @@ function createDataEntry(path: InputWithPath): DataEntry {
         schemaType: path.Input.inputType,
         schemaLabel: path.Input.label,
     };
-}
-
-export function getStoredPathByDataAttrString(value: string): InputWithPath | undefined {
-    return allFormItemsWithPaths
-        .get()
-        .filter(isInputWithPath)
-        .find(path => pathToString(path) === value);
-}
-
-export function getFormItemByStringPath(pathAsString: string): Optional<FormItemWithPath> {
-    return allFormItemsWithPaths.get().find(path => pathToString(path) === pathAsString);
 }
 
 export function generateAllPathsEntries(): Record<string, DataEntry> {

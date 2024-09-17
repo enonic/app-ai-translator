@@ -18,8 +18,7 @@ export async function translate(language?: string): Promise<boolean> {
 
     const translateTo = language ?? getLanguage();
     const entries = generateAllPathsEntries();
-    const translations = Object.keys(entries).map(async (path): Promise<void> => {
-        const entry = entries[path];
+    const translations = Object.entries(entries).map(async ([path, entry]): Promise<void> => {
         if (entry.value) {
             dispatchStarted({path});
             const value = await requestTranslation(entry, translateTo);

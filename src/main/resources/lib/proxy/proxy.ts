@@ -1,24 +1,15 @@
-import {ERRORS} from '../errors';
 import {getOptions} from '../google/options';
 import {logDebug, LogDebugGroups} from '../logger';
-import {DEFAULT_MODE, Mode} from '../shared/modes';
 import {GeminiProxy} from './gemini';
-import {isMode, ModelProxy, ModelProxyConfig} from './model';
+import {ModelProxy, ModelProxyConfig} from './model';
 
-type ConnectionConfig = Omit<ModelProxyConfig, 'model' | 'mode'> & {
-    mode: Optional<Mode>;
-};
+type ConnectionConfig = Omit<ModelProxyConfig, 'model'>;
 
-export function connect({mode, instructions, messages, schema}: ConnectionConfig): Try<ModelProxy> {
+export function connect({instructions, messages}: ConnectionConfig): Try<ModelProxy> {
     logDebug(
         LogDebugGroups.FUNC,
-        `proxy.connect(${mode}, [instructions: ${instructions?.length ?? 0}], [messages: ${messages.length}], ${schema ? '[schema]' : undefined})`,
+        `proxy.connect([instructions: ${instructions?.length ?? 0}], [messages: ${messages.length}]})`,
     );
-
-    const preferredMode = mode || DEFAULT_MODE;
-    if (!isMode(preferredMode)) {
-        return [null, ERRORS.FUNC_UNKNOWN_MODE];
-    }
 
     const [options, err] = getOptions();
     if (err) {
@@ -26,6 +17,6 @@ export function connect({mode, instructions, messages, schema}: ConnectionConfig
     }
     const {model} = options;
 
-    const config = {model, mode: preferredMode, instructions, messages, schema};
+    const config = {model, instructions, messages};
     return [new GeminiProxy(config), null];
 }

@@ -1,4 +1,4 @@
-import {getValueByPath, getValueByStringPath, setPersistedData, setValueByPath} from './data';
+import {getValueByPath, getValueByStringPath, setPersistedData} from './data';
 import {ContentData, PropertyValue} from './data/ContentData';
 import {Path} from './data/Path';
 
@@ -96,43 +96,6 @@ describe('getValueByStringPath', () => {
         const parentPath = 'contact_info[1]/phone_number[1]';
         const received = getValueByStringPath(parentPath);
         const expected: PropertyValue = {v: 'phone number 11'};
-
-        expect(received).toEqual(expected);
-    });
-});
-
-describe('setValueByPath', () => {
-    it('should set value', () => {
-        const data = getRootTextItems();
-
-        const parentPath: Path = {
-            elements: [{name: 'myTextArea'}],
-        };
-
-        setValueByPath({v: 'newValue'}, parentPath, data);
-        setPersistedData(data);
-
-        const received = getValueByPath(parentPath);
-        const expected: PropertyValue = {v: 'newValue'};
-
-        expect(received).toEqual(expected);
-    });
-
-    it('should set value in nested item', () => {
-        const data = getFieldSetData();
-
-        const parentPath: Path = {
-            elements: [
-                {name: 'contact_info', index: 1},
-                {name: 'phone_number', index: 1},
-            ],
-        };
-
-        setValueByPath({v: 'newValue'}, parentPath, data);
-        setPersistedData(data);
-
-        const received = getValueByPath(parentPath);
-        const expected: PropertyValue = {v: 'newValue'};
 
         expect(received).toEqual(expected);
     });

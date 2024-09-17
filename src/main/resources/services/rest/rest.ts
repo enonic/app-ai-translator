@@ -2,7 +2,7 @@ import * as authLib from '/lib/xp/auth';
 
 import {ERRORS} from '../../lib/errors';
 import {logDebug, LogDebugGroups, logError} from '../../lib/logger';
-import {ModelProxy, validateMode} from '../../lib/proxy/model';
+import {ModelProxy} from '../../lib/proxy/model';
 import {connect} from '../../lib/proxy/proxy';
 import {respondData, respondError} from '../../lib/requests';
 import type {ModelPostResponse, ModelRequestData} from '../../types/shared/model';
@@ -34,9 +34,8 @@ export function post(request: Enonic.Request): Enonic.Response<ModelPostResponse
 }
 
 function connectModel(data: ModelRequestData): Try<ModelProxy> {
-    const mode = validateMode(data.mode);
-    const {instructions, messages, schema} = data;
-    return connect({mode, instructions, messages, schema});
+    const {instructions, messages} = data;
+    return connect({instructions, messages});
 }
 
 function parsePostRequest(request: Enonic.Request): Try<ModelRequestData> {
@@ -48,9 +47,6 @@ function parsePostRequest(request: Enonic.Request): Try<ModelRequestData> {
 
     switch (body.operation) {
         case 'generate':
-            if (body.mode == null) {
-                return [null, ERRORS.REST_MODE_REQUIRED];
-            }
             if (body.messages == null) {
                 return [null, ERRORS.REST_MESSAGES_REQUIRED];
             }

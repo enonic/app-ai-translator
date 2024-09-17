@@ -1,7 +1,5 @@
 import type {ErrorResponse} from '../../types/shared/model';
 
-export const isNonNullable = <T>(value: T): value is NonNullable<T> => value != null;
-
 export function isErrorResponse(data: unknown): data is ErrorResponse {
     return data != null && typeof data == 'object' && 'error' in data;
 }
