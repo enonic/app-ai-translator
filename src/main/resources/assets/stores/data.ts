@@ -12,13 +12,11 @@ import {getFormItemsWithPaths, isFormItemSet, isFormOptionSet, isInput, isInputW
 export type Data = {
     persisted: Optional<ContentData>;
     schema: Optional<Schema>;
-    customPrompt: Optional<string>;
 };
 
 const store = map<Data>({
     persisted: null,
     schema: null,
-    customPrompt: null,
 });
 
 export interface DataEntry {
@@ -43,27 +41,13 @@ export const getSchema = (): Optional<Readonly<Schema>> => store.get().schema;
 
 export const setSchema = (schema: Schema): void => store.setKey('schema', schema);
 
-export const setCustomPrompt = (customPrompt: string): void => store.setKey('customPrompt', customPrompt);
-
-export const getCustomPrompt = (): Optional<string> => store.get().customPrompt;
-
 function putEventDataToStore(eventData: EventData): void {
-    if (!eventData['payload']) {
-        return;
-    }
-
-    const {schema, data, customPrompt} = eventData.payload;
-
+    const {schema, data} = eventData.payload;
     if (schema) {
         setSchema(schema);
     }
-
     if (data) {
         setPersistedData(data);
-    }
-
-    if (customPrompt) {
-        setCustomPrompt(customPrompt);
     }
 }
 

@@ -18,8 +18,10 @@ export async function generate(messages: Message[]): Promise<ModelResponseGenera
 }
 
 async function requestGenerate(messages: Message[]): Promise<ModelResponseGenerateData | ErrorResponse> {
+    const {instructions} = $config.get();
     const body = JSON.stringify({
         operation: 'generate',
+        instructions,
         messages,
     } satisfies ModelRequestGenerateData);
     const response = await fetch($config.get().serviceUrl, {method: 'POST', body});
