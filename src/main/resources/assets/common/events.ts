@@ -2,8 +2,8 @@ export enum EnonicAiEvents {
     // Translator
     STARTED = 'EnonicAiTranslatorStartedEvent',
     COMPLETED = 'EnonicAiTranslatorCompletedEvent',
+    CONFIG = 'EnonicAiTranslatorConfigEvent',
     // Common
-    CONFIG = 'EnonicAiConfigEvent',
     DATA_SENT = 'EnonicAiDataSentEvent',
 }
 
