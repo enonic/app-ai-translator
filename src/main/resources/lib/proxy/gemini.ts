@@ -1,4 +1,4 @@
-import type {Content, GenerateContentRequest, POSSIBLE_ROLES} from '@google/generative-ai';
+import {Content, GenerateContentRequest, HarmBlockThreshold, HarmCategory, POSSIBLE_ROLES} from '@google/generative-ai';
 
 import type {ModelResponseGenerateData} from '../../types/shared/model';
 import {ERRORS} from '../errors';
@@ -24,10 +24,28 @@ export class GeminiProxy implements ModelProxy {
             contents,
             generationConfig: {
                 candidateCount: 1,
-                temperature: 0.5,
+                temperature: 0.2,
                 topP: 0.9,
                 responseMimeType: 'text/plain',
             },
+            safetySettings: [
+                {
+                    category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+                    threshold: HarmBlockThreshold.BLOCK_NONE,
+                },
+                {
+                    category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+                    threshold: HarmBlockThreshold.BLOCK_NONE,
+                },
+                {
+                    category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+                    threshold: HarmBlockThreshold.BLOCK_NONE,
+                },
+                {
+                    category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+                    threshold: HarmBlockThreshold.BLOCK_NONE,
+                },
+            ],
             systemInstruction,
         };
     }
