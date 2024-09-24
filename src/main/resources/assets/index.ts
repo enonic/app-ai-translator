@@ -36,7 +36,17 @@ export function isAvailable(): boolean {
     return Object.values(entries).some(entry => !!entry.value);
 }
 
-async function requestTranslation({type, value}: DataEntry, language: string): Promise<string> {
-    const prompt = [`Language is "${language}".`, `Format is "${type}".`, `#Content#`, value].join('\n');
+async function requestTranslation({type, value, schemaLabel}: DataEntry, language: string): Promise<string> {
+    const prompt = [
+        `Detect the language of the provided text and translate it into \`${language}\`.`,
+        'ALWAYS return ONLY the translated text without any additional explanations or comments.',
+        'You MUST follow these guidelines unless otherwise stated:',
+        `* The format of the text is \`${type}\`, so preserve ALL formatting (e.g., HTML tags, Markdown elements, etc.).`,
+        `* The text is used in the context of "${schemaLabel}". Only use this context if it is MEANINGFUL. If it is unclear or irrelevant, ignore it.`,
+        `* Do not alter or remove any formatting elements unless explicitly instructed.`,
+        '===',
+        value,
+        '===',
+    ].join('\n');
     return (await postTranslation(prompt)) ?? String(value);
 }
