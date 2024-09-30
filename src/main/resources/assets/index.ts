@@ -44,9 +44,8 @@ async function requestTranslation({type, value, schemaLabel}: DataEntry, languag
         `* The format of the text is \`${type}\`, so preserve ALL formatting (e.g., HTML tags, Markdown elements, etc.).`,
         `* The text is used in the context of "${schemaLabel}". Only use this context if it is MEANINGFUL. If it is unclear or irrelevant, ignore it.`,
         `* Do not alter or remove any formatting elements unless explicitly instructed.`,
-        '===',
+        'The text to translate:',
         value,
-        '===',
     ].join('\n');
     return (await postTranslation(prompt)) ?? String(value);
 }
