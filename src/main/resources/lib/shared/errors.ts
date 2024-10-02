@@ -4,13 +4,32 @@ export class CustomAiError implements AiError {
         public message: string,
     ) {}
 
-    withMsg(message: string): CustomAiError {
-        return new CustomAiError(this.code, message);
+    withMsg(message: string, replace?: boolean): CustomAiError {
+        if (message == null || message === '') {
+            return this;
+        }
+        return new CustomAiError(this.code, replace ? message : `${this.message} ${message}`);
+    }
+
+    is(error: unknown): boolean {
+        return isAiError(error) && this.code === error.code;
     }
 
     toString(): string {
         return `AI Error [${this.code}]: ${this.message}`;
     }
+}
+
+function isAiError(error: unknown): error is AiError {
+    if (error == null || typeof error !== 'object' || Array.isArray(error)) {
+        return false;
+    }
+
+    if (error instanceof CustomAiError) {
+        return true;
+    }
+
+    return 'code' in error && typeof error.code === 'number' && 'message' in error && typeof error.message === 'string';
 }
 
 const err = (code: number, message: string): CustomAiError => new CustomAiError(code, message);
@@ -37,6 +56,9 @@ export const ERRORS = {
     FUNC_UNKNOWN_MODE: err(3001, 'Unknown AI mode.'),
 
     // Model Errors 4000
+    MODEL_UNKNOWN_ERROR: err(4000, 'Model: Unknown error.'),
+    MODEL_INVALID_ARGUMENT: err(4001, 'Model: Invalid argument.'),
+    MODEL_FAILED_PRECONDITION: err(4002, 'Model: Failed precondition.'),
 
     // Google Errors 5000
     GOOGLE_SAK_MISSING: err(5000, 'Google Service Account Key is missing or invalid.'),

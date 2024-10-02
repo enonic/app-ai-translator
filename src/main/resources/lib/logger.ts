@@ -1,5 +1,5 @@
 import {DEBUG_GROUPS} from './config';
-import {CustomAiError} from './errors';
+import {CustomAiError} from './shared/errors';
 
 export enum LogDebugGroups {
     ALL = 'all',

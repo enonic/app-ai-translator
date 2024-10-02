@@ -1,10 +1,10 @@
 import type {Content, GenerateContentRequest, POSSIBLE_ROLES} from '@google/generative-ai';
 
 import type {ModelResponseGenerateData} from '../../types/shared/model';
-import {ERRORS} from '../errors';
 import {generate} from '../google/api/generate';
 import {logDebug, LogDebugGroups} from '../logger';
 import {HarmBlockThreshold, HarmCategory} from '../shared/enums';
+import {ERRORS} from '../shared/errors';
 import {TRANSLATION_INSTRUCTIONS} from '../shared/prompts';
 import {ModelProxy, ModelProxyConfig} from './model';
 
