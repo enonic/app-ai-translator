@@ -1,10 +1,10 @@
 import * as authLib from '/lib/xp/auth';
 
-import {ERRORS} from '../../lib/errors';
 import {logDebug, LogDebugGroups, logError} from '../../lib/logger';
 import {ModelProxy} from '../../lib/proxy/model';
 import {connect} from '../../lib/proxy/proxy';
 import {respondData, respondError} from '../../lib/requests';
+import {ERRORS} from '../../lib/shared/errors';
 import type {ModelPostResponse, ModelRequestData} from '../../types/shared/model';
 
 export function post(request: Enonic.Request): Enonic.Response<ModelPostResponse> {

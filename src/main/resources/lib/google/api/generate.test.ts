@@ -4,7 +4,7 @@ import {createResponse} from '/tests/testUtils/testHelpers';
 import type {GenerateContentRequest} from '@google/generative-ai';
 
 import {content} from '../../../../../../tests/testUtils/fixtures/google';
-import {ERRORS} from '../../errors';
+import {ERRORS} from '../../shared/errors';
 import {generate} from './generate';
 
 type Client = typeof import('../client');

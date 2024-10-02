@@ -1,8 +1,8 @@
 import type {HttpClientResponse} from '/lib/http-client';
 
-import {ERRORS} from '../errors';
 import {logDebug, LogDebugGroups, logError} from '../logger';
 import {request, RequestParams} from '../requests';
+import {CustomAiError, ERRORS} from '../shared/errors';
 import {getOptions} from './options';
 
 type GoogleRequestOptions = Omit<RequestParams, 'url'> & {
@@ -14,9 +14,13 @@ type GoogleHeaders = {
 } & Enonic.RequestHeaders;
 
 type GoogleErrorResponseBody = {
-    error: {
-        message: string;
-    };
+    error: Partial<GoogleErrorData>;
+};
+
+type GoogleErrorData = {
+    code: number;
+    message: string;
+    status: string;
 };
 
 function sendRequest(params: GoogleRequestOptions): Try<HttpClientResponse> {
@@ -54,9 +58,9 @@ export function parseResponse<Data, Body = unknown>(
 
     try {
         if (response.status >= 400) {
-            const message = parseError(response);
-            logDebug(LogDebugGroups.GOOGLE, `client.parseResponse() error: ${JSON.stringify(response)}`);
-            return [null, message ? ERRORS.GOOGLE_REQUEST_FAILED.withMsg(message) : ERRORS.GOOGLE_REQUEST_FAILED];
+            const error = parseError(response);
+            logDebug(LogDebugGroups.GOOGLE, `client.parseResponse() error: ${String(error)}`);
+            return [null, error];
         }
 
         if (response.body == null) {
@@ -71,16 +75,24 @@ export function parseResponse<Data, Body = unknown>(
     }
 }
 
-function parseError(response: HttpClientResponse): Optional<string> {
+function parseError({body, message}: HttpClientResponse): CustomAiError {
     logDebug(LogDebugGroups.GOOGLE, 'client.parseError()');
 
+    if (body == null) {
+        return message ? ERRORS.GOOGLE_REQUEST_FAILED.withMsg(message) : ERRORS.GOOGLE_REQUEST_FAILED;
+    }
+
     try {
-        if (response.body == null) {
-            return response.message ?? null;
+        const {error} = (JSON.parse(body) ?? {error: {}}) as GoogleErrorResponseBody;
+        const {message: errorMessage = '', status} = error;
+        if (status === 'INVALID_ARGUMENT') {
+            return ERRORS.MODEL_INVALID_ARGUMENT.withMsg(errorMessage);
         }
-        const {error} = (JSON.parse(response.body) ?? {error: {message: ''}}) as GoogleErrorResponseBody;
-        return error.message;
+        if (status === 'FAILED_PRECONDITION') {
+            return ERRORS.MODEL_FAILED_PRECONDITION.withMsg(errorMessage);
+        }
+        return ERRORS.MODEL_UNKNOWN_ERROR.withMsg(errorMessage);
     } catch (e) {
-        return null;
+        return ERRORS.MODEL_UNKNOWN_ERROR.withMsg('Cannot parse error message.');
     }
 }
