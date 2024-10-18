@@ -1,11 +1,22 @@
-export enum EnonicAiEvents {
+export enum AiEvents {
     // Translator
-    STARTED = 'EnonicAiTranslatorStartedEvent',
-    COMPLETED = 'EnonicAiTranslatorCompletedEvent',
-    CONFIG = 'EnonicAiTranslatorConfigEvent',
+    //   Outgoing
+    DIALOG_SHOWN = 'AiTranslatorDialogShownEvent',
+    DIALOG_HIDDEN = 'AiTranslatorDialogHiddenEvent',
+    STARTED = 'AiTranslatorStartedEvent',
+    COMPLETED = 'AiTranslatorCompletedEvent',
+    //   Incoming
+    OPEN_DIALOG = 'AiTranslatorOpenDialogEvent',
+    CONFIGURE = 'AiTranslatorConfigureEvent',
     // Common
-    DATA_SENT = 'EnonicAiDataSentEvent',
+    //   Incoming
+    UPDATE_DATA = 'AiUpdateDataEvent',
 }
+
+export type EventHandler<T extends Event = Event> = (event: T) => void;
+export type CustomEventHandler = EventHandler<CustomEvent>;
+
+export type SimpleDispatchableAiEvents = AiEvents.DIALOG_SHOWN | AiEvents.DIALOG_HIDDEN;
 
 type StartedDetail = {
     path: string;
@@ -16,34 +27,36 @@ type CompletedDetail = {
     value: string;
 };
 
-type EventHandler<T extends Event = Event> = (event: T) => void;
+export function dispatch(type: SimpleDispatchableAiEvents): void {
+    window.dispatchEvent(new CustomEvent(type));
+}
 
 export function dispatchStarted(detail: StartedDetail): void {
-    window.dispatchEvent(new CustomEvent(EnonicAiEvents.STARTED, {detail}));
+    window.dispatchEvent(new CustomEvent(AiEvents.STARTED, {detail}));
 }
 
 export function dispatchCompleted(detail: CompletedDetail): void {
-    window.dispatchEvent(new CustomEvent(EnonicAiEvents.COMPLETED, {detail}));
+    window.dispatchEvent(new CustomEvent(AiEvents.COMPLETED, {detail}));
 }
 
-function createEventHandler(handler: EventHandler<CustomEvent>): EventHandler {
-    return (event: Event): void => {
+function addGlobalHandler(eventType: AiEvents, handler: CustomEventHandler): FnVoid {
+    const eventHandler = (event: Event): void => {
         if (event instanceof CustomEvent) {
             handler(event);
         }
     };
-}
-
-export function addGlobalConfigHandler(handler: EventHandler<CustomEvent>): FnVoid {
-    return addGlobalHandler(EnonicAiEvents.CONFIG, handler);
-}
-
-export function addGlobalDataSentHandler(handler: EventHandler<CustomEvent>): FnVoid {
-    return addGlobalHandler(EnonicAiEvents.DATA_SENT, handler);
-}
-
-function addGlobalHandler(eventType: EnonicAiEvents, handler: EventHandler<CustomEvent>): FnVoid {
-    const eventHandler = createEventHandler(handler);
     window.addEventListener(eventType, eventHandler);
     return () => window.removeEventListener(eventType, eventHandler);
+}
+
+export function addGlobalUpdateDataHandler(handler: CustomEventHandler): FnVoid {
+    return addGlobalHandler(AiEvents.UPDATE_DATA, handler);
+}
+
+export function addGlobalConfigureHandler(handler: CustomEventHandler): FnVoid {
+    return addGlobalHandler(AiEvents.CONFIGURE, handler);
+}
+
+export function addGlobalOpenDialogHandler(handler: CustomEventHandler): FnVoid {
+    return addGlobalHandler(AiEvents.OPEN_DIALOG, handler);
 }

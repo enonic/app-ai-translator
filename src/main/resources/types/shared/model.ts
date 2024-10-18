@@ -32,13 +32,6 @@ export type ModelRequestGenerateData = OperationData<'generate'> & {
     messages: Message[];
 };
 
-export type SchemaField<T extends string = string> = {
-    name: T;
-    type: 'STRING' | 'NUMBER' | 'BOOLEAN' | 'OBJECT' | 'ARRAY';
-    description?: string;
-    required?: boolean;
-};
-
 // ------------------------------------
 // Response
 // ------------------------------------

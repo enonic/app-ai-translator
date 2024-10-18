@@ -1,6 +1,6 @@
 import {computed, map} from 'nanostores';
 
-import {addGlobalDataSentHandler} from '../common/events';
+import {addGlobalUpdateDataHandler} from '../common/events';
 import {ContentData, PropertyArray, PropertyValue} from './data/ContentData';
 import {EventData} from './data/EventData';
 import {FormItemSetWithPath, FormItemWithPath, FormOptionSetWithPath, InputWithPath} from './data/FormItemWithPath';
@@ -27,7 +27,7 @@ export interface DataEntry {
     schemaHelpText?: string;
 }
 
-addGlobalDataSentHandler((event: CustomEvent<EventData>) => {
+addGlobalUpdateDataHandler((event: CustomEvent<EventData>) => {
     putEventDataToStore(event.detail);
 });
 
