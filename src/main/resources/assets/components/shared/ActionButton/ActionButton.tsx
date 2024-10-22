@@ -7,7 +7,7 @@ type Props = {
     className?: string;
     disabled?: boolean;
     name: string;
-    icon: IconName;
+    icon?: IconName;
     mode?: 'icon-only' | 'compact' | 'full';
     size?: 'tiny' | 'small' | 'medium' | 'large';
     handleClick?: React.MouseEventHandler;
@@ -43,18 +43,20 @@ export default function ActionButton({
             )}
             disabled={!handleClick || disabled}
         >
-            <Icon
-                name={icon}
-                className={clsx([
-                    'shrink-0',
-                    {
-                        'w-3 h-3': size === 'tiny',
-                        'w-4 h-4': size === 'small',
-                        'w-6 h-6': size === 'medium',
-                        'w-8 h-8': size === 'large',
-                    },
-                ])}
-            />
+            {icon && (
+                <Icon
+                    name={icon}
+                    className={clsx([
+                        'shrink-0',
+                        {
+                            'w-3 h-3': size === 'tiny',
+                            'w-4 h-4': size === 'small',
+                            'w-6 h-6': size === 'medium',
+                            'w-8 h-8': size === 'large',
+                        },
+                    ])}
+                />
+            )}
             <span
                 className={clsx([
                     'pl-1',

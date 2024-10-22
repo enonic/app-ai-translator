@@ -28,22 +28,25 @@ export default {
                 '1/2': '50%',
                 '4/5': '80%',
             },
+            padding: {
+                2.5: '.625rem',
+                7.5: '1.875rem',
+            },
             lineHeight: {
                 initial: 'initial',
                 3.5: '.875rem',
-            },
-            padding: {
-                2.5: '.625rem',
+                'header-title': '2rem',
             },
             fontSize: {
                 '2xs': '.625rem',
+                'header-title': '1.725rem',
             },
             flex: {
                 max: '1 0 100%',
             },
             gridTemplateColumns: {
                 'min-280': 'repeat(auto-fill, minmax(300px, 1fr))',
-                'mid-3': 'minmax(auto, min-content) 1fr minmax(auto, min-content)',
+                header: '1fr minmax(auto, min-content)',
                 'fit-1fr': 'minmax(auto, min-content) 1fr',
                 'fit-fit-1fr': 'minmax(auto, min-content) minmax(auto, min-content) 1fr',
             },

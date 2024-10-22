@@ -116,7 +116,6 @@ function getRootTextItems(): ContentData {
             },
         ],
         topic: 'all input types',
-        language: 'ak',
     };
 }
 
@@ -159,6 +158,5 @@ function getFieldSetData(): ContentData {
             },
         ],
         topic: 'all input types',
-        language: 'ak',
     };
 }

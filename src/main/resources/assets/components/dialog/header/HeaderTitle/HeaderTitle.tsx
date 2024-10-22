@@ -11,14 +11,7 @@ export default function HeaderTitle({className}: Props): JSX.Element {
     const title = t('field.title');
 
     return (
-        <div
-            className={clsx([
-                'flex justify-center items-center flex-nowrap',
-                'px-2',
-                'text-sm text-enonic-gray text-center',
-                className,
-            ])}
-        >
+        <div className={clsx(['py-5 pl-7.5 pr-2', 'text-header-title font-bold', className])}>
             <span>{title}</span>
         </div>
     );

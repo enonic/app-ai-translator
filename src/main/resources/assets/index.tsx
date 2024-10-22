@@ -3,6 +3,8 @@ import {createRoot} from 'react-dom/client';
 
 import {dispatchCompleted, dispatchStarted} from './common/events';
 import App from './components/App/App';
+import './i18n/config';
+import './index.css';
 import {requestTranslation} from './requests/translation';
 import {$config, setServiceUrl} from './stores/config';
 import {generateAllPathsEntries, getLanguage} from './stores/data';
@@ -31,10 +33,10 @@ export function setup({serviceUrl}: SetupConfig): void {
 
 export async function translate(language?: string): Promise<boolean> {
     if ($config.get().serviceUrl === '') {
-        console.warn('[Enonic AI] Translator was rendered before configured.');
+        console.warn('[Enonic AI] Translator was used before configured.');
     }
 
-    const translateTo = language ?? getLanguage();
+    const translateTo = language ?? getLanguage().tag;
     const entries = generateAllPathsEntries();
     const translations = Object.entries(entries).map(async ([path, entry]): Promise<void> => {
         if (entry.value) {
@@ -47,9 +49,4 @@ export async function translate(language?: string): Promise<boolean> {
     await Promise.all(translations);
 
     return true;
-}
-
-export function isAvailable(): boolean {
-    const entries = generateAllPathsEntries();
-    return Object.values(entries).some(entry => !!entry.value);
 }

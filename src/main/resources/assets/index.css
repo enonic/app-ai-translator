@@ -1,6 +1,3 @@
-@import './styles/elements.css';
-@import './styles/scroll.css';
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

@@ -9,16 +9,8 @@ type Props = {
 
 export default function Header({className}: Props): JSX.Element {
     return (
-        <div
-            className={clsx([
-                'Header',
-                'grid grid-cols-mid-3 items-center',
-                'h-10',
-                'bg-enonic-gray-lighter',
-                className,
-            ])}
-        >
-            <HeaderTitle className='drag-handle self-stretch' />
+        <div className={clsx(['Header', 'grid grid-cols-header items-center', 'px-7.5 py-5', 'bg-white', className])}>
+            <HeaderTitle />
             <div className='text-right text-nowrap'>
                 <CloseButton />
             </div>

@@ -1,10 +1,10 @@
 import {useStore} from '@nanostores/react';
 
-import {$visible} from '../../stores/dialog';
+import {$hasData} from '../../stores/data';
 import TranslationDialog from '../dialog/TranslationDialog/TranslationDialog';
 
 export default function App(): JSX.Element {
-    const visible = useStore($visible);
+    const hasData = useStore($hasData);
 
-    return visible ? <TranslationDialog /> : <></>;
+    return hasData ? <TranslationDialog /> : <></>;
 }
