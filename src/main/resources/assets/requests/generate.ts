@@ -6,8 +6,10 @@ import type {
 } from '../../types/shared/model';
 import {$config} from '../stores/config';
 
-export async function generate(messages: Message[]): Promise<ModelResponseGenerateData | ErrorResponse> {
-    const {instructions} = $config.get();
+export async function generate(
+    messages: Message[],
+    instructions?: string,
+): Promise<ModelResponseGenerateData | ErrorResponse> {
     const body = JSON.stringify({
         operation: 'generate',
         instructions,

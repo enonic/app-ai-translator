@@ -1,20 +1,26 @@
 import {computed, map} from 'nanostores';
 
-import {addGlobalDataSentHandler} from '../common/events';
+import {addGlobalUpdateDataHandler} from '../common/events';
 import {ContentData, PropertyArray, PropertyValue} from './data/ContentData';
 import {EventData} from './data/EventData';
 import {FormItemSetWithPath, FormItemWithPath, FormOptionSetWithPath, InputWithPath} from './data/FormItemWithPath';
+import {Language} from './data/Language';
 import {Path, PathElement} from './data/Path';
 import {FormItemSet, FormOptionSet, Schema} from './data/Schema';
 import {clonePath, pathFromString, pathToString} from './pathUtil';
 import {getFormItemsWithPaths, isFormItemSet, isFormOptionSet, isInput, isInputWithPath} from './schemaUtil';
 
 export type Data = {
+    language: Language;
     persisted: Optional<ContentData>;
     schema: Optional<Schema>;
 };
 
-const store = map<Data>({
+export const $data = map<Data>({
+    language: {
+        tag: navigator?.language ?? 'en',
+        name: 'English',
+    },
     persisted: null,
     schema: null,
 });
@@ -27,36 +33,48 @@ export interface DataEntry {
     schemaHelpText?: string;
 }
 
-addGlobalDataSentHandler((event: CustomEvent<EventData>) => {
+addGlobalUpdateDataHandler((event: CustomEvent<EventData>) => {
     putEventDataToStore(event.detail);
 });
 
-export default store;
+export const getLanguage = (): Readonly<Language> => $data.get().language;
 
-export const getPersistedData = (): Optional<Readonly<ContentData>> => store.get().persisted;
+export const setLanguage = (language: Language): void => $data.setKey('language', language);
 
-export const setPersistedData = (data: ContentData): void => store.setKey('persisted', data);
+export const getPersistedData = (): Optional<Readonly<ContentData>> => $data.get().persisted;
 
-export const getSchema = (): Optional<Readonly<Schema>> => store.get().schema;
+export const setPersistedData = (data: ContentData): void => $data.setKey('persisted', data);
 
-export const setSchema = (schema: Schema): void => store.setKey('schema', schema);
+export const getSchema = (): Optional<Readonly<Schema>> => $data.get().schema;
+
+export const setSchema = (schema: Schema): void => $data.setKey('schema', schema);
 
 function putEventDataToStore(eventData: EventData): void {
-    const {schema, data} = eventData.payload;
-    if (schema) {
-        setSchema(schema);
+    const {language, data, schema} = eventData.payload;
+
+    if (language) {
+        setLanguage(language);
     }
+
     if (data) {
         setPersistedData(data);
     }
+
+    if (schema) {
+        setSchema(schema);
+    }
 }
 
-export const allFormItemsWithPaths = computed(store, store => {
+export const $allFormItemsWithPaths = computed($data, store => {
     void store.persisted;
     const schemaPaths: FormItemWithPath[] = makePathsToFormItems();
 
     const data = getPersistedData();
     return data ? getDataPathsToEditableItems(schemaPaths, data) : [];
+});
+
+export const $hasData = computed($allFormItemsWithPaths, store => {
+    return store.some(path => isInputWithPath(path) && !!getValueByPath(path)?.v);
 });
 
 function makePathsToFormItems(): FormItemWithPath[] {
@@ -183,8 +201,6 @@ function doGetPropertyArrayByPath(properties: PropertyArray[], path: Path): Opti
     return doGetPropertyArrayByPath(value.set, {elements: pathElements});
 }
 
-export const getLanguage = (): string => getPersistedData()?.language ?? navigator?.language ?? 'en';
-
 export function getPathType(path: InputWithPath | undefined): 'html' | 'text' {
     return path?.Input.inputType === 'HtmlArea' ? 'html' : 'text';
 }
@@ -201,7 +217,7 @@ function createDataEntry(path: InputWithPath): DataEntry {
 export function generateAllPathsEntries(): Record<string, DataEntry> {
     const entries: Record<string, DataEntry> = {};
 
-    const inputs = allFormItemsWithPaths.get().filter(isInputWithPath);
+    const inputs = $allFormItemsWithPaths.get().filter(isInputWithPath);
     inputs.forEach(path => {
         entries[pathToString(path)] = createDataEntry(path);
     });
