@@ -1,10 +1,11 @@
 import {useStore} from '@nanostores/react';
 import clsx from 'clsx';
 
-import {translate} from '../../..';
 import {$visible, setDialogVisible} from '../../../stores/dialog';
-import ActionButton from '../../shared/ActionButton/ActionButton';
-import Header from '../header/Header/Header';
+import ModalWrapper from '../../shared/ModalWrapper/ModalWrapper';
+import DialogContent from '../DialogContent/DialogContent';
+import DialogFooter from '../DialogFooter/DialogFooter';
+import DialogHeader from '../DialogHeader/DialogHeader';
 
 export type Props = {
     className?: string;
@@ -14,35 +15,28 @@ export default function TranslationDialog({className = ''}: Props): JSX.Element 
     const visible = useStore($visible);
 
     return (
-        <div
-            className={clsx(
-                'enonic-ai',
-                'TranslationDialog',
-                'fixed',
-                'max-w-[720px] min-w-[230px] w-[85.185%]',
-                'fixed',
-                'top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2',
-                'flex flex-col',
-                'leading-initial',
-                'bg-white',
-                'border',
-                'shadow-xl',
-                'z-[2000]',
-                {hidden: !visible},
-                className,
-            )}
+        <ModalWrapper
+            className={clsx(['enonic-ai TranslationDialog', {hidden: !visible}])}
+            closeHandler={() => setDialogVisible(false)}
+            trapFocus={visible}
         >
-            <Header />
-            <div className='TranslationContent'></div>
-            <div className='TranslationButtons'>
-                <ActionButton
-                    name='translate'
-                    handleClick={() => {
-                        setDialogVisible(false);
-                        void translate();
-                    }}
-                />
+            <div
+                className={clsx(
+                    'w-full sm2:max-w-2xl',
+                    'h-dvh sm2:h-auto',
+                    'flex flex-col',
+                    'bg-white',
+                    'sm2:shadow-xl',
+                    'rounded-sm',
+                    className,
+                )}
+                role='dialog'
+                aria-modal='true'
+            >
+                <DialogHeader />
+                <DialogContent />
+                <DialogFooter />
             </div>
-        </div>
+        </ModalWrapper>
     );
 }

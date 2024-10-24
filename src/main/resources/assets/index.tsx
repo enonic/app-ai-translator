@@ -1,13 +1,12 @@
 import React from 'react';
 import {createRoot} from 'react-dom/client';
 
-import {dispatchCompleted, dispatchStarted} from './common/events';
 import App from './components/App/App';
 import './i18n/config';
 import './index.css';
-import {requestTranslation} from './requests/translation';
 import {$config, setServiceUrl} from './stores/config';
-import {generateAllPathsEntries, getLanguage} from './stores/data';
+import {getLanguage} from './stores/data';
+import {postTranslate} from './stores/requests';
 
 type SetupConfig = {
     serviceUrl: string;
@@ -31,22 +30,11 @@ export function setup({serviceUrl}: SetupConfig): void {
     setServiceUrl(serviceUrl);
 }
 
-export async function translate(language?: string): Promise<boolean> {
+export async function translate(instructions?: string, language?: string): Promise<boolean> {
     if ($config.get().serviceUrl === '') {
         console.warn('[Enonic AI] Translator was used before configured.');
     }
 
     const translateTo = language ?? getLanguage().tag;
-    const entries = generateAllPathsEntries();
-    const translations = Object.entries(entries).map(async ([path, entry]): Promise<void> => {
-        if (entry.value) {
-            dispatchStarted({path});
-            const value = await requestTranslation(entry, translateTo);
-            dispatchCompleted({path, value});
-        }
-    });
-
-    await Promise.all(translations);
-
-    return true;
+    return postTranslate(translateTo, instructions);
 }

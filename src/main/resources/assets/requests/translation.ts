@@ -4,25 +4,23 @@ import {isErrorResponse} from '../common/data';
 import {DataEntry} from '../stores/data';
 import {generate} from './generate';
 
-export async function requestTranslation({type, value, schemaLabel}: DataEntry, language: string): Promise<string> {
-    const instructions = [
+export async function requestTranslation(
+    {type, value, schemaLabel}: DataEntry,
+    language: string,
+    instructions?: string,
+): Promise<string> {
+    const text = String(value);
+    const prompt = [
         `Detect the language of the provided text and translate it into \`${language}\`.`,
         `* The format of the text is \`${type}\`, so preserve ALL formatting (e.g., HTML tags, Markdown elements, etc.).`,
         `* The text is used in the context of "${schemaLabel}". Only use this context if it is MEANINGFUL. If it is unclear or irrelevant, ignore it.`,
         'The text to translate:',
+        text,
     ].join('\n');
-    const text = String(value);
 
-    return await postTranslation(instructions, text);
-}
-
-async function postTranslation(instructions: string, text: string): Promise<string> {
     try {
-        const messages: Message[] = [
-            {role: 'user', text: instructions},
-            {role: 'user', text},
-        ];
-        return (await postMessages(messages)) ?? text;
+        const messages: Message[] = [{role: 'user', text: prompt}];
+        return (await postMessages(messages, instructions)) ?? text;
     } catch (error) {
         const msg = error instanceof Error ? error.message : String(error);
         console.error('Error translating text:', msg);
@@ -30,10 +28,10 @@ async function postTranslation(instructions: string, text: string): Promise<stri
     return text;
 }
 
-async function postMessages(messages: Message[]): Promise<Optional<string>> {
+async function postMessages(messages: Message[], userInstructions?: string): Promise<Optional<string>> {
     const oldContents = getContents(messages);
 
-    const response = await generate(messages);
+    const response = await generate(messages, userInstructions);
 
     if (isErrorResponse(response)) {
         const isContinuation = messages.at(-1)?.role === 'model';

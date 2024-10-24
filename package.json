@@ -20,6 +20,7 @@
     "dependencies": {
         "@nanostores/react": "^0.8.0",
         "clsx": "^2.1.1",
+        "focus-trap-react": "^10.3.0",
         "i18next": "^23.16.0",
         "i18next-http-backend": "^2.6.2",
         "lodash.debounce": "^4.0.8",
@@ -52,8 +53,8 @@
         "@enonic/esbuild-plugin-copy-with-hash": "^0.2.0",
         "@enonic/eslint-config": "^1.2.1",
         "@enonic/mock-xp": "^1.0.0",
-        "@swc/core": "^1.7.35",
         "@google/generative-ai": "^0.21.0",
+        "@swc/core": "^1.7.35",
         "@tailwindcss/typography": "^0.5.15",
         "@trivago/prettier-plugin-sort-imports": "^4.3.0",
         "@types/jest": "^29.5.13",

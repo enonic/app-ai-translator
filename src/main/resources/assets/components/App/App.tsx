@@ -6,5 +6,5 @@ import TranslationDialog from '../dialog/TranslationDialog/TranslationDialog';
 export default function App(): JSX.Element {
     const hasData = useStore($hasData);
 
-    return hasData ? <TranslationDialog /> : <></>;
+    return hasData ? <TranslationDialog className='text-base' /> : <></>;
 }

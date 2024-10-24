@@ -1,8 +1,9 @@
 {
     "action.translate": "Translate",
     "action.cancel": "Cancel",
-    "field.title": "Juke AI: Automatic Translation",
+    "field.title": "AI Automated Translation",
     "field.instructions.title": "Translation instructions",
     "field.instructions.placeholder": "Write text translation instructions. The general instructions configured via site will also be added here.",
-    "text.greeting": "Want me to translate texts to {{language}}?"
+    "text.greeting": "Hey! Want me to translate texts to ",
+    "text.assistant.name": "Juke AI"
 }
