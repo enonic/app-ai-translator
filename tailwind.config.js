@@ -56,6 +56,9 @@ export default {
                 auto: 'auto',
                 'fit-1fr': 'minmax(auto, min-content) 1fr',
             },
+            blur: {
+                xs: '2px',
+            },
         },
     },
     plugins: [

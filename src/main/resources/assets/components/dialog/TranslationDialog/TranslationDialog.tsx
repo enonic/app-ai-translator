@@ -34,8 +34,8 @@ export default function TranslationDialog({className = ''}: Props): JSX.Element 
                 aria-modal='true'
             >
                 <DialogHeader />
-                <DialogContent />
-                <DialogFooter />
+                <DialogContent className='max-h-[calc(100vh-6.5rem)]' />
+                <DialogFooter className='mt-auto sm2:mt-0' />
             </div>
         </ModalWrapper>
     );
