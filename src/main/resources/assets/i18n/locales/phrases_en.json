@@ -4,6 +4,6 @@
     "field.title": "AI Automated Translation",
     "field.instructions.title": "Translation instructions",
     "field.instructions.placeholder": "Write text translation instructions. The general instructions configured via site will also be added here.",
-    "text.greeting": "Hey! Want me to translate texts to ",
+    "text.greeting": "Hey! Want me to translate texts to <0/> ?",
     "text.assistant.name": "Juke AI"
 }

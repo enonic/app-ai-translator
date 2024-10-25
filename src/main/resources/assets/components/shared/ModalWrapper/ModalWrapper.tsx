@@ -29,7 +29,7 @@ export default function ModalWrapper({className, children, trapFocus, closeHandl
         <FocusTrap active={trapFocus} focusTrapOptions={{initialFocus: false}}>
             <div className={clsx(['fixed inset-0', 'flex justify-center items-center', 'z-[2000]', className])}>
                 <div
-                    className={clsx(['absolute inset-0', 'bg-black bg-opacity-60 backdrop-blur-sm', '-z-10'])}
+                    className={clsx(['absolute inset-0', 'bg-black bg-opacity-60 backdrop-blur-xs', '-z-10'])}
                     role='presentation'
                     onClick={closeHandler}
                 ></div>

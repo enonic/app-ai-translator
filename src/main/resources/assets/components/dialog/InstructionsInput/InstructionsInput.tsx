@@ -20,7 +20,7 @@ export default function InstructionsInput({className}: Props): JSX.Element {
             </label>
             <textarea
                 id={instructionsId}
-                className='w-full text-sm rounded border border-gray-300 p-2 empty:text-enonic-gray-600'
+                className='w-full min-h-9 text-sm rounded border border-gray-300 p-2 empty:text-enonic-gray-600'
                 placeholder={t('field.instructions.placeholder')}
                 onChange={e => setDialogInstructions(e.target.value)}
                 value={instructions}

@@ -23,7 +23,7 @@ export default function DialogFooter({className}: Props): JSX.Element {
     }, []);
 
     return (
-        <div className={clsx(['DialogFooter', 'flex justify-end', 'px-3 pb-3', 'gap-3', className])}>
+        <div className={clsx(['DialogFooter', 'flex justify-end', 'px-3 py-3', 'gap-3', className])}>
             <ActionButton
                 ref={ref}
                 className='text-white bg-enonic-blue enabled:hover:bg-enonic-blue-light'
@@ -38,7 +38,7 @@ export default function DialogFooter({className}: Props): JSX.Element {
                 }}
             />
             <ActionButton
-                className='text-white bg-gray-500 enabled:hover:bg-gray-400'
+                className='text-white bg-enonic-gray-500 enabled:hover:bg-enonic-gray-400'
                 name={t('action.cancel')}
                 size='lg'
                 mode='text-only'
