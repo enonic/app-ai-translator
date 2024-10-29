@@ -1,6 +1,7 @@
 {
     "action.translate": "Translate",
     "action.cancel": "Cancel",
+    "action.addInstructions": "Add translation instructions",
     "field.title": "AI Automated Translation",
     "field.instructions.title": "Translation instructions",
     "field.instructions.placeholder": "Write text translation instructions. The general instructions configured via site will also be added here.",

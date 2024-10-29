@@ -11,7 +11,7 @@ type Props = {
     className?: string;
 };
 
-export default function AssistantMessage({className}: Props): JSX.Element {
+export default function AssistantMessage({className}: Props): React.ReactNode {
     const {language} = useStore($data, {keys: ['language']});
     const {t} = useTranslation();
 

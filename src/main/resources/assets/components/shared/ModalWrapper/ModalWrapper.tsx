@@ -11,7 +11,7 @@ export type Props = {
     closeHandler: () => void;
 };
 
-export default function ModalWrapper({className, children, trapFocus, closeHandler}: Props): JSX.Element {
+export default function ModalWrapper({className, children, trapFocus, closeHandler}: Props): React.ReactNode {
     const handleEscape = useCallback(
         (event: KeyboardEvent) => {
             if (isEscapeKey(event)) {

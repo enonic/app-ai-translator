@@ -1,9 +1,12 @@
 import {twMerge} from 'tailwind-merge';
 
-import {HeroIconClose, SvgIconSpinner} from '../icons';
+import {HeroIconChevronDown, HeroIconChevronRight, HeroIconClose, HeroIconPlus, SvgIconSpinner} from '../icons';
 
 const outlineIcons = {
     close: HeroIconClose,
+    plus: HeroIconPlus,
+    chevronDown: HeroIconChevronDown,
+    chevronRight: HeroIconChevronRight,
 } as const;
 
 const svgIcons = {
@@ -23,11 +26,11 @@ type Props = {
 
 const isOutlineIcon = (name: IconName): name is OutlineIconName => name in outlineIcons;
 
-function selectIcon(name: IconName): (props: {className?: string; title?: string}) => JSX.Element {
+function selectIcon(name: IconName): (props: {className?: string; title?: string}) => React.ReactNode {
     return isOutlineIcon(name) ? outlineIcons[name] : svgIcons[name];
 }
 
-export default function Icon({className, name, title}: Props): JSX.Element {
+export default function Icon({className, name, title}: Props): React.ReactNode {
     const IconElement = selectIcon(name);
     return <IconElement className={twMerge('size-6', className)} title={title} />;
 }

@@ -12,7 +12,7 @@ type Props = {
     className?: string;
 };
 
-export default function DialogFooter({className}: Props): JSX.Element {
+export default function DialogFooter({className}: Props): React.ReactNode {
     const isTranslating = useStore($translating);
 
     const {t} = useTranslation();

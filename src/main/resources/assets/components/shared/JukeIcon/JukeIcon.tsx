@@ -7,7 +7,7 @@ type Props = {
     animated?: boolean;
 };
 
-export default function JukeIcon({className, animated = false}: Props): JSX.Element {
+export default function JukeIcon({className, animated = false}: Props): React.ReactNode {
     const pupilId = useId();
     const eyeId = useId();
 

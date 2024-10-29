@@ -9,7 +9,7 @@ type Props = {
     className?: string;
 };
 
-export default function CloseButton({className}: Props): JSX.Element {
+export default function CloseButton({className}: Props): React.ReactNode {
     const {t} = useTranslation();
     return (
         <ActionButton

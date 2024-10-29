@@ -1,7 +1,7 @@
 import {useStore} from '@nanostores/react';
 import clsx from 'clsx';
 
-import {$visible, setDialogVisible} from '../../../stores/dialog';
+import {$dialog, setDialogVisible} from '../../../stores/dialog';
 import ModalWrapper from '../../shared/ModalWrapper/ModalWrapper';
 import DialogContent from '../DialogContent/DialogContent';
 import DialogFooter from '../DialogFooter/DialogFooter';
@@ -11,8 +11,8 @@ export type Props = {
     className?: string;
 };
 
-export default function TranslationDialog({className = ''}: Props): JSX.Element {
-    const visible = useStore($visible);
+export default function TranslationDialog({className = ''}: Props): React.ReactNode {
+    const {visible} = useStore($dialog, {keys: ['visible']});
 
     return (
         <ModalWrapper
