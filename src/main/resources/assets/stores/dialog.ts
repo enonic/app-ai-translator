@@ -6,15 +6,24 @@ import {$config} from './config';
 export type Dialog = {
     visible: boolean;
     instructions?: string;
+    instructionsEnabled: boolean;
+    instructionsVisible: boolean;
 };
 
 export const $dialog = map<Dialog>({
     visible: false,
+    instructionsEnabled: false,
+    instructionsVisible: false,
 });
 
-export const $visible = computed($dialog, state => state.visible);
 export const $instructions = computed([$dialog, $config], (dialog, config) => {
     return dialog.instructions ?? config.instructions ?? '';
+});
+
+$instructions.subscribe(instructions => {
+    if (instructions) {
+        $dialog.setKey('instructionsEnabled', true);
+    }
 });
 
 export const setDialogVisible = (visible: boolean): void => {
@@ -29,12 +38,21 @@ export const setDialogInstructions = (instructions: string): void => {
 };
 
 export const toggleDialog = (): void => {
-    dispatch($visible.get() ? AiEvents.DIALOG_HIDDEN : AiEvents.DIALOG_SHOWN);
+    dispatch($dialog.get().visible ? AiEvents.DIALOG_HIDDEN : AiEvents.DIALOG_SHOWN);
     $dialog.setKey('visible', !$dialog.get().visible);
 };
 
+export const toggleDialogInstructions = (): void => {
+    $dialog.setKey('instructionsVisible', !$dialog.get().instructionsVisible);
+};
+
+export const enableInstructions = (): void => {
+    $dialog.setKey('instructionsEnabled', true);
+    $dialog.setKey('instructionsVisible', true);
+};
+
 addGlobalOpenDialogHandler(() => {
-    if (!$visible.get()) {
+    if (!$dialog.get().visible) {
         toggleDialog();
     }
 });

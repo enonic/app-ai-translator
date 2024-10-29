@@ -7,7 +7,7 @@ type Props = {
     className?: string;
 };
 
-export default function DialogContent({className}: Props): JSX.Element {
+export default function DialogContent({className}: Props): React.ReactNode {
     return (
         <div className={clsx(['DialogContent', 'flex flex-col gap-4', 'px-3 pt-3', 'overflow-y-auto', className])}>
             <AssistantMessage />
