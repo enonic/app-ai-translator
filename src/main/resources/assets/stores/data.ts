@@ -7,6 +7,7 @@ import {FormItemSetWithPath, FormItemWithPath, FormOptionSetWithPath, InputWithP
 import {Language} from './data/Language';
 import {Path, PathElement} from './data/Path';
 import {FormItemSet, FormOptionSet, Schema} from './data/Schema';
+import {XData} from './data/XData';
 import {clonePath, pathFromString, pathToString} from './pathUtil';
 import {getFormItemsWithPaths, isFormItemSet, isFormOptionSet, isInput, isInputWithPath} from './schemaUtil';
 
@@ -14,7 +15,11 @@ export type Data = {
     language: Language;
     persisted: Optional<ContentData>;
     schema: Optional<Schema>;
+    xData: Optional<XData[]>;
+    xDataSchemas: Optional<Schema[]>;
 };
+
+export type DataEntryValue = string | boolean | number;
 
 export const $data = map<Data>({
     language: {
@@ -23,10 +28,12 @@ export const $data = map<Data>({
     },
     persisted: null,
     schema: null,
+    xData: null,
+    xDataSchemas: null,
 });
 
 export interface DataEntry {
-    value: string | boolean | number;
+    value: DataEntryValue;
     type: 'text' | 'html';
     schemaType: string;
     schemaLabel: string;
@@ -49,8 +56,16 @@ export const getSchema = (): Optional<Readonly<Schema>> => $data.get().schema;
 
 export const setSchema = (schema: Schema): void => $data.setKey('schema', schema);
 
+export const setXData = (xData: XData[]): void => $data.setKey('xData', xData ?? []);
+
+export const getXData = (): Optional<Readonly<XData[]>> => $data.get().xData;
+
+export const setXDataSchemas = (xDataSchemas: Schema[]): void => $data.setKey('xDataSchemas', xDataSchemas ?? []);
+
+export const getXDataSchemas = (): Optional<Readonly<Schema[]>> => $data.get().xDataSchemas;
+
 function putEventDataToStore(eventData: EventData): void {
-    const {language, data, schema} = eventData.payload;
+    const {language, data, schema, xData, xDataSchemas} = eventData.payload;
 
     if (language) {
         setLanguage(language);
@@ -63,18 +78,55 @@ function putEventDataToStore(eventData: EventData): void {
     if (schema) {
         setSchema(schema);
     }
+
+    if (xData) {
+        setXData(xData);
+    }
+
+    if (xDataSchemas) {
+        setXDataSchemas(xDataSchemas);
+    }
 }
 
 export const $allFormItemsWithPaths = computed($data, store => {
     void store.persisted;
-    const schemaPaths: FormItemWithPath[] = makePathsToFormItems();
 
     const data = getPersistedData();
-    return data ? getDataPathsToEditableItems(schemaPaths, data) : [];
+
+    if (!data) {
+        return [];
+    }
+
+    return getDataPathsToEditableItems(makePathsToFormItems(), data.fields);
 });
 
-export const $hasData = computed($allFormItemsWithPaths, store => {
-    return store.some(path => isInputWithPath(path) && !!getValueByPath(path)?.v);
+export const $allXDataFormItemsWithPaths = computed($data, store => {
+    void store.xData;
+
+    const allXData = getXData();
+
+    if (!allXData) {
+        return {};
+    }
+
+    const xDataFormItemsWithPaths: Record<string, FormItemWithPath[]> = {};
+
+    allXData.forEach(xData => {
+        const xDataSchema = getXDataSchemas()?.find(schema => schema.name === xData.name);
+
+        if (xDataSchema) {
+            const schemaPaths: FormItemWithPath[] = getFormItemsWithPaths(xDataSchema.form.formItems);
+            xDataFormItemsWithPaths[xData.name] = getDataPathsToEditableItems(schemaPaths, xData.fields);
+        }
+    });
+
+    return xDataFormItemsWithPaths;
+});
+
+export const $hasData = computed([$allFormItemsWithPaths, $allXDataFormItemsWithPaths], (store, xDataStore) => {
+    return [...store, ...Object.values(xDataStore).flat()].some(
+        path => isInputWithPath(path) && !!getValueByPath(path)?.v,
+    );
 });
 
 function makePathsToFormItems(): FormItemWithPath[] {
@@ -82,9 +134,9 @@ function makePathsToFormItems(): FormItemWithPath[] {
     return schema ? getFormItemsWithPaths(schema.form.formItems) : [];
 }
 
-function getDataPathsToEditableItems(schemaPaths: FormItemWithPath[], data: ContentData): FormItemWithPath[] {
+function getDataPathsToEditableItems(schemaPaths: FormItemWithPath[], fields: PropertyArray[]): FormItemWithPath[] {
     return schemaPaths.flatMap((schemaPath: FormItemWithPath) => {
-        const dataPaths = makePropertyPaths(data.fields, clonePath(schemaPath), []).filter(
+        const dataPaths = makePropertyPaths(fields, clonePath(schemaPath), []).filter(
             dataPath => dataPath.elements.length === schemaPath.elements.length,
         );
 
@@ -205,22 +257,63 @@ export function getPathType(path: InputWithPath | undefined): 'html' | 'text' {
     return path?.Input.inputType === 'HtmlArea' ? 'html' : 'text';
 }
 
-function createDataEntry(path: InputWithPath): DataEntry {
+function createDataEntry(value: DataEntryValue, path: InputWithPath): DataEntry {
     return {
-        value: getValueByPath(path)?.v ?? '',
+        value: value,
         type: getPathType(path),
         schemaType: path.Input.inputType,
         schemaLabel: path.Input.label,
     };
 }
 
-export function generateAllPathsEntries(): Record<string, DataEntry> {
+export function generateAllDataPathsEntries(): Record<string, DataEntry> {
     const entries: Record<string, DataEntry> = {};
 
     const inputs = $allFormItemsWithPaths.get().filter(isInputWithPath);
     inputs.forEach(path => {
-        entries[pathToString(path)] = createDataEntry(path);
+        entries[pathToString(path)] = createDataEntry(getValueByPath(path)?.v ?? '', path);
     });
 
     return entries;
+}
+
+export function generateAllXDataPathsEntries(): Record<string, Record<string, DataEntry>> {
+    const xDataEntries: Record<string, Record<string, DataEntry>> = {};
+
+    Object.entries($allXDataFormItemsWithPaths.get()).forEach(([xDataName, xDataPaths]) => {
+        xDataEntries[xDataName] = generateXDataPathsEntries(xDataName, xDataPaths);
+    });
+
+    return xDataEntries;
+}
+
+function generateXDataPathsEntries(
+    xDataName: string,
+    formItemsWithPath: FormItemWithPath[],
+): Record<string, DataEntry> {
+    const entries: Record<string, DataEntry> = {};
+
+    const inputs = formItemsWithPath.filter(isInputWithPath);
+    inputs.forEach(path => {
+        entries[pathToString(path)] = createDataEntry(getXDataValueByPath(xDataName, path)?.v ?? '', path);
+    });
+
+    return entries;
+}
+
+export function getXDataValueByPath(xDataName: string, path: Path): Optional<PropertyValue> {
+    const xData = getXData()?.find(xData => xData.name === xDataName);
+
+    if (!xData) {
+        return null;
+    }
+
+    const array = doGetPropertyArrayByPath(xData.fields, path);
+
+    if (array) {
+        const index = path.elements[path.elements.length - 1]?.index ?? 0;
+        return array.values[index];
+    }
+
+    return null;
 }

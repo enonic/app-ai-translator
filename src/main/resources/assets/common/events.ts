@@ -20,11 +20,13 @@ export type SimpleDispatchableAiEvents = AiEvents.DIALOG_SHOWN | AiEvents.DIALOG
 
 type StartedDetail = {
     path: string;
+    prefix?: string;
 };
 
 type CompletedDetail = {
     path: string;
     value: string;
+    prefix?: string;
 };
 
 export function dispatch(type: SimpleDispatchableAiEvents): void {

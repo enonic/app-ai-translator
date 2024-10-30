@@ -13,3 +13,7 @@ task pnpmInstallForce( type: PnpmTask ) {
 task cleanNode( type: Delete ) {
     delete 'node_modules'
 }
+
+tasks.named("pnpmInstall") {
+    doNotTrackState('')
+}
