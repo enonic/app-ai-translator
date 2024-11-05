@@ -1,13 +1,14 @@
 import * as authLib from '/lib/xp/auth';
 
+import {getTranslatableDataFromContent} from '../../lib/content/content';
 import {logDebug, LogDebugGroups, logError} from '../../lib/logger';
-import {ModelProxy} from '../../lib/proxy/model';
-import {connect} from '../../lib/proxy/proxy';
-import {respondData, respondError} from '../../lib/requests';
+import {respond, respondError, RestPostResponse} from '../../lib/requests';
 import {ERRORS} from '../../lib/shared/errors';
-import type {ModelPostResponse, ModelRequestData} from '../../types/shared/model';
+import {translateContentField} from '../../lib/translate/translate';
+import {isRecordEmpty} from '../../lib/utils/func';
+import type {ModelRequestData} from '../../types/shared/model';
 
-export function post(request: Enonic.Request): Enonic.Response<ModelPostResponse> {
+export function post(request: Enonic.Request): Enonic.Response<RestPostResponse> {
     logDebug(LogDebugGroups.REST, 'post()');
 
     const isAuthenticated = authLib.getUser() != null;
@@ -21,21 +22,28 @@ export function post(request: Enonic.Request): Enonic.Response<ModelPostResponse
             return respondError(err1);
         }
 
-        const [model, err2] = connectModel(data);
-        if (err2) {
-            return respondError(err2);
+        const itemsToTranslate = getTranslatableDataFromContent(data.contentId, data.context);
+
+        if (isRecordEmpty(itemsToTranslate)) {
+            return respond(200, {message: 'No translatable fields found'});
         }
 
-        return respondData(model.generate());
+        for (const path in itemsToTranslate) {
+            translateContentField({
+                contentId: data.contentId,
+                context: data.context,
+                language: data.language,
+                path,
+                entry: itemsToTranslate[path],
+                instructions: data.instructions,
+            });
+        }
+
+        return respond(200, {message: 'Started fields translation for ' + data.contentId + ' in ' + data.context});
     } catch (err3) {
         logError(err3);
         return respondError(ERRORS.REST_UNHANDLED_ERROR.withMsg(String(err3)));
     }
-}
-
-function connectModel(data: ModelRequestData): Try<ModelProxy> {
-    const {instructions, messages} = data;
-    return connect({instructions, messages});
 }
 
 function parsePostRequest(request: Enonic.Request): Try<ModelRequestData> {
@@ -47,8 +55,14 @@ function parsePostRequest(request: Enonic.Request): Try<ModelRequestData> {
 
     switch (body.operation) {
         case 'generate':
-            if (body.messages == null) {
-                return [null, ERRORS.REST_MESSAGES_REQUIRED];
+            if (body.contentId == null) {
+                return [null, ERRORS.REST_CONTENT_ID_REQUIRED];
+            }
+            if (body.language == null) {
+                return [null, ERRORS.REST_CONTENT_ID_REQUIRED];
+            }
+            if (body.context == null) {
+                return [null, ERRORS.REST_CONTEXT_MISSING];
             }
             return [body, null];
         default:
