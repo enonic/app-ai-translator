@@ -3,9 +3,9 @@ import * as authLib from '/lib/xp/auth';
 import {getTranslatableDataFromContent} from '../../lib/content/content';
 import {logDebug, LogDebugGroups, logError} from '../../lib/logger';
 import {respond, respondError, RestPostResponse} from '../../lib/requests';
-import {ERRORS} from '../../shared/errors';
 import {translateContentField} from '../../lib/translate/translate';
 import {isRecordEmpty} from '../../lib/utils/func';
+import {ERRORS} from '../../shared/errors';
 import type {ModelRequestData} from '../../shared/types/model';
 
 export function post(request: Enonic.Request): Enonic.Response<RestPostResponse> {

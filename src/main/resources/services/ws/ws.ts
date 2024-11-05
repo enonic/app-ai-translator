@@ -34,16 +34,13 @@ export function webSocketEvent(event: Enonic.WebSocketEvent): void {
 
         switch (type) {
             case 'open':
-                log.info(JSON.stringify(event, null, 2));
                 break;
             case 'message':
                 handleMessage(event);
                 break;
             case 'close':
-                log.info(JSON.stringify(event, null, 2));
                 break;
             case 'error':
-                log.info(JSON.stringify(event, null, 2));
                 break;
         }
     } catch (e) {

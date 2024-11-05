@@ -20,7 +20,7 @@ export function translateContentField(item: TranslateContentParams): void {
     TaskQueue.getTaskQueue(`${item.contentId}-${item.context}`, TRANSLATION_POOL_SIZE).addTask({
         func: () => translate(item),
         description,
-        onError: () => log.error('Error: ' + description),
+        onError: () => logError(description),
     });
 }
 
