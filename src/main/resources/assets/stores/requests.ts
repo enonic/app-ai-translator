@@ -26,5 +26,5 @@ export const $requests = map<RequestStore>({
 export const $translating = computed($requests, ({translate}) => translate.state === RequestState.IN_PROGRESS);
 
 export async function postTranslate(params: TranslationParams): Promise<void> {
-    return requestTranslation(params);
+    await requestTranslation(params);
 }

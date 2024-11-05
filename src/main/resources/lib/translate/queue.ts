@@ -1,7 +1,10 @@
 import * as taskLib from '/lib/xp/task';
 import cron from '/lib/cron';
+import type {TaskStateType} from '/lib/xp/task';
 
-export type QueuedTask = {
+import {logDebug, LogDebugGroups, logError} from '../logger';
+
+type QueuedTask = {
     description?: string;
     func: () => void;
     onSuccess?: () => void;
@@ -44,23 +47,30 @@ export class TaskQueue {
     }
 
     private runNextTask(): void {
-        if (this.queue.length > 0) {
-            if (this.activeTasks.size < this.activeAllowed) {
-                const task = this.queue.shift();
-
-                if (task) {
-                    const taskId = taskLib.executeFunction({
-                        description: task.description ?? 'app-ai-translator-queued-task',
-                        func: task.func,
-                    });
-
-                    this.activeTasks.set(taskId, task);
-                    this.startPolling();
-                }
-            }
-        } else {
+        const isQueueEmpty = this.queue.length === 0;
+        if (isQueueEmpty) {
             this.stopPolling();
+            return;
         }
+
+        const isActiveTasksLimitReached = this.activeTasks.size >= this.activeAllowed;
+        if (isActiveTasksLimitReached) {
+            return;
+        }
+
+        const task = this.queue.shift();
+        if (!task) {
+            logError('Undefined task received from non empty queue');
+            return;
+        }
+
+        const taskId = taskLib.executeFunction({
+            description: task.description ?? 'app-ai-translator-queued-task',
+            func: task.func,
+        });
+
+        this.activeTasks.set(taskId, task);
+        this.startPolling();
     }
 
     private startPolling(): void {
@@ -76,10 +86,16 @@ export class TaskQueue {
             delay: 1000,
             times: 60,
             callback: () => {
-                log.info('Active tasks: ' + this.activeTasks.size + ', queue length: ' + this.queue.length);
+                logDebug(
+                    LogDebugGroups.CRON,
+                    `Active tasks: ${this.activeTasks.size}, queue length: ${this.queue.length}`,
+                );
 
                 this.activeTasks.forEach((task, taskId) => {
-                    this.updateTaskState(task, taskId, taskLib.get(taskId));
+                    const taskInfo = taskLib.get(taskId);
+                    if (taskInfo) {
+                        this.updateTaskState(task, taskId, taskInfo.state);
+                    }
                 });
 
                 this.runNextTask();
@@ -87,15 +103,16 @@ export class TaskQueue {
         });
     }
 
-    private updateTaskState(task: QueuedTask, taskId: string, taskInfo: taskLib.TaskInfo | null): void {
-        if (taskInfo) {
-            if (taskInfo.state === 'FINISHED') {
+    private updateTaskState(task: QueuedTask, taskId: string, state: TaskStateType): void {
+        switch (state) {
+            case 'FINISHED':
                 this.activeTasks.delete(taskId);
                 task.onSuccess?.();
-            } else if (taskInfo.state === 'FAILED') {
+                break;
+            case 'FAILED':
                 this.activeTasks.delete(taskId);
                 task.onError?.();
-            }
+                break;
         }
     }
 
