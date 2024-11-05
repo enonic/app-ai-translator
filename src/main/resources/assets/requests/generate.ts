@@ -1,21 +1,11 @@
-import type {
-    ErrorResponse,
-    Message,
-    ModelRequestGenerateData,
-    ModelResponseGenerateData,
-} from '../../types/shared/model';
 import {$config} from '../stores/config';
+import {TranslationParams} from '../stores/data/RequestData';
 
-export async function generate(
-    messages: Message[],
-    instructions?: string,
-): Promise<ModelResponseGenerateData | ErrorResponse> {
+export async function generate(params: TranslationParams): Promise<void> {
     const body = JSON.stringify({
         operation: 'generate',
-        instructions,
-        messages,
-    } satisfies ModelRequestGenerateData);
-    const response = await fetch($config.get().serviceUrl, {method: 'POST', body});
+        ...params,
+    });
 
-    return (await response.json()) as ModelResponseGenerateData | ErrorResponse;
+    return fetch($config.get().serviceUrl, {method: 'POST', body}).then(() => Promise.resolve());
 }

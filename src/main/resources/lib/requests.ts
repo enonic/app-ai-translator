@@ -65,3 +65,9 @@ export function respondData<T extends Enonic.ResponseBody = Enonic.ResponseBody>
     }
     return respond(status, data);
 }
+
+export type OkResponse = {
+    message?: string;
+};
+
+export type RestPostResponse = OkResponse | ErrorResponse;
