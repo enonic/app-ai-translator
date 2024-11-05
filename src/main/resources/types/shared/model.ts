@@ -29,7 +29,9 @@ export type FinishReason =
 export type ModelRequestData = ModelRequestGenerateData;
 export type ModelRequestGenerateData = OperationData<'generate'> & {
     instructions?: string;
-    messages: Message[];
+    language: string;
+    contentId: string;
+    context: string;
 };
 
 // ------------------------------------
