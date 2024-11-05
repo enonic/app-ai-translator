@@ -44,8 +44,8 @@ export async function postTranslate(language: string, instructions?: string): Pr
     const translations = Object.entries(entries).map(async ([path, entry]): Promise<void> => {
         if (entry.value) {
             dispatchStarted({path});
-            const value = await requestTranslation(entry, language, instructions);
-            dispatchCompleted({path, value});
+            const text = await requestTranslation(entry, language, instructions);
+            dispatchCompleted({path, text});
         }
     });
 

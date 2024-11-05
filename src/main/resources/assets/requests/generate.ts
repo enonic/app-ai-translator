@@ -3,7 +3,7 @@ import type {
     Message,
     ModelRequestGenerateData,
     ModelResponseGenerateData,
-} from '../../types/shared/model';
+} from '../../shared/types/model';
 import {$config} from '../stores/config';
 
 export async function generate(
@@ -15,7 +15,7 @@ export async function generate(
         instructions,
         messages,
     } satisfies ModelRequestGenerateData);
-    const response = await fetch($config.get().serviceUrl, {method: 'POST', body});
+    const response = await fetch($config.get().restServiceUrl, {method: 'POST', body});
 
     return (await response.json()) as ModelResponseGenerateData | ErrorResponse;
 }

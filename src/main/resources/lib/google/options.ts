@@ -1,7 +1,7 @@
+import {ERRORS} from '../../shared/errors';
 import {GOOGLE_GEMINI_URL, GOOGLE_SAK_PATH} from '../config';
 import {APP_NAME} from '../constants';
 import {logDebug, LogDebugGroups} from '../logger';
-import {ERRORS} from '../shared/errors';
 
 type ClientOptions = {
     accessToken: string;

@@ -1,4 +1,4 @@
-import type {Message, ModelResponseGenerateData} from '../../types/shared/model';
+import type {Message, ModelResponseGenerateData} from '../../shared/types/model';
 
 export type ModelProxy = {
     generate(): Try<ModelResponseGenerateData>;

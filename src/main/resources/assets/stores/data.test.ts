@@ -103,6 +103,7 @@ describe('getValueByStringPath', () => {
 
 function getRootTextItems(): ContentData {
     return {
+        contentId: '251e6b26-5d9d-4337-981c-bc440e4076ab',
         fields: [
             {
                 name: 'myTextArea',
@@ -121,6 +122,7 @@ function getRootTextItems(): ContentData {
 
 function getFieldSetData(): ContentData {
     return {
+        contentId: '251e6b26-5d9d-4337-981c-bc440e4076ab',
         fields: [
             {
                 name: 'contact_info',

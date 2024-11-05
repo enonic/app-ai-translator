@@ -4,8 +4,8 @@ import {logDebug, LogDebugGroups, logError} from '../../lib/logger';
 import {ModelProxy} from '../../lib/proxy/model';
 import {connect} from '../../lib/proxy/proxy';
 import {respondData, respondError} from '../../lib/requests';
-import {ERRORS} from '../../lib/shared/errors';
-import type {ModelPostResponse, ModelRequestData} from '../../types/shared/model';
+import {ERRORS} from '../../shared/errors';
+import type {ModelPostResponse, ModelRequestData} from '../../shared/types/model';
 
 export function post(request: Enonic.Request): Enonic.Response<ModelPostResponse> {
     logDebug(LogDebugGroups.REST, 'post()');

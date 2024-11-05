@@ -1,8 +1,8 @@
 import libHttpClient, {HttpClientResponse} from '/lib/http-client';
 
-import type {ErrorResponse} from '../types/shared/model';
+import {ERRORS} from '../shared/errors';
+import type {ErrorResponse} from '../shared/types/model';
 import {logError} from './logger';
-import {ERRORS} from './shared/errors';
 
 export type RequestParams = {
     url: string;

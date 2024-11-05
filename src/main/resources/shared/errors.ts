@@ -45,6 +45,7 @@ export const ERRORS = {
     REST_REQUEST_BODY_MISSING: err(20, 'Request body is missing.'),
     REST_OPERATION_NOT_SUPPORTED: err(21, 'Operation not supported.'),
     REST_NOT_AUTHENTICATED: err(401, 'Not authenticated.'),
+    REST_NOT_FOUND: err(404, 'Not found.'),
     REST_UNHANDLED_ERROR: err(500, 'Unhandled server error.'),
 
     // Node Errors 1000

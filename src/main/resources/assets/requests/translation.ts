@@ -1,5 +1,5 @@
-import {ERRORS} from '../../lib/shared/errors';
-import {Message} from '../../types/shared/model';
+import {ERRORS} from '../../shared/errors';
+import {Message} from '../../shared/types/model';
 import {isErrorResponse} from '../common/data';
 import {DataEntry} from '../stores/data';
 import {generate} from './generate';
