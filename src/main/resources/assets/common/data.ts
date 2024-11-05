@@ -1,4 +1,4 @@
-import type {ErrorResponse} from '../../types/shared/model';
+import type {ErrorResponse} from '../../shared/types/model';
 
 export function isErrorResponse(data: unknown): data is ErrorResponse {
     return data != null && typeof data == 'object' && 'error' in data;

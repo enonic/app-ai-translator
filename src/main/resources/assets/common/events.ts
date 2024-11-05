@@ -24,7 +24,8 @@ type StartedDetail = {
 
 type CompletedDetail = {
     path: string;
-    value: string;
+    // Text is optional for error
+    text?: string;
 };
 
 export function dispatch(type: SimpleDispatchableAiEvents): void {

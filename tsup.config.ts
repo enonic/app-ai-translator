@@ -29,7 +29,6 @@ export default function buildServerConfig(): Options {
             options.chunkNames = '_chunks/[name]-[hash]';
             options.mainFields = ['module', 'main'];
         },
-        external: ['/lib/http-client', /^\/lib\/xp\//],
         format: 'cjs',
         inject: [],
         minify: false,

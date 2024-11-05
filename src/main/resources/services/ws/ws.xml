@@ -1,0 +1,6 @@
+<service>
+  <allow>
+    <principal>role:system.everyone</principal>
+  </allow>
+  <websocket>true</websocket>
+</service>
