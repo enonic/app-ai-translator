@@ -1,6 +1,8 @@
 export type ContentData = {
     fields: PropertyArray[];
     topic: string;
+    id: string;
+    context: string;
 };
 
 export type PropertyArray = {

@@ -6,6 +6,7 @@
         "lib": ["esnext"],
         "paths": {
             "/lib/http-client": ["src/main/resources/types/lib/httpClient"],
+            "/lib/cron": ["src/main/resources/types/lib/cron"],
             "/lib/xp/core": ["node_modules/@enonic-types/core"],
             "/lib/xp/*": ["node_modules/@enonic-types/lib-*"],
             "/tests/testUtils/*": ["tests/testUtils/*"],
