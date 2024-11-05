@@ -5,6 +5,7 @@ namespace Enonic {
             id: string;
         };
         data: Data;
-        error: string;
+        message?: string;
+        error?: string;
     }
 }

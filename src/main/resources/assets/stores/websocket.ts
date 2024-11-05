@@ -1,5 +1,6 @@
 import {computed, map} from 'nanostores';
 
+import {WS_PROTOCOL} from '../../shared/constants';
 import {ClientMessage, MessageMetadata, MessageType, ServerMessage} from '../../shared/types/websocket';
 import {dispatchCompleted, dispatchStarted} from '../common/events';
 import {$config} from './config';
@@ -49,12 +50,7 @@ let pingInterval: number;
 
 function connect(): void {
     const {wsServiceUrl} = $config.get();
-
-    const startsWithSlash = wsServiceUrl.startsWith('/');
-    const uri = `${window.location.origin}${startsWithSlash ? '' : '/'}${wsServiceUrl}`;
-    uri.replace(/^http/, 'ws');
-
-    const ws = new WebSocket(uri.replace(/^http/, 'ws'), ['ai']);
+    const ws = new WebSocket(wsServiceUrl, [WS_PROTOCOL]);
 
     ws.onopen = () => {
         $websocket.setKey('connection', ws);

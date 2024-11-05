@@ -47,6 +47,8 @@ export const ERRORS = {
     REST_NOT_AUTHENTICATED: err(401, 'Not authenticated.'),
     REST_NOT_FOUND: err(404, 'Not found.'),
     REST_UNHANDLED_ERROR: err(500, 'Unhandled server error.'),
+    // WS Errors 0600
+    WS_INVALID_PROTOCOL: err(601, 'Invalid WebSocket protocol.'),
 
     // Node Errors 1000
 
