@@ -1,4 +1,4 @@
-import type {Message} from '../../types/shared/model';
+import {Message} from '../../shared/types/model';
 import {TRANSLATION_POOL_SIZE} from '../config';
 import {DataEntry} from '../content/data';
 import {logError} from '../logger';

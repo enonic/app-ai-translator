@@ -3,9 +3,8 @@ import clsx from 'clsx';
 import {useEffect, useRef} from 'react';
 import {useTranslation} from 'react-i18next';
 
-import {translate} from '../../..';
-import {$instructions, setDialogVisible} from '../../../stores/dialog';
-import {$translating} from '../../../stores/requests';
+import {setDialogVisible} from '../../../stores/dialog';
+import {$translating, startTranslation} from '../../../stores/websocket';
 import ActionButton from '../../shared/ActionButton/ActionButton';
 
 type Props = {
@@ -32,10 +31,7 @@ export default function DialogFooter({className}: Props): React.ReactNode {
                 mode={isTranslating ? 'full' : 'text-only'}
                 icon='spinner'
                 disabled={isTranslating}
-                clickHandler={() => {
-                    void translate($instructions.get());
-                    setDialogVisible(false);
-                }}
+                clickHandler={() => void startTranslation()}
             />
             <ActionButton
                 className='text-white bg-enonic-gray-500 enabled:hover:bg-enonic-gray-400'
