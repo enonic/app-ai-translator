@@ -4,17 +4,18 @@ import {createRoot} from 'react-dom/client';
 import App from './components/App/App';
 import './i18n/i18n';
 import './index.css';
-import {$config, setServiceUrl} from './stores/config';
+import {$config, setRestServiceUrl, setWsServiceUrl} from './stores/config';
 import {getContentId, getContext, getLanguage} from './stores/data';
 import {TranslationParams} from './stores/data/RequestData';
 import {postTranslate} from './stores/requests';
 
 type SetupConfig = {
-    serviceUrl: string;
+    restServiceUrl: string;
+    wsServiceUrl: string;
 };
 
 export function render(container: HTMLElement): void {
-    if ($config.get().serviceUrl === '') {
+    if ($config.get().restServiceUrl === '' || $config.get().wsServiceUrl === '') {
         console.warn('[Enonic AI] Translator dialog was rendered before configured.');
     }
 
@@ -27,12 +28,13 @@ export function render(container: HTMLElement): void {
     );
 }
 
-export function setup({serviceUrl}: SetupConfig): void {
-    setServiceUrl(serviceUrl);
+export function setup({restServiceUrl, wsServiceUrl}: SetupConfig): void {
+    setRestServiceUrl(restServiceUrl);
+    setWsServiceUrl(wsServiceUrl);
 }
 
 export function translate(instructions?: string, language?: string): Promise<void> {
-    if ($config.get().serviceUrl === '') {
+    if ($config.get().restServiceUrl === '' || $config.get().wsServiceUrl === '') {
         console.warn('[Enonic AI] Translator was used before configured.');
     }
 

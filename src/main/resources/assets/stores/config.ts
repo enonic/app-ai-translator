@@ -4,7 +4,8 @@ import {addGlobalConfigureHandler} from '../common/events';
 import {ConfigData} from './data/ConfigData';
 
 export type Config = {
-    serviceUrl: string;
+    restServiceUrl: string;
+    wsServiceUrl: string;
     user: {
         fullName: string;
         shortName: string;
@@ -13,7 +14,8 @@ export type Config = {
 };
 
 export const $config = map<Config>({
-    serviceUrl: '',
+    restServiceUrl: '',
+    wsServiceUrl: '',
     user: {
         fullName: 'You',
         shortName: 'Y',
@@ -21,7 +23,8 @@ export const $config = map<Config>({
     instructions: '',
 });
 
-export const setServiceUrl = (serviceUrl: string): void => $config.setKey('serviceUrl', serviceUrl);
+export const setRestServiceUrl = (serviceRestUrl: string): void => $config.setKey('restServiceUrl', serviceRestUrl);
+export const setWsServiceUrl = (serviceWsUrl: string): void => $config.setKey('wsServiceUrl', serviceWsUrl);
 export const setUser = (user: Config['user']): void => $config.setKey('user', user);
 export const setInstructions = (instructions: string): void => $config.setKey('instructions', instructions);
 

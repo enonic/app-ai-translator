@@ -1,8 +1,8 @@
 import type {HttpClientResponse} from '/lib/http-client';
 
+import {CustomAiError, ERRORS} from '../../shared/errors';
 import {logDebug, LogDebugGroups, logError} from '../logger';
 import {request, RequestParams} from '../requests';
-import {CustomAiError, ERRORS} from '../shared/errors';
 import {getOptions} from './options';
 
 type GoogleRequestOptions = Omit<RequestParams, 'url'> & {

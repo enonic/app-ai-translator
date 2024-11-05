@@ -7,5 +7,5 @@ export async function generate(params: TranslationParams): Promise<void> {
         ...params,
     });
 
-    return fetch($config.get().serviceUrl, {method: 'POST', body}).then(() => Promise.resolve());
+    return fetch($config.get().restServiceUrl, {method: 'POST', body}).then(() => Promise.resolve());
 }

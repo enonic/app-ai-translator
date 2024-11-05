@@ -1,11 +1,11 @@
 import type {Content, GenerateContentRequest, POSSIBLE_ROLES} from '@google/generative-ai';
 
-import type {ModelResponseGenerateData} from '../../types/shared/model';
+import {HarmBlockThreshold, HarmCategory} from '../../shared/enums';
+import {ERRORS} from '../../shared/errors';
+import {TRANSLATION_INSTRUCTIONS} from '../../shared/prompts';
+import type {ModelResponseGenerateData} from '../../shared/types/model';
 import {generate} from '../google/api/generate';
 import {logDebug, LogDebugGroups} from '../logger';
-import {HarmBlockThreshold, HarmCategory} from '../shared/enums';
-import {ERRORS} from '../shared/errors';
-import {TRANSLATION_INSTRUCTIONS} from '../shared/prompts';
 import {ModelProxy, ModelProxyConfig} from './model';
 
 type Role = (typeof POSSIBLE_ROLES)[number];
