@@ -2,6 +2,8 @@ export type Path = {
     elements: PathElement[];
 };
 
+export const PATH_SEP = '/';
+
 export type PathElement = {
     name: string;
     label?: string;
@@ -9,7 +11,7 @@ export type PathElement = {
 };
 
 export function pathToString(path: Path): string {
-    return path.elements.map(pathElementToString).join('.');
+    return path.elements.map(pathElementToString).join('/');
 }
 
 function pathElementToString(element: PathElement): string {

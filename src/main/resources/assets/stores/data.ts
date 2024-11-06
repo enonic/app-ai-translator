@@ -25,9 +25,9 @@ addGlobalUpdateDataHandler((event: CustomEvent<EventData>) => {
     putEventDataToStore(event.detail);
 });
 
-export const getContentId = (): string => $data.get().persisted?.id ?? '';
+export const getContentId = (): string => $data.get().persisted?.contentId ?? '';
 
-export const getContext = (): string => $data.get().persisted?.context ?? '';
+export const getProject = (): string => $data.get().persisted?.project ?? '';
 
 export const getLanguage = (): Readonly<Language> => $data.get().language;
 

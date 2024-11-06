@@ -39,6 +39,7 @@ export type TranslateMessage = MessageWithPayload<
     MessageType.TRANSLATE,
     {
         contentId: string;
+        project: string;
         targetLanguage: string;
         customInstructions?: string;
     }
