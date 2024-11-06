@@ -1,11 +1,23 @@
 import * as websocketLib from '/lib/xp/websocket';
 
-import {logError} from '../../lib/logger';
+import {getTranslatableDataFromContent} from '../../lib/content/content';
+import {DataEntry} from '../../lib/content/data';
+import {logDebug, LogDebugGroups, logError} from '../../lib/logger';
 import {respondError} from '../../lib/requests';
+import {translateFields} from '../../lib/translate/translate';
 import {unsafeUUIDv4} from '../../lib/utils/uuid';
 import {WS_PROTOCOL} from '../../shared/constants';
 import {ERRORS} from '../../shared/errors';
-import {ClientMessage, MessageMetadata, MessageType, ServerMessage} from '../../shared/types/websocket';
+import {
+    AcceptedMessage,
+    ClientMessage,
+    CompletedMessage,
+    FailedMessage,
+    MessageMetadata,
+    MessageType,
+    ServerMessage,
+    TranslateMessage,
+} from '../../shared/types/websocket';
 
 export function get(request: Enonic.Request): Enonic.Response {
     if (!request.webSocket) {
@@ -55,12 +67,17 @@ function handleMessage(event: Enonic.WebSocketEvent): void {
         return;
     }
 
+    logDebug(LogDebugGroups.WS, `Received message: ${JSON.stringify(message)}`);
+
     switch (message.type) {
         case MessageType.PING:
             sendMessage(id, {type: MessageType.PONG});
             break;
         case MessageType.CONNECT:
             sendMessage(id, {type: MessageType.CONNECTED});
+            break;
+        case MessageType.TRANSLATE:
+            startTranslation(id, message);
             break;
     }
 }
@@ -82,4 +99,66 @@ function createMetadata(): MessageMetadata {
 
 function sendMessage(id: string, message: Omit<ServerMessage, 'metadata'>): void {
     websocketLib.send(id, JSON.stringify({...message, metadata: createMetadata()}));
+}
+
+function startTranslation(sessionId: string, message: TranslateMessage): void {
+    const data = message.payload;
+    const itemsToTranslate = getTranslatableDataFromContent(data.contentId, data.project);
+
+    sendMessage(sessionId, makeAcceptedMessage(data.contentId, itemsToTranslate));
+
+    translateFields(
+        {
+            fields: itemsToTranslate,
+            contentId: data.contentId,
+            project: data.project,
+            targetLanguage: data.targetLanguage,
+            customInstructions: data.customInstructions,
+        },
+        (path, result) => {
+            const [text, err] = result;
+
+            if (err) {
+                sendMessage(sessionId, makeFailedMessage(err, data.contentId, path));
+            } else {
+                sendMessage(sessionId, makeCompletedMessage(data.contentId, path, text));
+            }
+        },
+    );
+}
+
+function makeAcceptedMessage(
+    contentId: string,
+    itemsToTranslate: Record<string, DataEntry>,
+): Omit<AcceptedMessage, 'metadata'> {
+    return {
+        type: MessageType.ACCEPTED,
+        payload: {
+            contentId,
+            paths: Object.keys(itemsToTranslate),
+        },
+    };
+}
+
+function makeCompletedMessage(contentId: string, path: string, text: string): Omit<CompletedMessage, 'metadata'> {
+    return {
+        type: MessageType.COMPLETED,
+        payload: {
+            contentId,
+            text,
+            path: path,
+        },
+    };
+}
+
+function makeFailedMessage(err: AiError, contentId: string, path: string): Omit<FailedMessage, 'metadata'> {
+    return {
+        type: MessageType.FAILED,
+        payload: {
+            contentId,
+            path: path,
+            message: err.message,
+            code: err.code?.toString(),
+        },
+    };
 }

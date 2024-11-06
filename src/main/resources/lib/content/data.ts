@@ -12,21 +12,21 @@ export function flattenData(data: Record<string, Property>): Record<string, Prop
     return flattenJson(data);
 }
 
-function flattenJson(nestedJson: Record<string, Property>, parentKey = '', sep = '.'): Record<string, PropertyValue> {
+function flattenJson(nestedJson: Record<string, Property>, parentKey = ''): Record<string, PropertyValue> {
     const flattened: Record<string, PropertyValue> = {};
 
     for (const key in nestedJson) {
         if (Object.prototype.hasOwnProperty.call(nestedJson, key)) {
-            const newKey = parentKey ? `${parentKey}${sep}${key}` : key;
+            const newKey = parentKey ? `${parentKey}/${key}` : key;
             const value = nestedJson[key];
 
             if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
-                overwrite(flattened, flattenJson(value as Record<string, Property>, newKey, sep));
+                overwrite(flattened, flattenJson(value as Record<string, Property>, newKey));
             } else if (Array.isArray(value)) {
                 value?.forEach((item, index) => {
                     const arrayKey = `${newKey}[${index}]`;
                     if (typeof item === 'object' && item !== null) {
-                        overwrite(flattened, flattenJson(item as Record<string, Property>, arrayKey, sep));
+                        overwrite(flattened, flattenJson(item as Record<string, Property>, arrayKey));
                     } else {
                         flattened[arrayKey] = item;
                     }

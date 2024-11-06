@@ -31,7 +31,10 @@ export default function DialogFooter({className}: Props): React.ReactNode {
                 mode={isTranslating ? 'full' : 'text-only'}
                 icon='spinner'
                 disabled={isTranslating}
-                clickHandler={() => void startTranslation()}
+                clickHandler={() => {
+                    startTranslation();
+                    setDialogVisible(false);
+                }}
             />
             <ActionButton
                 className='text-white bg-enonic-gray-500 enabled:hover:bg-enonic-gray-400'

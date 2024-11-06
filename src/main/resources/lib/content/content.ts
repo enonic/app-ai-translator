@@ -2,7 +2,7 @@ import * as contentLib from '/lib/xp/content';
 import * as contextLib from '/lib/xp/context';
 import {Content} from '/lib/xp/content';
 
-import {isRecordEmpty} from '../utils/func';
+import {isRecordEmpty} from '../utils/objects';
 import {DataEntry, flattenData} from './data';
 import {getPathsToTranslatableFields, InputWithPath} from './form';
 import {pathToString} from './path';
@@ -50,7 +50,7 @@ function getFieldsToTranslate(
             const keyNoIndex = key.replace(/\[\d+\]/g, '');
 
             if (keyNoIndex === pathToString(formItemWithPath)) {
-                result[key] = {
+                result[processKeyForOutput(key)] = {
                     value,
                     type: getPathType(formItemWithPath),
                     schemaType: formItemWithPath.inputType,
@@ -66,4 +66,10 @@ function getFieldsToTranslate(
 
 function getPathType(path: InputWithPath | undefined): 'html' | 'text' {
     return path?.inputType === 'HtmlArea' ? 'html' : 'text';
+}
+
+// Adjusting path format with the one used in elements data-path attributes
+function processKeyForOutput(key: string): string {
+    const keyNoZeroIndexes = key.replace(/\[0\]/g, '');
+    return `/${keyNoZeroIndexes}`;
 }

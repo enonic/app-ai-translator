@@ -2,42 +2,31 @@ import * as taskLib from '/lib/xp/task';
 import cron from '/lib/cron';
 import type {TaskStateType} from '/lib/xp/task';
 
+import {TRANSLATION_POOL_SIZE} from '../config';
 import {logDebug, LogDebugGroups, logError} from '../logger';
 
 type QueuedTask = {
     description?: string;
     func: () => void;
-    onSuccess?: () => void;
-    onError?: () => void;
+    onError: () => void;
 };
 
-export class TaskQueue {
-    private static instance: TaskQueue;
+class TaskQueue {
+    private static TASK_NAME = 'ai-translator-task';
 
-    private readonly activeAllowed: number;
+    private readonly poolSize: number;
 
     private readonly queue: QueuedTask[];
 
     private readonly activeTasks: Map<string, QueuedTask>;
 
-    private readonly name: string;
-
     private isPolling: boolean;
 
-    private constructor(name: string, activeAllowed: number) {
-        this.name = name;
-        this.activeAllowed = activeAllowed;
+    constructor() {
+        this.poolSize = TRANSLATION_POOL_SIZE;
         this.isPolling = false;
         this.queue = [];
         this.activeTasks = new Map();
-    }
-
-    static getTaskQueue(name: string, poolSize: number): TaskQueue {
-        if (!TaskQueue.instance) {
-            TaskQueue.instance = new TaskQueue(name, poolSize);
-        }
-
-        return TaskQueue.instance;
     }
 
     addTask(task: QueuedTask): void {
@@ -53,7 +42,7 @@ export class TaskQueue {
             return;
         }
 
-        const isActiveTasksLimitReached = this.activeTasks.size >= this.activeAllowed;
+        const isActiveTasksLimitReached = this.activeTasks.size >= this.poolSize;
         if (isActiveTasksLimitReached) {
             return;
         }
@@ -81,7 +70,7 @@ export class TaskQueue {
         this.isPolling = true;
 
         cron.schedule({
-            name: this.name,
+            name: TaskQueue.TASK_NAME,
             fixedDelay: 1000,
             delay: 1000,
             times: 60,
@@ -107,7 +96,6 @@ export class TaskQueue {
         switch (state) {
             case 'FINISHED':
                 this.activeTasks.delete(taskId);
-                task.onSuccess?.();
                 break;
             case 'FAILED':
                 this.activeTasks.delete(taskId);
@@ -118,9 +106,15 @@ export class TaskQueue {
 
     private stopPolling(): void {
         if (this.isPolling) {
-            cron.unschedule({name: this.name});
+            cron.unschedule({name: TaskQueue.TASK_NAME});
         }
 
         this.isPolling = false;
     }
+}
+
+const taskQueue = new TaskQueue();
+
+export function addTask(task: QueuedTask): void {
+    taskQueue.addTask(task);
 }

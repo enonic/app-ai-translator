@@ -1,27 +1,60 @@
+import {ERRORS} from '../../shared/errors';
+import {createTranslationPrompt} from '../../shared/prompts';
 import {Message} from '../../shared/types/model';
-import {TRANSLATION_POOL_SIZE} from '../config';
 import {DataEntry} from '../content/data';
-import {logError} from '../logger';
 import {ModelProxy} from '../proxy/model';
 import {connect} from '../proxy/proxy';
-import {TaskQueue} from './queue';
+import {addTask} from './queue';
 
 export type TranslateContentParams = {
-    contentId: string;
     language: string;
-    context: string;
-    path: string;
     entry: DataEntry;
     instructions?: string | undefined;
 };
 
-export function translateContentField(item: TranslateContentParams): void {
-    const description = `Translating content '${item.contentId}' in repo '${item.context}', field: ${item.path}`;
-    TaskQueue.getTaskQueue(`${item.contentId}-${item.context}`, TRANSLATION_POOL_SIZE).addTask({
-        func: () => translate(item),
-        description,
-        onError: () => logError(description),
-    });
+type TranslationData = {
+    contentId: string;
+    project: string;
+    targetLanguage: string;
+    customInstructions?: string;
+};
+
+type TranslationConfig = TranslationData & {
+    fields: Record<string, DataEntry>;
+};
+
+type Callback = (path: string, result: Try<string>) => void;
+
+export function translateFields(config: TranslationConfig, callback: Callback): void {
+    const {fields, contentId, project, targetLanguage, customInstructions} = config;
+    for (const path in fields) {
+        const params: TranslateContentParams = {
+            entry: fields[path],
+            language: targetLanguage,
+            instructions: customInstructions,
+        };
+        addTask({
+            description: `Translating content '${contentId}' in repo '${project}', field: ${path}`,
+            func: () => callback(path, translate(params)),
+            onError: () => callback(path, [null, ERRORS.UNKNOWN_ERROR.withMsg('Translation task execution failed')]),
+        });
+    }
+}
+
+export function translate(item: TranslateContentParams): Try<string> {
+    const [model, err] = connectModel(createMessage(item.entry, item.language), item.instructions);
+
+    if (err) {
+        return [null, err];
+    }
+
+    const [response, error] = model.generate();
+
+    if (error) {
+        return [null, error];
+    }
+
+    return [response.content, null];
 }
 
 function connectModel(messages: Message[], instructions?: string): Try<ModelProxy> {
@@ -30,34 +63,12 @@ function connectModel(messages: Message[], instructions?: string): Try<ModelProx
 
 function createMessage(entry: DataEntry, language: string): Message[] {
     const text = String(entry.value);
-    const prompt = [
-        `Detect the language of the provided text and translate it into \`${language}\`.`,
-        `* The format of the text is \`${entry.type}\`, so preserve ALL formatting (e.g., HTML tags, Markdown elements, etc.).`,
-        `* The text is used in the context of "${entry.schemaLabel}". Only use this context if it is MEANINGFUL. If it is unclear or irrelevant, ignore it.`,
-        'The text to translate:',
+    const prompt = createTranslationPrompt({
         text,
-    ].join('\n');
+        language,
+        type: entry.type,
+        context: entry.schemaLabel,
+    });
 
     return [{role: 'user', text: prompt}];
-}
-
-function translate(item: TranslateContentParams): void {
-    const [model, err1] = connectModel(createMessage(item.entry, item.language), item.instructions);
-
-    if (err1) {
-        logError(err1);
-        return;
-    }
-
-    log.info(`Translating '${item.entry.value}' to '${item.language}'`);
-
-    const [response, err2] = model.generate();
-
-    if (err2) {
-        logError(err2);
-        return;
-    }
-
-    // send the response to Websocket
-    log.info(`Translation result: '${item.entry.value}' -> '${response?.content}'`);
 }
