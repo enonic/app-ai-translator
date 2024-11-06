@@ -23,8 +23,9 @@ export const $translating = computed($websocket, ({connection}) => connection !=
 
 export function startTranslation(): void {
     const contentId = $data.get().persisted?.contentId;
+    const project = $data.get().persisted?.project;
 
-    if ($translating.get() || !contentId) {
+    if ($translating.get() || !contentId || !project) {
         return;
     }
 
@@ -35,7 +36,7 @@ export function startTranslation(): void {
 
     const unsubscribe = $websocket.subscribe(({state}) => {
         if (state === 'connected') {
-            requestTranslation(contentId, targetLanguage, customInstructions);
+            requestTranslation(contentId, project, targetLanguage, customInstructions);
             unsubscribe();
         }
     });
@@ -172,12 +173,18 @@ function sendMessage(message: ClientMessage): void {
     }
 }
 
-function requestTranslation(contentId: string, targetLanguage: string, customInstructions?: string): void {
+function requestTranslation(
+    contentId: string,
+    project: string,
+    targetLanguage: string,
+    customInstructions?: string,
+): void {
     sendMessage({
         type: MessageType.TRANSLATE,
         metadata: createMetadata(),
         payload: {
             contentId,
+            project,
             targetLanguage,
             customInstructions,
         },

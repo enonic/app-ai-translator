@@ -10,6 +10,7 @@ export enum LogDebugGroups {
     QUERY = 'query',
     FUNC = 'func',
     CRON = 'cron',
+    WS = 'ws',
 }
 
 function stringifyCode(code: object): string {
