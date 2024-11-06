@@ -1,0 +1,10 @@
+{
+    "action.translate": "Oversett",
+    "action.cancel": "Avbryt",
+    "action.addInstructions": "Legg til oversettingsinstruksjoner",
+    "field.title": "AI Automatisk Oversetting",
+    "field.instructions.title": "Oversettingsinstruksjoner",
+    "field.instructions.placeholder": "Skriv instruksjoner for tekstoversetting. De generelle instruksjonene konfigurert via nettstedet vil også bli lagt til her.",
+    "text.greeting": "Hei! Vil du at jeg skal oversette tekster til <0/> ?",
+    "text.assistant.name": "Juke AI"
+}

@@ -2,7 +2,7 @@ import React from 'react';
 import {createRoot} from 'react-dom/client';
 
 import App from './components/App/App';
-import './i18n/config';
+import './i18n/i18n';
 import './index.css';
 import {$config, setServiceUrl} from './stores/config';
 import {getLanguage} from './stores/data';

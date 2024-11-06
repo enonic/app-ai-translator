@@ -1,0 +1,10 @@
+{
+    "action.translate": "Перакласці",
+    "action.cancel": "Адмена",
+    "action.addInstructions": "Дадаць інструкцыі для перакладу",
+    "field.title": "AI Аўтаматычны Пераклад",
+    "field.instructions.title": "Інструкцыі для перакладу",
+    "field.instructions.placeholder": "Напішыце інструкцыі для перакладу тэксту. Агульныя інструкцыі, наладжаныя праз сайт, таксама будуць дададзены сюды.",
+    "text.greeting": "Прывітанне! Хочаце, каб я пераклаў тэксты на <0/> ?",
+    "text.assistant.name": "Juke AI"
+}

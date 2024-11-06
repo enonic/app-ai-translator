@@ -1,0 +1,10 @@
+{
+    "action.translate": "Перевести",
+    "action.cancel": "Отмена",
+    "action.addInstructions": "Добавить инструкции для перевода",
+    "field.title": "Автоматический Перевод",
+    "field.instructions.title": "Инструкции для перевода",
+    "field.instructions.placeholder": "Напишите инструкции для перевода текста. Общие инструкции, настроенные через сайт, также будут добавлены сюда.",
+    "text.greeting": "Привет! Хотите, чтобы я перевел тексты на <0/> ?",
+    "text.assistant.name": "Juke AI"
+}
