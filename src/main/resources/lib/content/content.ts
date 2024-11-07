@@ -12,18 +12,30 @@ export function getTranslatableDataFromContent(contentId: string, context: strin
     const content = getContent(contentId, context);
     const contentType = content && contentLib.getType(content.type);
 
-    if (content && contentType) {
-        const flatData = flattenData(content.data as Record<string, Property>);
-
-        if (isRecordEmpty(flatData)) {
-            return {};
-        }
-
-        const formItemsWithPath: InputWithPath[] = getPathsToTranslatableFields(contentType.form) as InputWithPath[];
-        return getFieldsToTranslate(flatData, formItemsWithPath);
+    if (!content || !contentType) {
+        return {};
     }
 
-    return {};
+    const flatData = flattenData(content.data as Record<string, Property>);
+    const toTranslate = getTranslatableFields(flatData, contentType);
+
+    if (content.displayName) {
+        assignTopic(toTranslate, content.displayName, contentType.description);
+    }
+
+    return toTranslate;
+}
+
+function getTranslatableFields(
+    flatData: Record<string, PropertyValue>,
+    contentType: contentLib.ContentType,
+): Record<string, DataEntry> {
+    if (isRecordEmpty(flatData)) {
+        return {};
+    }
+
+    const formItemsWithPath: InputWithPath[] = getPathsToTranslatableFields(contentType.form) as InputWithPath[];
+    return mapDataToFormItems(flatData, formItemsWithPath);
 }
 
 function getContent(contentId: string, context: string): Content<unknown> {
@@ -38,7 +50,7 @@ function getContent(contentId: string, context: string): Content<unknown> {
     );
 }
 
-function getFieldsToTranslate(
+function mapDataToFormItems(
     data: Record<string, PropertyValue>,
     formItemsWithPath: InputWithPath[],
 ): Record<string, DataEntry> {
@@ -72,4 +84,22 @@ function getPathType(path: InputWithPath | undefined): 'html' | 'text' {
 function processKeyForOutput(key: string): string {
     const keyNoZeroIndexes = key.replace(/\[0\]/g, '');
     return `/${keyNoZeroIndexes}`;
+}
+
+function assignTopic(
+    target: Record<string, DataEntry>,
+    displayName: string,
+    context: string,
+): Record<string, DataEntry> {
+    target['__topic__'] = makeDisplayNameDataEntry(displayName, context);
+    return target;
+}
+
+function makeDisplayNameDataEntry(displayName: string, context: string): DataEntry {
+    return {
+        value: displayName,
+        type: 'text',
+        schemaType: 'TextLine',
+        schemaLabel: context,
+    };
 }
