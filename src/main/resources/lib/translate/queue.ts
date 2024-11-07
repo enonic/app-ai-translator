@@ -1,9 +1,8 @@
 import * as taskLib from '/lib/xp/task';
 import cron from '/lib/cron';
-import type {TaskStateType} from '/lib/xp/task';
 
 import {TRANSLATION_POOL_SIZE} from '../config';
-import {logDebug, LogDebugGroups, logError} from '../logger';
+import {logDebug, LogDebugGroups} from '../logger';
 
 type QueuedTask = {
     description?: string;
@@ -36,8 +35,8 @@ class TaskQueue {
     }
 
     private runNextTask(): void {
-        const isQueueEmpty = this.queue.length === 0;
-        if (isQueueEmpty) {
+        const hasNoTasks = this.queue.length === 0 && this.activeTasks.size === 0;
+        if (hasNoTasks) {
             this.stopPolling();
             return;
         }
@@ -49,7 +48,6 @@ class TaskQueue {
 
         const task = this.queue.shift();
         if (!task) {
-            logError('Undefined task received from non empty queue');
             return;
         }
 
@@ -81,27 +79,21 @@ class TaskQueue {
                 );
 
                 this.activeTasks.forEach((task, taskId) => {
-                    const taskInfo = taskLib.get(taskId);
-                    if (taskInfo) {
-                        this.updateTaskState(task, taskId, taskInfo.state);
+                    const state = taskLib.get(taskId)?.state ?? 'FINISHED';
+                    switch (state) {
+                        case 'FINISHED':
+                            this.activeTasks.delete(taskId);
+                            break;
+                        case 'FAILED':
+                            this.activeTasks.delete(taskId);
+                            task.onError?.();
+                            break;
                     }
                 });
 
                 this.runNextTask();
             },
         });
-    }
-
-    private updateTaskState(task: QueuedTask, taskId: string, state: TaskStateType): void {
-        switch (state) {
-            case 'FINISHED':
-                this.activeTasks.delete(taskId);
-                break;
-            case 'FAILED':
-                this.activeTasks.delete(taskId);
-                task.onError?.();
-                break;
-        }
     }
 
     private stopPolling(): void {
