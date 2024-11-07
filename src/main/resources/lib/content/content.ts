@@ -1,10 +1,11 @@
 import * as contentLib from '/lib/xp/content';
 import * as contextLib from '/lib/xp/context';
-import {Content} from '/lib/xp/content';
+import {Content, ContentType} from '/lib/xp/content';
 
+import {TOPIC_NAME} from '../../shared/constants';
 import {isRecordEmpty} from '../utils/objects';
 import {DataEntry, flattenData} from './data';
-import {getPathsToTranslatableFields, InputWithPath} from './form';
+import {FormItemWithPath, getPathsToTranslatableFields, InputWithPath, isInput} from './form';
 import {pathToString} from './path';
 import {Property, PropertyValue} from './property';
 
@@ -16,11 +17,12 @@ export function getTranslatableDataFromContent(contentId: string, context: strin
         return {};
     }
 
-    const flatData = flattenData(content.data as Record<string, Property>);
+    const flatData = flattenData(content.data);
     const toTranslate = getTranslatableFields(flatData, contentType);
 
     if (content.displayName) {
-        assignTopic(toTranslate, content.displayName, contentType.description);
+        const topic = makeDisplayNameDataEntry(content.displayName, contentType.description);
+        toTranslate[TOPIC_NAME] = topic;
     }
 
     return toTranslate;
@@ -28,25 +30,25 @@ export function getTranslatableDataFromContent(contentId: string, context: strin
 
 function getTranslatableFields(
     flatData: Record<string, PropertyValue>,
-    contentType: contentLib.ContentType,
+    contentType: ContentType,
 ): Record<string, DataEntry> {
     if (isRecordEmpty(flatData)) {
         return {};
     }
 
-    const formItemsWithPath: InputWithPath[] = getPathsToTranslatableFields(contentType.form) as InputWithPath[];
+    const formItemsWithPath = getPathsToTranslatableFields(contentType.form).filter(
+        (item: FormItemWithPath): item is InputWithPath => isInput(item),
+    );
     return mapDataToFormItems(flatData, formItemsWithPath);
 }
 
-function getContent(contentId: string, context: string): Content<unknown> {
+function getContent(contentId: string, context: string): Content<Record<string, Property>> | null {
     return contextLib.run(
         {
-            repository: 'com.enonic.cms.' + context,
+            repository: `com.enonic.cms.${context}`,
             branch: 'draft',
         },
-        () => {
-            return contentLib.get({key: contentId}) as Content<unknown>;
-        },
+        () => contentLib.get({key: contentId}),
     );
 }
 
@@ -76,23 +78,13 @@ function mapDataToFormItems(
     return result;
 }
 
-function getPathType(path: InputWithPath | undefined): 'html' | 'text' {
+function getPathType(path: Optional<InputWithPath>): 'html' | 'text' {
     return path?.inputType === 'HtmlArea' ? 'html' : 'text';
 }
 
 // Adjusting path format with the one used in elements data-path attributes
 function processKeyForOutput(key: string): string {
-    const keyNoZeroIndexes = key.replace(/\[0\]/g, '');
-    return `/${keyNoZeroIndexes}`;
-}
-
-function assignTopic(
-    target: Record<string, DataEntry>,
-    displayName: string,
-    context: string,
-): Record<string, DataEntry> {
-    target['__topic__'] = makeDisplayNameDataEntry(displayName, context);
-    return target;
+    return `/${key.replace(/\[0\]/g, '')}`;
 }
 
 function makeDisplayNameDataEntry(displayName: string, context: string): DataEntry {

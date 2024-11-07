@@ -1,5 +1,5 @@
-import {FormItemLayout, FormItemOptionSet, FormItemSet} from '@enonic-types/core';
-import {FormItem, FormItemInput} from '@enonic-types/lib-content';
+import {FormItem, FormItemInput} from '/lib/xp/content';
+import {FormItemLayout, FormItemOptionSet, FormItemSet} from '/lib/xp/core';
 
 import {Path} from './path';
 
