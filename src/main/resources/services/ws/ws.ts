@@ -1,4 +1,6 @@
+import * as taskLib from '/lib/xp/task';
 import * as websocketLib from '/lib/xp/websocket';
+import cron from '/lib/cron';
 
 import {getTranslatableDataFromContent} from '../../lib/content/content';
 import {DataEntry} from '../../lib/content/data';
@@ -18,6 +20,8 @@ import {
     ServerMessage,
     TranslateMessage,
 } from '../../shared/types/websocket';
+
+const POLL_MESSAGES_TASK = 'send-ws-messages';
 
 export function get(request: Enonic.Request): Enonic.Response {
     if (!request.webSocket) {
@@ -51,6 +55,7 @@ export function webSocketEvent(event: Enonic.WebSocketEvent): void {
                 handleMessage(event);
                 break;
             case 'close':
+                handleClose();
                 break;
             case 'error':
                 break;
@@ -107,6 +112,16 @@ function startTranslation(sessionId: string, message: TranslateMessage): void {
 
     sendMessage(sessionId, makeAcceptedMessage(data.contentId, itemsToTranslate));
 
+    const wsMessagesQueue = new Map<string, Try<string>>();
+
+    // sending messages to the client in a separate task/thread to make sending synchronous to avoid ws backend error, see XP-10759
+    taskLib.executeFunction({
+        description: 'ai-translator-task-ws',
+        func: () => {
+            pollAndSendMessages(sessionId, data.contentId, wsMessagesQueue);
+        },
+    });
+
     translateFields(
         {
             fields: itemsToTranslate,
@@ -116,13 +131,7 @@ function startTranslation(sessionId: string, message: TranslateMessage): void {
             customInstructions: data.customInstructions,
         },
         (path, result) => {
-            const [text, err] = result;
-
-            if (err) {
-                sendMessage(sessionId, makeFailedMessage(err, data.contentId, path));
-            } else {
-                sendMessage(sessionId, makeCompletedMessage(data.contentId, path, text));
-            }
+            wsMessagesQueue.set(path, result);
         },
     );
 }
@@ -161,4 +170,30 @@ function makeFailedMessage(err: AiError, contentId: string, path: string): Omit<
             code: err.code?.toString(),
         },
     };
+}
+
+function pollAndSendMessages(sessionId: string, contentId: string, messages: Map<string, Try<string>>): void {
+    cron.schedule({
+        name: POLL_MESSAGES_TASK,
+        fixedDelay: 500,
+        delay: 1000,
+        times: 240, // 500ms * 240 = 120s, run for 2 minutes
+        callback: () => {
+            messages.forEach((result, path) => {
+                const [text, err] = result;
+
+                if (err) {
+                    sendMessage(sessionId, makeFailedMessage(err, contentId, path));
+                } else {
+                    sendMessage(sessionId, makeCompletedMessage(contentId, path, text));
+                }
+
+                messages.delete(path);
+            });
+        },
+    });
+}
+
+function handleClose(): void {
+    cron.unschedule({name: POLL_MESSAGES_TASK});
 }
