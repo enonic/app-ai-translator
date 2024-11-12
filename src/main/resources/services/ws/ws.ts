@@ -112,13 +112,13 @@ function startTranslation(sessionId: string, message: TranslateMessage): void {
 
     sendMessage(sessionId, makeAcceptedMessage(data.contentId, itemsToTranslate));
 
-    const wsMessagesQueue = new Map<string, Try<string>>();
+    const wsMessagesMap = __.newBean<ConcurrentHashMap<string, Try<string>>>('java.util.concurrent.ConcurrentHashMap');
 
     // sending messages to the client in a separate task/thread to make sending synchronous to avoid ws backend error, see XP-10759
     taskLib.executeFunction({
         description: 'ai-translator-task-ws',
         func: () => {
-            pollAndSendMessages(sessionId, data.contentId, wsMessagesQueue);
+            pollAndSendMessages(sessionId, data.contentId, wsMessagesMap);
         },
     });
 
@@ -131,7 +131,7 @@ function startTranslation(sessionId: string, message: TranslateMessage): void {
             customInstructions: data.customInstructions,
         },
         (path, result) => {
-            wsMessagesQueue.set(path, result);
+            wsMessagesMap.put(path, result);
         },
     );
 }
@@ -172,14 +172,18 @@ function makeFailedMessage(err: AiError, contentId: string, path: string): Omit<
     };
 }
 
-function pollAndSendMessages(sessionId: string, contentId: string, messages: Map<string, Try<string>>): void {
+function pollAndSendMessages(
+    sessionId: string,
+    contentId: string,
+    messages: ConcurrentHashMap<string, Try<string>>,
+): void {
     cron.schedule({
         name: POLL_MESSAGES_TASK,
         fixedDelay: 500,
         delay: 1000,
         times: 240, // 500ms * 240 = 120s, run for 2 minutes
         callback: () => {
-            messages.forEach((result, path) => {
+            messages.forEach((path, result) => {
                 const [text, err] = result;
 
                 if (err) {
@@ -188,7 +192,7 @@ function pollAndSendMessages(sessionId: string, contentId: string, messages: Map
                     sendMessage(sessionId, makeCompletedMessage(contentId, path, text));
                 }
 
-                messages.delete(path);
+                messages.remove(path);
             });
         },
     });
