@@ -1,10 +1,14 @@
 /** @type {import('tailwindcss').Config} */
 import {isolateInsideOfContainer, scopedPreflightStyles} from 'tailwindcss-scoped-preflight';
+import defaultTheme from 'tailwindcss/defaultTheme';
 
 export default {
     content: ['./src/main/resources/assets/**/*.tsx'],
     theme: {
         extend: {
+            fontFamily: {
+                sans: ['"Open Sans"', ...defaultTheme.fontFamily.sans],
+            },
             colors: {
                 'enonic-gray': {
                     700: '#333333',
@@ -25,6 +29,7 @@ export default {
                 sm2: '720px',
             },
             spacing: {
+                8.5: '2.125rem',
                 30: '7.5rem',
                 '1/2': '50%',
                 '4/5': '80%',

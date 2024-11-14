@@ -1,6 +1,6 @@
-import clsx from 'clsx';
 import FocusTrap from 'focus-trap-react';
 import {useCallback, useEffect} from 'react';
+import {twMerge} from 'tailwind-merge';
 
 import {addGlobalKeydownHandler, isEscapeKey} from '../../../common/events';
 
@@ -26,10 +26,10 @@ export default function ModalWrapper({className, children, trapFocus, closeHandl
     }, [handleEscape]);
 
     return (
-        <FocusTrap active={trapFocus} focusTrapOptions={{initialFocus: false}}>
-            <div className={clsx(['fixed inset-0', 'flex justify-center items-center', 'z-[2000]', className])}>
+        <FocusTrap active={trapFocus} focusTrapOptions={{initialFocus: false, allowOutsideClick: true}}>
+            <div className={twMerge('fixed inset-0 flex justify-center items-center z-[2000]', className)}>
                 <div
-                    className={clsx(['absolute inset-0', 'bg-black bg-opacity-60 backdrop-blur-xs', '-z-10'])}
+                    className='absolute inset-0 bg-black bg-opacity-60 backdrop-blur-xs -z-10'
                     role='presentation'
                     onClick={closeHandler}
                 ></div>
