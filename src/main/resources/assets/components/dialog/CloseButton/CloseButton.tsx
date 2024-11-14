@@ -1,4 +1,3 @@
-import clsx from 'clsx';
 import {useTranslation} from 'react-i18next';
 import {twMerge} from 'tailwind-merge';
 
@@ -14,12 +13,10 @@ export default function CloseButton({className}: Props): React.ReactNode {
     return (
         <ActionButton
             className={twMerge(
-                clsx(
-                    'CloseButton',
-                    'bg-transparent enabled:bg-transparent',
-                    'text-enonic-gray-600 enabled:hover:text-black enabled:hover:active:text-enonic-blue',
-                    className,
-                ),
+                'CloseButton',
+                'bg-transparent enabled:bg-transparent',
+                'text-enonic-gray-600 enabled:hover:text-black enabled:hover:active:text-enonic-blue',
+                className,
             )}
             name={t('action.close')}
             icon='close'

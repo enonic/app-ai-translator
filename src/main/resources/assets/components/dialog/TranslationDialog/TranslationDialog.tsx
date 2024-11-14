@@ -1,5 +1,5 @@
 import {useStore} from '@nanostores/react';
-import clsx from 'clsx';
+import {twMerge} from 'tailwind-merge';
 
 import {$dialog, setDialogVisible} from '../../../stores/dialog';
 import ModalWrapper from '../../shared/ModalWrapper/ModalWrapper';
@@ -16,12 +16,12 @@ export default function TranslationDialog({className = ''}: Props): React.ReactN
 
     return (
         <ModalWrapper
-            className={clsx(['enonic-ai TranslationDialog', {hidden: !visible}])}
+            className={twMerge('enonic-ai TranslationDialog', !visible && 'hidden')}
             closeHandler={() => setDialogVisible(false)}
             trapFocus={visible}
         >
             <div
-                className={clsx(
+                className={twMerge(
                     'w-full sm2:max-w-2xl',
                     'h-dvh sm2:h-auto',
                     'flex flex-col',
@@ -34,7 +34,7 @@ export default function TranslationDialog({className = ''}: Props): React.ReactN
                 aria-modal='true'
             >
                 <DialogHeader />
-                <DialogContent className='max-h-[calc(100vh-6.5rem)]' />
+                <DialogContent className='sm2:max-h-[calc(100vh-8.5rem)]' />
                 <DialogFooter className='mt-auto sm2:mt-0' />
             </div>
         </ModalWrapper>
