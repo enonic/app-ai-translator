@@ -2,7 +2,7 @@ import {computed, map} from 'nanostores';
 
 import {WS_PROTOCOL} from '../../shared/constants';
 import {ClientMessage, MessageMetadata, MessageType, ServerMessage} from '../../shared/types/websocket';
-import {dispatchCompleted, dispatchStarted} from '../common/events';
+import {dispatchCompleted, dispatchFailed, dispatchStarted} from '../common/events';
 import {$config} from './config';
 import {$data, getLanguage} from './data';
 import {$instructions} from './dialog';
@@ -131,11 +131,11 @@ function handleMessage(event: MessageEvent<string>): void {
             const {path} = message.payload;
             if (path) {
                 removePath(path);
-                dispatchCompleted({path});
+                dispatchFailed({path, text: 'Translation failed'});
             } else {
                 // Global error
                 const {paths} = $websocket.get();
-                paths.forEach(path => dispatchCompleted({path}));
+                paths.forEach(path => dispatchFailed({path}));
                 closeConnection();
             }
             break;

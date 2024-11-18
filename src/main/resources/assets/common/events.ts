@@ -5,6 +5,7 @@ export enum AiEvents {
     DIALOG_HIDDEN = 'AiTranslatorDialogHiddenEvent',
     STARTED = 'AiTranslatorStartedEvent',
     COMPLETED = 'AiTranslatorCompletedEvent',
+    FAILED = 'AiTranslatorFailedEvent',
     //   Incoming
     OPEN_DIALOG = 'AiTranslatorOpenDialogEvent',
     CONFIGURE = 'AiTranslatorConfigureEvent',
@@ -24,6 +25,11 @@ type StartedDetail = {
 
 type CompletedDetail = {
     path: string;
+    text: string;
+};
+
+type FailedDetail = {
+    path: string;
     // Text is optional for error
     text?: string;
 };
@@ -38,6 +44,10 @@ export function dispatchStarted(detail: StartedDetail): void {
 
 export function dispatchCompleted(detail: CompletedDetail): void {
     window.dispatchEvent(new CustomEvent(AiEvents.COMPLETED, {detail}));
+}
+
+export function dispatchFailed(detail: FailedDetail): void {
+    window.dispatchEvent(new CustomEvent(AiEvents.FAILED, {detail}));
 }
 
 function addGlobalHandler(eventType: AiEvents, handler: CustomEventHandler): FnVoid {
