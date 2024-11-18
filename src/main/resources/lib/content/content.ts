@@ -3,12 +3,21 @@ import * as contextLib from '/lib/xp/context';
 import * as schemaLib from '/lib/xp/schema';
 import {Content, FormItem} from '/lib/xp/content';
 
-import {XDataSchema} from '@enonic-types/lib-schema';
+import {
+    FragmentComponent,
+    LayoutComponent,
+    PageComponent,
+    PartComponent,
+    Region,
+    TextComponent,
+} from '@enonic-types/core';
+import {ComponentDescriptor, ComponentDescriptorType, XDataSchema} from '@enonic-types/lib-schema';
 
 import {TOPIC_NAME} from '../../shared/constants';
 import {isRecordEmpty} from '../utils/objects';
 import {DataEntry, flattenData} from './data';
 import {FormItemWithPath, getPathsToTranslatableFields, InputWithPath, isInput} from './form';
+import {isLayoutComponent, isPageComponent, isPartComponent, isTextComponent} from './page';
 import {pathToString} from './path';
 import {Property, PropertyValue} from './property';
 
@@ -32,6 +41,12 @@ export function getTranslatableDataFromContent(contentId: string, context: strin
 
     for (const xDataPath in xDataToTranslate) {
         dataToTranslate[`__xdata__/${xDataPath}`] = xDataToTranslate[xDataPath];
+    }
+
+    const pageDataToTranslate = getPageDataEntries(content);
+
+    for (const pagePath in pageDataToTranslate) {
+        dataToTranslate[`__page__${pagePath}`] = pageDataToTranslate[pagePath];
     }
 
     return dataToTranslate;
@@ -164,6 +179,118 @@ function getXDataEntriesBySchemaPrefix(
     for (const path in xData) {
         if (path.startsWith(schemaPrefixWithSeparator)) {
             result[path.replace(schemaPrefixWithSeparator, '')] = xData[path];
+        }
+    }
+
+    return result;
+}
+
+function getPageDataEntries(content: Content): Record<string, DataEntry> {
+    if (content.page) {
+        return getFieldsToTranslateFromComponent(content.page);
+    }
+
+    if (content.fragment) {
+        return getFieldsToTranslateFromComponent(content.fragment);
+    }
+
+    return {};
+}
+
+function getComponent(key: string, type: ComponentDescriptorType): ComponentDescriptor {
+    return contextLib.run(
+        {
+            principals: ['role:system.admin'],
+        },
+        () => schemaLib.getComponent({key, type}),
+    ) as ComponentDescriptor;
+}
+
+function getRegionFieldsToTranslate(
+    region: Region<(FragmentComponent | LayoutComponent | PartComponent | TextComponent)[]>,
+): Record<string, DataEntry> {
+    const result: Record<string, DataEntry> = {};
+
+    region.components.forEach(component => {
+        const componentFields = getFieldsToTranslateFromComponent(component);
+
+        for (const path in componentFields) {
+            result[path] = componentFields[path];
+        }
+    });
+
+    return result;
+}
+
+function getFieldsToTranslateFromComponent(
+    component: PageComponent | FragmentComponent | LayoutComponent | PartComponent | TextComponent,
+): Record<string, DataEntry> {
+    if (isPageComponent(component)) {
+        return getFieldsToTranslateFromRegionsBasedComponent(component);
+    }
+
+    if (isTextComponent(component)) {
+        return makeTextComponentField(component);
+    }
+
+    if (isPartComponent(component)) {
+        return getDescriptorBasesComponentConfigFields(component, 'PART');
+    }
+
+    if (isLayoutComponent(component)) {
+        return getFieldsToTranslateFromRegionsBasedComponent(component);
+    }
+
+    return {};
+}
+
+function makeTextComponentField(component: TextComponent): Record<string, DataEntry> {
+    return {
+        [component.path]: {
+            value: component.text,
+            type: 'html',
+            schemaType: 'HtmlArea',
+            schemaLabel: '',
+        },
+    };
+}
+
+function getDescriptorBasesComponentConfigFields(
+    component: PartComponent | LayoutComponent | PageComponent,
+    type: 'PART' | 'LAYOUT' | 'PAGE',
+): Record<string, DataEntry> {
+    const pageDescriptor = getComponent(component.descriptor, type);
+    const config = component.config as Record<string, Property>;
+    const flatConfig = flattenData(config);
+
+    const fields = getTranslatableFields(flatConfig, pageDescriptor.form);
+    const result: Record<string, DataEntry> = {};
+
+    for (const path in fields) {
+        result[makeConfigDataEntryKey(component, path)] = fields[path];
+    }
+
+    return result;
+}
+
+function makeConfigDataEntryKey(component: PartComponent | LayoutComponent | PageComponent, path: string): string {
+    const pathToConfigPrefix = isPageComponent(component) ? '' : component.path || '';
+    return `${pathToConfigPrefix}/__config__${path}`;
+}
+
+function getFieldsToTranslateFromRegionsBasedComponent(
+    component: PageComponent | LayoutComponent,
+): Record<string, DataEntry> {
+    const result: Record<string, DataEntry> = getDescriptorBasesComponentConfigFields(
+        component,
+        isPageComponent(component) ? 'PAGE' : 'LAYOUT',
+    );
+
+    for (const regionName in component.regions) {
+        const regionComponents = getRegionFieldsToTranslate(component.regions[regionName]);
+
+        for (const path in regionComponents) {
+            result[path] = regionComponents[path];
         }
     }
 

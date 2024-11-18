@@ -1,9 +1,11 @@
+import {InputType} from '@enonic-types/core';
+
 import {Property, PropertyValue} from './property';
 
 export type DataEntry = {
     value: PropertyValue;
     type: 'text' | 'html';
-    schemaType: string;
+    schemaType: InputType;
     schemaLabel: string;
     schemaHelpText?: string;
 };
