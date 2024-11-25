@@ -245,7 +245,7 @@ function getFieldsToTranslateFromComponent(
     }
 
     if (isPartComponent(component)) {
-        return getDescriptorBasesComponentConfigFields(component, 'PART');
+        return getDescriptorBasedComponentConfigFields(component, 'PART');
     }
 
     if (isLayoutComponent(component)) {
@@ -266,15 +266,19 @@ function makeTextComponentField(component: TextComponent): Record<string, DataEn
     };
 }
 
-function getDescriptorBasesComponentConfigFields(
+function getDescriptorBasedComponentConfigFields(
     component: PartComponent | LayoutComponent | PageComponent,
     type: 'PART' | 'LAYOUT' | 'PAGE',
 ): Record<string, DataEntry> {
-    const pageDescriptor = getComponent(component.descriptor, type);
+    if (!component.descriptor) {
+        return {};
+    }
+
+    const descriptor = getComponent(component.descriptor, type);
     const config = component.config as Record<string, Property>;
     const flatConfig = flattenData(config);
 
-    const fields = getTranslatableFields(flatConfig, pageDescriptor.form);
+    const fields = getTranslatableFields(flatConfig, descriptor.form);
     const result: Record<string, DataEntry> = {};
 
     for (const path in fields) {
@@ -292,7 +296,7 @@ function makeConfigDataEntryKey(component: PartComponent | LayoutComponent | Pag
 function getFieldsToTranslateFromRegionsBasedComponent(
     component: PageComponent | LayoutComponent,
 ): Record<string, DataEntry> {
-    const result: Record<string, DataEntry> = getDescriptorBasesComponentConfigFields(
+    const result: Record<string, DataEntry> = getDescriptorBasedComponentConfigFields(
         component,
         isPageComponent(component) ? 'PAGE' : 'LAYOUT',
     );
