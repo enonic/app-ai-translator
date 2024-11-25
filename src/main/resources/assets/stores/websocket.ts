@@ -2,7 +2,7 @@ import {computed, map} from 'nanostores';
 
 import {WS_PROTOCOL} from '../../shared/constants';
 import {ClientMessage, MessageMetadata, MessageType, ServerMessage} from '../../shared/types/websocket';
-import {dispatchAllCompleted, dispatchCompleted, dispatchFailed, dispatchStarted} from '../common/events';
+import {dispatchAllCompleted, dispatchCompleted, dispatchStarted} from '../common/events';
 import {$config} from './config';
 import {$data, getLanguage} from './data';
 import {$instructions} from './dialog';
@@ -11,14 +11,14 @@ type WebSocketStore = {
     state: 'connecting' | 'connected' | 'disconnecting' | 'disconnected';
     connection: Optional<WebSocket>;
     paths: string[];
-    anyFailed: boolean;
+    success: boolean;
 };
 
 export const $websocket = map<WebSocketStore>({
     state: 'disconnected',
     connection: null,
     paths: [],
-    anyFailed: false,
+    success: true,
 });
 
 export const $translating = computed($websocket, ({connection}) => connection != null);
@@ -98,7 +98,7 @@ function cleanup(): void {
         state: 'disconnected',
         paths: [],
         connection: null,
-        anyFailed: false,
+        success: true,
     });
 }
 
@@ -125,7 +125,7 @@ function handleMessage(event: MessageEvent<string>): void {
 
         case MessageType.COMPLETED: {
             const {path, text} = message.payload;
-            dispatchCompleted({path, text});
+            dispatchCompleted({path, text, success: true});
             removePath(path);
             break;
         }
@@ -133,14 +133,14 @@ function handleMessage(event: MessageEvent<string>): void {
         case MessageType.FAILED: {
             const {path} = message.payload;
             if (path) {
-                $websocket.setKey('anyFailed', true);
+                $websocket.setKey('success', false);
                 removePath(path);
-                dispatchFailed({path, text: 'Translation failed'});
+                dispatchCompleted({path, text: 'Translation failed', success: false});
             } else {
                 // Global error
                 const {paths} = $websocket.get();
-                paths.forEach(path => dispatchFailed({path}));
-                dispatchAllCompleted({anyFailed: true});
+                paths.forEach(path => dispatchCompleted({path, success: false}));
+                dispatchAllCompleted({success: false});
                 closeConnection();
             }
             break;
@@ -156,7 +156,7 @@ function removePath(path: string): void {
     const paths = $websocket.get().paths.filter(p => p !== path);
     $websocket.setKey('paths', paths);
     if (paths.length === 0) {
-        dispatchAllCompleted({anyFailed: $websocket.get().anyFailed});
+        dispatchAllCompleted({success: $websocket.get().success});
         closeConnection();
     }
 }
