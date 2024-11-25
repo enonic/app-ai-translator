@@ -5,7 +5,6 @@ export enum AiEvents {
     DIALOG_HIDDEN = 'AiTranslatorDialogHiddenEvent',
     STARTED = 'AiTranslatorStartedEvent',
     COMPLETED = 'AiTranslatorCompletedEvent',
-    FAILED = 'AiTranslatorFailedEvent',
     ALL_COMPLETED = 'AiTranslatorAllCompletedEvent',
     //   Incoming
     OPEN_DIALOG = 'AiTranslatorOpenDialogEvent',
@@ -26,17 +25,12 @@ type StartedDetail = {
 
 type CompletedDetail = {
     path: string;
-    text: string;
-};
-
-type FailedDetail = {
-    path: string;
-    // Text is optional for error
     text?: string;
+    success: boolean;
 };
 
 type AllCompletedDetail = {
-    anyFailed: boolean;
+    success: boolean;
 };
 
 export function dispatch(type: SimpleDispatchableAiEvents): void {
@@ -49,10 +43,6 @@ export function dispatchStarted(detail: StartedDetail): void {
 
 export function dispatchCompleted(detail: CompletedDetail): void {
     window.dispatchEvent(new CustomEvent(AiEvents.COMPLETED, {detail}));
-}
-
-export function dispatchFailed(detail: FailedDetail): void {
-    window.dispatchEvent(new CustomEvent(AiEvents.FAILED, {detail}));
 }
 
 export function dispatchAllCompleted(detail: AllCompletedDetail): void {
