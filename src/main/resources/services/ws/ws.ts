@@ -108,7 +108,13 @@ function sendMessage(id: string, message: Omit<ServerMessage, 'metadata'>): void
 
 function startTranslation(sessionId: string, message: TranslateMessage): void {
     const data = message.payload;
-    const itemsToTranslate = getTranslatableDataFromContent(data.contentId, data.project);
+
+    const [itemsToTranslate, err] = getTranslatableDataFromContent(data.contentId, data.project);
+
+    if (err) {
+        sendMessage(sessionId, makeFailedMessage(err, data.contentId));
+        return;
+    }
 
     sendMessage(sessionId, makeAcceptedMessage(data.contentId, itemsToTranslate));
 
@@ -122,18 +128,26 @@ function startTranslation(sessionId: string, message: TranslateMessage): void {
         },
     });
 
-    translateFields(
-        {
-            fields: itemsToTranslate,
-            contentId: data.contentId,
-            project: data.project,
-            targetLanguage: data.targetLanguage,
-            customInstructions: data.customInstructions,
-        },
-        (path, result) => {
-            wsMessagesMap.put(path, result);
-        },
-    );
+    try {
+        translateFields(
+            {
+                fields: itemsToTranslate,
+                contentId: data.contentId,
+                project: data.project,
+                targetLanguage: data.targetLanguage,
+                customInstructions: data.customInstructions,
+            },
+            (path, result) => {
+                wsMessagesMap.put(path, result);
+            },
+        );
+    } catch (e) {
+        sendMessage(
+            sessionId,
+            makeFailedMessage(ERRORS.UNKNOWN_ERROR.withMsg(`Failed to translate: ${data.contentId}`), data.contentId),
+        );
+        logError(e);
+    }
 }
 
 function makeAcceptedMessage(
@@ -160,7 +174,7 @@ function makeCompletedMessage(contentId: string, path: string, text: string): Om
     };
 }
 
-function makeFailedMessage(err: AiError, contentId: string, path: string): Omit<FailedMessage, 'metadata'> {
+function makeFailedMessage(err: AiError, contentId: string, path?: string): Omit<FailedMessage, 'metadata'> {
     return {
         type: MessageType.FAILED,
         payload: {

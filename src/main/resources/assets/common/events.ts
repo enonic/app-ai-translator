@@ -31,6 +31,7 @@ type CompletedDetail = {
 
 type AllCompletedDetail = {
     success: boolean;
+    message?: string;
 };
 
 export function dispatch(type: SimpleDispatchableAiEvents): void {

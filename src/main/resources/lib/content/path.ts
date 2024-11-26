@@ -2,8 +2,6 @@ export type Path = {
     elements: PathElement[];
 };
 
-export const PATH_SEP = '/';
-
 export type PathElement = {
     name: string;
     label?: string;

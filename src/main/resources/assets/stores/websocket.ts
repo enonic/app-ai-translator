@@ -107,15 +107,15 @@ function cleanup(): void {
 //
 
 function handleMessage(event: MessageEvent<string>): void {
-    const message = JSON.parse(event.data) as ServerMessage;
+    const msg = JSON.parse(event.data) as ServerMessage;
 
-    switch (message.type) {
+    switch (msg.type) {
         case MessageType.CONNECTED:
             $websocket.setKey('state', 'connected');
             break;
 
         case MessageType.ACCEPTED: {
-            const {paths} = message.payload;
+            const {paths} = msg.payload;
             $websocket.setKey('paths', paths);
             paths.forEach(path => {
                 dispatchStarted({path});
@@ -124,14 +124,14 @@ function handleMessage(event: MessageEvent<string>): void {
         }
 
         case MessageType.COMPLETED: {
-            const {path, text} = message.payload;
+            const {path, text} = msg.payload;
             dispatchCompleted({path, text, success: true});
             removePath(path);
             break;
         }
 
         case MessageType.FAILED: {
-            const {path} = message.payload;
+            const {path, message} = msg.payload;
             if (path) {
                 $websocket.setKey('success', false);
                 removePath(path);
@@ -140,7 +140,7 @@ function handleMessage(event: MessageEvent<string>): void {
                 // Global error
                 const {paths} = $websocket.get();
                 paths.forEach(path => dispatchCompleted({path, success: false}));
-                dispatchAllCompleted({success: false});
+                dispatchAllCompleted({success: false, message});
                 closeConnection();
             }
             break;
