@@ -9,7 +9,7 @@ type Props = {
 
 export default function DialogContent({className}: Props): React.ReactNode {
     return (
-        <div className={twMerge('DialogContent flex flex-col gap-4 h-max px-3 pt-3 overflow-y-auto', className)}>
+        <div className={twMerge('DialogContent flex flex-col gap-4 h-max px-5 pt-3 overflow-y-auto', className)}>
             <AssistantMessage />
             <InstructionsInput />
         </div>

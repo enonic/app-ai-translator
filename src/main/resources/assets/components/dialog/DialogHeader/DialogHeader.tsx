@@ -13,9 +13,9 @@ export default function DialogHeader({className}: Props): React.ReactNode {
     const title = t('field.title');
 
     return (
-        <div className={twJoin(['DialogHeader grid grid-cols-header h-10', className])}>
-            <div className='pl-12 pr-2 text-center leading-10 font-semibold'>{title}</div>
-            <div className='text-right text-nowrap'>
+        <div className={twJoin(['DialogHeader grid grid-cols-header', className])}>
+            <div className='pr-2 leading-10 font-normal text-2xl h-16 pl-5 pt-3'>{title}</div>
+            <div className='text-nowrap'>
                 <CloseButton />
             </div>
         </div>

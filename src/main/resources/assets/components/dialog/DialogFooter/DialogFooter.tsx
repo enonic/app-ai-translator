@@ -22,7 +22,7 @@ export default function DialogFooter({className}: Props): React.ReactNode {
     }, []);
 
     return (
-        <div className={twMerge('DialogFooter flex justify-end px-3 py-3 gap-2.5', className)}>
+        <div className={twMerge('DialogFooter flex justify-end px-5 py-5 gap-2.5', className)}>
             <ActionButton
                 ref={ref}
                 className='h-8.5 px-5 rounded-none text-white bg-enonic-blue enabled:hover:bg-enonic-blue-light'
