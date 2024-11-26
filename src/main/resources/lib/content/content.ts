@@ -14,6 +14,8 @@ import {
 import {ComponentDescriptor, ComponentDescriptorType, XDataSchema} from '@enonic-types/lib-schema';
 
 import {TOPIC_NAME} from '../../shared/constants';
+import {ERRORS} from '../../shared/errors';
+import {logError} from '../logger';
 import {isRecordEmpty} from '../utils/objects';
 import {DataEntry, flattenData} from './data';
 import {FormItemWithPath, getPathsToTranslatableFields, InputWithPath, isInput} from './form';
@@ -21,7 +23,16 @@ import {isLayoutComponent, isPageComponent, isPartComponent, isTextComponent} fr
 import {pathToString} from './path';
 import {Property, PropertyValue} from './property';
 
-export function getTranslatableDataFromContent(contentId: string, context: string): Record<string, DataEntry> {
+export function getTranslatableDataFromContent(contentId: string, context: string): Try<Record<string, DataEntry>> {
+    try {
+        return [doGetTranslatableDataFromContent(contentId, context), null];
+    } catch (e) {
+        logError(e);
+        return [null, ERRORS.UNKNOWN_ERROR.withMsg(`Failed to fetch translatable fields from content: ${contentId}`)];
+    }
+}
+
+export function doGetTranslatableDataFromContent(contentId: string, context: string): Record<string, DataEntry> {
     const content = getContent(contentId, context);
     const contentType = content && contentLib.getType(content.type);
 
