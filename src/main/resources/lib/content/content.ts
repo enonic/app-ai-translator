@@ -42,25 +42,30 @@ export function doGetTranslatableDataFromContent(contentId: string, context: str
 
     const flatData = flattenData(content.data);
     const dataToTranslate = getTranslatableFields(flatData, contentType.form);
+    const result: Record<string, DataEntry> = {};
+
+    for (const dataPath in dataToTranslate) {
+        result[`__data__${dataPath}`] = dataToTranslate[dataPath];
+    }
 
     if (content.displayName) {
-        dataToTranslate[TOPIC_NAME] = makeDisplayNameDataEntry(content.displayName, contentType.description);
+        result[`__data__/${TOPIC_NAME}`] = makeDisplayNameDataEntry(content.displayName, contentType.description);
     }
 
     const flatXData = flattenData(content.x as Record<string, Property>);
     const xDataToTranslate = getXDataFieldsToTranslate(flatXData);
 
     for (const xDataPath in xDataToTranslate) {
-        dataToTranslate[`__xdata__/${xDataPath}`] = xDataToTranslate[xDataPath];
+        result[`__xdata__/${xDataPath}`] = xDataToTranslate[xDataPath];
     }
 
     const pageDataToTranslate = getPageDataEntries(content);
 
     for (const pagePath in pageDataToTranslate) {
-        dataToTranslate[`__page__${pagePath}`] = pageDataToTranslate[pagePath];
+        result[`__page__${pagePath}`] = pageDataToTranslate[pagePath];
     }
 
-    return dataToTranslate;
+    return result;
 }
 
 function getTranslatableFields(flatData: Record<string, PropertyValue>, form: FormItem[]): Record<string, DataEntry> {
