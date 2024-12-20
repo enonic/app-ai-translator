@@ -16,7 +16,7 @@ export default function TranslationDialog({className = ''}: Props): React.ReactN
 
     return (
         <ModalWrapper
-            className={twMerge('enonic-ai TranslationDialog', !visible && 'hidden')}
+            className={twMerge('TranslationDialog', !visible && 'hidden')}
             closeHandler={() => setDialogVisible(false)}
             trapFocus={visible}
         >

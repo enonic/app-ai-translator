@@ -65,11 +65,12 @@ export default {
                 xs: '2px',
             },
         },
+        important: '.ai-translator', // isolate tailwind utility styles
     },
     plugins: [
         require('@tailwindcss/typography'),
         scopedPreflightStyles({
-            isolationStrategy: isolateInsideOfContainer('.enonic-ai'),
+            isolationStrategy: isolateInsideOfContainer('.ai-translator'), // isolate preflight styles
         }),
     ],
 };
