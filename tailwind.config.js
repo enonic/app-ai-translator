@@ -65,8 +65,8 @@ export default {
                 xs: '2px',
             },
         },
-        important: '.ai-translator', // isolate tailwind utility styles
     },
+    important: '.ai-translator', // isolate tailwind utility styles
     plugins: [
         require('@tailwindcss/typography'),
         scopedPreflightStyles({
