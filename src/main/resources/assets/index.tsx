@@ -19,6 +19,8 @@ export function render(container: HTMLElement): void {
         console.warn('[Enonic AI] Translator dialog was rendered before configured.');
     }
 
+    container.classList.add('ai-translator');
+
     const root = createRoot(container);
 
     root.render(
