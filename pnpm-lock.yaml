@@ -16,7 +16,7 @@ importers:
         version: 2.1.1
       focus-trap-react:
         specifier: ^11.0.2
-        version: 11.0.2(@types/react-dom@19.0.2(@types/react@19.0.7))(@types/react@19.0.7)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+        version: 11.0.2(@types/react-dom@19.0.3(@types/react@19.0.7))(@types/react@19.0.7)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       i18next:
         specifier: ^24.2.1
         version: 24.2.1(typescript@5.7.2)
@@ -118,8 +118,8 @@ importers:
         specifier: ^19.0.7
         version: 19.0.7
       '@types/react-dom':
-        specifier: ^19.0.2
-        version: 19.0.2(@types/react@19.0.7)
+        specifier: ^19.0.3
+        version: 19.0.3(@types/react@19.0.7)
       '@typescript-eslint/eslint-plugin':
         specifier: ^7.18.0
         version: 7.18.0(@typescript-eslint/parser@7.18.0(eslint@8.57.1)(typescript@5.7.2))(eslint@8.57.1)(typescript@5.7.2)
@@ -1235,8 +1235,8 @@ packages:
   '@types/node@22.8.7':
     resolution: {integrity: sha512-LidcG+2UeYIWcMuMUpBKOnryBWG/rnmOHQR5apjn8myTQcx3rinFRn7DcIFhMnS0PPFSC6OafdIKEad0lj6U0Q==}
 
-  '@types/react-dom@19.0.2':
-    resolution: {integrity: sha512-c1s+7TKFaDRRxr1TxccIX2u7sfCnc3RxkVyBIUA2lCpyqCF+QoAwQ/CBg7bsMdVwP120HEH143VQezKtef5nCg==}
+  '@types/react-dom@19.0.3':
+    resolution: {integrity: sha512-0Knk+HJiMP/qOZgMyNFamlIjw9OFCsyC2ZbigmEEyXXixgre6IQpm/4V+r3qH4GC1JPvRJKInw+on2rV6YZLeA==}
     peerDependencies:
       '@types/react': ^19.0.0
 
@@ -4919,7 +4919,7 @@ snapshots:
     dependencies:
       undici-types: 6.19.8
 
-  '@types/react-dom@19.0.2(@types/react@19.0.7)':
+  '@types/react-dom@19.0.3(@types/react@19.0.7)':
     dependencies:
       '@types/react': 19.0.7
 
@@ -6082,10 +6082,10 @@ snapshots:
 
   fnv1a@1.1.1: {}
 
-  focus-trap-react@11.0.2(@types/react-dom@19.0.2(@types/react@19.0.7))(@types/react@19.0.7)(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
+  focus-trap-react@11.0.2(@types/react-dom@19.0.3(@types/react@19.0.7))(@types/react@19.0.7)(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
     dependencies:
       '@types/react': 19.0.7
-      '@types/react-dom': 19.0.2(@types/react@19.0.7)
+      '@types/react-dom': 19.0.3(@types/react@19.0.7)
       focus-trap: 7.6.2
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
