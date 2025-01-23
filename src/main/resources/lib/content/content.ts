@@ -160,7 +160,7 @@ function getXDataSchemas(xData: Record<string, PropertyValue>): Record<string, X
     for (const path in xData) {
         const schemaPrefix = makeSchemaPrefix(path);
 
-        if (schemaPrefix && !schemas[schemaPrefix]) {
+        if (schemaPrefix && !schemas[schemaPrefix] && !isBuiltInSchema(schemaPrefix)) {
             schemas[schemaPrefix] = getSchema(schemaPrefix);
         }
     }
@@ -171,6 +171,10 @@ function getXDataSchemas(xData: Record<string, PropertyValue>): Record<string, X
 function makeSchemaPrefix(path: string): string | undefined {
     const pathParts = path.split('/');
     return pathParts.length > 2 ? `${pathParts[0]}/${pathParts[1]}` : undefined;
+}
+
+function isBuiltInSchema(schemaPrefix: string): boolean {
+    return schemaPrefix.startsWith('media/') || schemaPrefix.startsWith('base/');
 }
 
 function getSchema(xDataPath: string): XDataSchema {
