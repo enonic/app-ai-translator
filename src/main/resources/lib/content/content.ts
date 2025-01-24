@@ -15,7 +15,7 @@ import {ComponentDescriptor, ComponentDescriptorType, XDataSchema} from '@enonic
 
 import {TOPIC_NAME} from '../../shared/constants';
 import {ERRORS} from '../../shared/errors';
-import {logError} from '../logger';
+import {logError, logWarn} from '../logger';
 import {isRecordEmpty} from '../utils/objects';
 import {DataEntry, flattenData} from './data';
 import {FormItemWithPath, getPathsToTranslatableFields, InputWithPath, isInput} from './form';
@@ -161,7 +161,11 @@ function getXDataSchemas(xData: Record<string, PropertyValue>): Record<string, X
         const schemaPrefix = makeSchemaPrefix(path);
 
         if (schemaPrefix && !schemas[schemaPrefix] && !isBuiltInSchema(schemaPrefix)) {
-            schemas[schemaPrefix] = getSchema(schemaPrefix);
+            const schema = getSchema(schemaPrefix);
+
+            if (schema) {
+                schemas[schemaPrefix] = schema;
+            }
         }
     }
 
@@ -177,16 +181,24 @@ function isBuiltInSchema(schemaPrefix: string): boolean {
     return schemaPrefix.startsWith('media/') || schemaPrefix.startsWith('base/');
 }
 
-function getSchema(xDataPath: string): XDataSchema {
+function getSchema(xDataPath: string): XDataSchema | undefined {
     const pathParts = xDataPath.split('/');
     const schemaKey = `${pathParts[0].replace(/-/g, '.')}:${pathParts[1]}`; // replace dashes with dots
+    let schema;
 
-    return contextLib.run(
-        {
-            principals: ['role:system.admin'],
-        },
-        () => schemaLib.getSchema({name: schemaKey, type: 'XDATA'}),
-    );
+    try {
+        // https://github.com/enonic/xp/issues/10425, try-catch can be removed after xp version is set to 7.15
+        schema = contextLib.run(
+            {
+                principals: ['role:system.admin'],
+            },
+            () => schemaLib.getSchema({name: schemaKey, type: 'XDATA'}),
+        );
+    } catch (e) {
+        logWarn(`Failed to fetch schema for xData: ${schemaKey}`);
+    }
+
+    return schema;
 }
 
 function getXDataEntriesBySchemaPrefix(
