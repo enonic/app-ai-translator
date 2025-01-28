@@ -6,5 +6,15 @@
     "field.instructions.title": "Translation instructions",
     "field.instructions.placeholder": "Write text translation instructions. The general instructions configured via site will also be added here.",
     "text.greeting": "Hey! Want me to translate texts to <0/> ?",
-    "text.assistant.name": "Juke AI"
+    "text.assistant.name": "Juke AI",
+    "text.error.unknown": "Something went wrong. Code: <{{code}}>.",
+    "text.error.configuration": "Looks like application is not configured correctly.",
+    "text.error.websocket.protocol": "Invalid WebSocket protocol.",
+    "text.error.query.notFound": "Problem retrieving fields to translate.",
+    "text.error.function": "Function execution failed.",
+    "text.error.model": "AI model error occurred.",
+    "text.error.response.safety": "AI service stopped generating response due to safety violation.",
+    "text.error.google.request": "Error communicating with AI service.",
+    "text.error.google.parse": "Failed to parse AI service response.",
+    "text.error.google.empty": "AI service returned empty response."
 }

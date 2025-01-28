@@ -67,6 +67,7 @@ export function webSocketEvent(event: Enonic.WebSocketEvent): void {
 
 function handleMessage(event: Enonic.WebSocketEvent): void {
     const {id} = event.session;
+
     const message = parseMessage(event.message);
     if (!message) {
         return;
@@ -82,7 +83,7 @@ function handleMessage(event: Enonic.WebSocketEvent): void {
             sendMessage(id, {type: MessageType.CONNECTED});
             break;
         case MessageType.TRANSLATE:
-            startTranslation(id, message);
+            startTranslation(event.session, message);
             break;
     }
 }
@@ -106,17 +107,17 @@ function sendMessage(id: string, message: Omit<ServerMessage, 'metadata'>): void
     websocketLib.send(id, JSON.stringify({...message, metadata: createMetadata()}));
 }
 
-function startTranslation(sessionId: string, message: TranslateMessage): void {
-    const data = message.payload;
+function startTranslation(session: Enonic.WebSocketSession, message: TranslateMessage): void {
+    const {contentId, project, targetLanguage, customInstructions} = message.payload;
 
-    const [itemsToTranslate, err] = getTranslatableDataFromContent(data.contentId, data.project);
+    const [fields, err] = getTranslatableDataFromContent(contentId, project, session.user);
 
     if (err) {
-        sendMessage(sessionId, makeFailedMessage(err, data.contentId));
+        sendMessage(session.id, makeFailedMessage(err, contentId));
         return;
     }
 
-    sendMessage(sessionId, makeAcceptedMessage(data.contentId, itemsToTranslate));
+    sendMessage(session.id, makeAcceptedMessage(contentId, fields));
 
     const wsMessagesMap = __.newBean<ConcurrentHashMap<string, Try<string>>>('java.util.concurrent.ConcurrentHashMap');
 
@@ -124,28 +125,26 @@ function startTranslation(sessionId: string, message: TranslateMessage): void {
     taskLib.executeFunction({
         description: 'ai-translator-task-ws',
         func: () => {
-            pollAndSendMessages(sessionId, data.contentId, wsMessagesMap);
+            pollAndSendMessages(session.id, contentId, wsMessagesMap);
         },
     });
 
     try {
         translateFields(
             {
-                fields: itemsToTranslate,
-                contentId: data.contentId,
-                project: data.project,
-                targetLanguage: data.targetLanguage,
-                customInstructions: data.customInstructions,
+                fields,
+                contentId,
+                project,
+                targetLanguage,
+                customInstructions,
             },
             (path, result) => {
                 wsMessagesMap.put(path, result);
             },
         );
     } catch (e) {
-        sendMessage(
-            sessionId,
-            makeFailedMessage(ERRORS.UNKNOWN_ERROR.withMsg(`Failed to translate: ${data.contentId}`), data.contentId),
-        );
+        const msg = makeFailedMessage(ERRORS.UNKNOWN_ERROR.withMsg(`Failed to translate: ${contentId}`), contentId);
+        sendMessage(session.id, msg);
         logError(e);
     }
 }
