@@ -2,6 +2,7 @@ import * as contentLib from '/lib/xp/content';
 import * as contextLib from '/lib/xp/context';
 import * as schemaLib from '/lib/xp/schema';
 import {Content, FormItem} from '/lib/xp/content';
+import {User} from '/lib/xp/context';
 
 import {
     FragmentComponent,
@@ -23,49 +24,61 @@ import {isLayoutComponent, isPageComponent, isPartComponent, isTextComponent} fr
 import {pathToString} from './path';
 import {Property, PropertyValue} from './property';
 
-export function getTranslatableDataFromContent(contentId: string, context: string): Try<Record<string, DataEntry>> {
+type ContextUser = Pick<User, 'login' | 'idProvider'> | undefined;
+
+export function getTranslatableDataFromContent(
+    contentId: string,
+    project: string,
+    user: ContextUser | undefined,
+): Try<Record<string, DataEntry>> {
     try {
-        return [doGetTranslatableDataFromContent(contentId, context), null];
+        const content = getContent(contentId, project, user);
+        if (!content) {
+            const msg = `Searched for "${contentId}" in "${project}" project under ${user?.login ?? 'anonymous'} user`;
+            return [null, ERRORS.QUERY_CONTENT_NOT_FOUND.withMsg(msg)];
+        }
+
+        const contentType = contentLib.getType(content.type);
+
+        if (!contentType) {
+            const msg = `Searched for type "${content.type}"`;
+            return [null, ERRORS.QUERY_CONTENT_TYPE_NOT_FOUND.withMsg(msg)];
+        }
+
+        const flatData = flattenData(content.data);
+        const dataToTranslate = getTranslatableFields(flatData, contentType.form);
+        const result: Record<string, DataEntry> = {};
+
+        for (const dataPath in dataToTranslate) {
+            result[`__data__${dataPath}`] = dataToTranslate[dataPath];
+        }
+
+        if (content.displayName) {
+            result[`__data__/${TOPIC_NAME}`] = makeDisplayNameDataEntry(content.displayName, contentType.description);
+        }
+
+        const flatXData = flattenData(content.x as Record<string, Property>);
+        const xDataToTranslate = getXDataFieldsToTranslate(flatXData);
+
+        for (const xDataPath in xDataToTranslate) {
+            result[`__xdata__/${xDataPath}`] = xDataToTranslate[xDataPath];
+        }
+
+        const pageDataToTranslate = getPageDataEntries(content);
+
+        for (const pagePath in pageDataToTranslate) {
+            result[`__page__${pagePath}`] = pageDataToTranslate[pagePath];
+        }
+
+        if (isRecordEmpty(result)) {
+            return [null, ERRORS.FUNC_NO_TRANSLATABLE_FIELDS];
+        }
+
+        return [result, null];
     } catch (e) {
         logError(e);
-        return [null, ERRORS.UNKNOWN_ERROR.withMsg(`Failed to fetch translatable fields from content: ${contentId}`)];
+        return [null, ERRORS.UNKNOWN_ERROR.withMsg(`Failed to fetch translatable fields from content "${contentId}"`)];
     }
-}
-
-export function doGetTranslatableDataFromContent(contentId: string, context: string): Record<string, DataEntry> {
-    const content = getContent(contentId, context);
-    const contentType = content && contentLib.getType(content.type);
-
-    if (!content || !contentType) {
-        return {};
-    }
-
-    const flatData = flattenData(content.data);
-    const dataToTranslate = getTranslatableFields(flatData, contentType.form);
-    const result: Record<string, DataEntry> = {};
-
-    for (const dataPath in dataToTranslate) {
-        result[`__data__${dataPath}`] = dataToTranslate[dataPath];
-    }
-
-    if (content.displayName) {
-        result[`__data__/${TOPIC_NAME}`] = makeDisplayNameDataEntry(content.displayName, contentType.description);
-    }
-
-    const flatXData = flattenData(content.x as Record<string, Property>);
-    const xDataToTranslate = getXDataFieldsToTranslate(flatXData);
-
-    for (const xDataPath in xDataToTranslate) {
-        result[`__xdata__/${xDataPath}`] = xDataToTranslate[xDataPath];
-    }
-
-    const pageDataToTranslate = getPageDataEntries(content);
-
-    for (const pagePath in pageDataToTranslate) {
-        result[`__page__${pagePath}`] = pageDataToTranslate[pagePath];
-    }
-
-    return result;
 }
 
 function getTranslatableFields(flatData: Record<string, PropertyValue>, form: FormItem[]): Record<string, DataEntry> {
@@ -79,11 +92,19 @@ function getTranslatableFields(flatData: Record<string, PropertyValue>, form: Fo
     return mapDataToFormItems(flatData, formItemsWithPath);
 }
 
-function getContent(contentId: string, context: string): Content<Record<string, Property>> | null {
+function getContent(
+    contentId: string,
+    project: string,
+    user: ContextUser | undefined,
+): Content<Record<string, Property>> | null {
     return contextLib.run(
         {
-            repository: `com.enonic.cms.${context}`,
+            repository: `com.enonic.cms.${project}`,
             branch: 'draft',
+            user: user && {
+                login: user.login,
+                idProvider: user.idProvider,
+            },
         },
         () => contentLib.get({key: contentId}),
     );
