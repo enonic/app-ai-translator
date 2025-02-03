@@ -8,14 +8,13 @@
     "text.greeting": "Hei! Vil du at jeg skal oversette tekster til <0/> ?",
     "text.assistant.name": "Juke AI",
     "text.error.unknown": "Noe gikk galt. Kode: <{{code}}>.",
-    "text.error.configuration": "Det ser ut til at applikasjonen ikke er konfigurert riktig.",
-    "text.error.rest.wrongContentType": "Svaret har uventet format.",
+    "text.error.configuration": "Ugyldig applikasjonskonfigurasjon.",
     "text.error.websocket.protocol": "Ugyldig WebSocket-protokoll.",
-    "text.error.query.notFound": "Kunne ikke finne forespurt innhold.",
+    "text.error.query.notFound": "Problem med å finne felt å oversette.",
     "text.error.function": "Funksjonsutførelse mislyktes.",
-    "text.error.model": "Det oppstod en AI-modell feil.",
-    "text.error.response.safety": "AI-tjenesten stoppet genereringen på grunn av sikkerhetsbrudd.",
-    "text.error.google.request": "Feil ved kommunikasjon med AI-tjenesten.",
-    "text.error.google.parse": "Kunne ikke tolke svaret fra AI-tjenesten.",
-    "text.error.google.empty": "AI-tjenesten returnerte tomt svar."
+    "text.error.model": "AI-modell feil oppstod.",
+    "text.error.response.safety": "Sikkerhetsbrudd oppdaget.",
+    "text.error.google.request": "Feil i kommunikasjon med AI.",
+    "text.error.google.parse": "Kunne ikke tolke AI-respons.",
+    "text.error.google.empty": "AI returnerte tomt svar."
 }

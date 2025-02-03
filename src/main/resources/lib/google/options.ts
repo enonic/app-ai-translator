@@ -1,7 +1,7 @@
 import {ERRORS} from '../../shared/errors';
 import {GOOGLE_GEMINI_URL, GOOGLE_SAK_PATH} from '../config';
 import {APP_NAME} from '../constants';
-import {logDebug, LogDebugGroups} from '../logger';
+import {logDebug, LogDebugGroups, logError} from '../logger';
 
 type ClientOptions = {
     accessToken: string;
@@ -10,6 +10,22 @@ type ClientOptions = {
 };
 
 export function getOptions(): Try<ClientOptions> {
+    const [options, err] = parseOptions();
+    if (err) {
+        logError(err);
+        return [null, err];
+    }
+    return [options, null];
+}
+
+export function validateOptions(): void {
+    const [, err] = parseOptions();
+    if (err) {
+        logError(err);
+    }
+}
+
+export function parseOptions(): Try<ClientOptions> {
     logDebug(LogDebugGroups.GOOGLE, 'options.getOptions()');
 
     if (!GOOGLE_GEMINI_URL) {

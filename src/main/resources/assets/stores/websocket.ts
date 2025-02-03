@@ -134,15 +134,16 @@ function handleMessage(event: MessageEvent<string>): void {
 
         case MessageType.FAILED: {
             const {code, path} = msg.payload;
+            const message = getErrorMessageByCode(Number(code));
             if (path) {
                 $websocket.setKey('success', false);
                 removePath(path);
-                dispatchCompleted({path, success: false});
+                dispatchCompleted({path, message, success: false});
             } else {
                 // Global error
                 const {paths} = $websocket.get();
-                paths.forEach(path => dispatchCompleted({path, success: false}));
-                dispatchAllCompleted({success: false, message: getErrorMessageByCode(Number(code))});
+                paths.forEach(path => dispatchCompleted({path, message, success: false}));
+                dispatchAllCompleted({message, success: false});
                 closeConnection();
             }
             break;
