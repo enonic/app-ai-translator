@@ -6,5 +6,15 @@
     "field.instructions.title": "Инструкции для перевода",
     "field.instructions.placeholder": "Напишите инструкции для перевода текста. Общие инструкции, настроенные через сайт, также будут добавлены сюда.",
     "text.greeting": "Привет! Хотите, чтобы я перевел тексты на <0/> ?",
-    "text.assistant.name": "Juke AI"
+    "text.assistant.name": "Juke AI",
+    "text.error.unknown": "Что-то пошло не так. Код: <{{code}}>.",
+    "text.error.configuration": "Неверная конфигурация приложения.",
+    "text.error.websocket.protocol": "Неверный протокол WebSocket.",
+    "text.error.query.notFound": "Поля для перевода не найдены.",
+    "text.error.function": "Сбой выполнения функции на сервере.",
+    "text.error.model": "Произошла ошибка в модели ИИ.",
+    "text.error.response.safety": "Ответ нарушает правила безопасности.",
+    "text.error.google.request": "Не удалось связаться с ИИ.",
+    "text.error.google.parse": "Не удалось обработать ответ ИИ.",
+    "text.error.google.empty": "ИИ вернул пустой ответ."
 }

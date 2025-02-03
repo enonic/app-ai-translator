@@ -23,11 +23,17 @@ type StartedDetail = {
     path: string;
 };
 
-type CompletedDetail = {
-    path: string;
-    text?: string;
-    success: boolean;
-};
+type CompletedDetail =
+    | {
+          path: string;
+          text: string;
+          success: true;
+      }
+    | {
+          path: string;
+          message: string;
+          success: false;
+      };
 
 type AllCompletedDetail = {
     success: boolean;
