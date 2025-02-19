@@ -1,20 +1,4 @@
 {
-    "action.translate": "Oversett",
-    "action.cancel": "Avbryt",
-    "action.addInstructions": "Legg til oversettingsinstruksjoner",
-    "field.title": "AI Automatisk Oversetting",
-    "field.instructions.title": "Oversettingsinstruksjoner",
-    "field.instructions.placeholder": "Skriv instruksjoner for tekstoversetting. De generelle instruksjonene konfigurert via nettstedet vil også bli lagt til her.",
-    "text.greeting": "Hei! Vil du at jeg skal oversette tekster til <0/> ?",
-    "text.assistant.name": "Juke AI",
-    "text.error.unknown": "Noe gikk galt. Kode: <{{code}}>.",
-    "text.error.configuration": "Ugyldig applikasjonskonfigurasjon.",
-    "text.error.websocket.protocol": "Ugyldig WebSocket-protokoll.",
-    "text.error.query.notFound": "Problem med å finne felt å oversette.",
-    "text.error.function": "Funksjonsutførelse mislyktes.",
-    "text.error.model": "AI-modell feil oppstod.",
-    "text.error.response.safety": "Sikkerhetsbrudd oppdaget.",
-    "text.error.google.request": "Feil i kommunikasjon med AI.",
-    "text.error.google.parse": "Kunne ikke tolke AI-respons.",
-    "text.error.google.empty": "AI returnerte tomt svar."
+    "text.error.google.empty": "KI gav ingen svar.",
+    "text.error.google.parse": "Kunne ikke analysere KI svaret."
 }
