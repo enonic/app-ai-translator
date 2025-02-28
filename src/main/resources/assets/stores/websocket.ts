@@ -206,10 +206,6 @@ function getErrorMessageByCode(code: number): string {
         case ERRORS.GOOGLE_SAK_READ_FAILED.code:
         case ERRORS.GOOGLE_ACCESS_TOKEN_MISSING.code:
         case ERRORS.GOOGLE_PROJECT_ID_MISSING.code:
-        case ERRORS.GOOGLE_GEMINI_URL_MISSING.code:
-        case ERRORS.GOOGLE_GEMINI_URL_INVALID.code:
-        case ERRORS.GOOGLE_PROJECT_ID_MISMATCH.code:
-        case ERRORS.GOOGLE_MODEL_NOT_SUPPORTED.code:
             return t('text.error.configuration');
         case ERRORS.WS_INVALID_PROTOCOL.code:
             return t('text.error.websocket.protocol');

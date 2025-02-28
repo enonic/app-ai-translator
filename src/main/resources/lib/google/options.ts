@@ -5,7 +5,6 @@ import {logDebug, LogDebugGroups, logError} from '../logger';
 
 type ClientOptions = {
     accessToken: string;
-    model: string;
     url: string;
 };
 
@@ -28,10 +27,6 @@ export function validateOptions(): void {
 export function parseOptions(): Try<ClientOptions> {
     logDebug(LogDebugGroups.GOOGLE, 'options.getOptions()');
 
-    if (!GOOGLE_GEMINI_URL) {
-        return [null, ERRORS.GOOGLE_GEMINI_URL_MISSING];
-    }
-
     if (!GOOGLE_SAK_PATH) {
         return [null, ERRORS.GOOGLE_SAK_MISSING];
     }
@@ -49,17 +44,11 @@ export function parseOptions(): Try<ClientOptions> {
             return [null, ERRORS.GOOGLE_PROJECT_ID_MISSING];
         }
 
-        const [model, validationError] = validateUrl(GOOGLE_GEMINI_URL, projectId);
-        if (validationError) {
-            return [null, validationError];
-        }
-
-        const url = `${GOOGLE_GEMINI_URL}:generateContent`;
+        const url = createModelGenerateUrl(projectId);
 
         return [
             {
                 accessToken,
-                model,
                 url,
             },
             null,
@@ -69,22 +58,9 @@ export function parseOptions(): Try<ClientOptions> {
     }
 }
 
-function validateUrl(url: string, projectId: string): Try<string> {
-    const urlRegex = /projects\/([^/]+)\/locations\/[^/]+\/publishers\/google\/models\/([^/]+)/;
-    const match = url.match(urlRegex);
-
-    if (!match) {
-        return [null, ERRORS.GOOGLE_GEMINI_URL_INVALID.withMsg(url)];
-    }
-
-    const [, urlProjectId, model] = match;
-    if (projectId !== urlProjectId) {
-        return [null, ERRORS.GOOGLE_PROJECT_ID_MISMATCH.withMsg(`${projectId} !== ${urlProjectId}`)];
-    }
-
-    if (!model || !model.startsWith('gemini')) {
-        return [null, ERRORS.GOOGLE_MODEL_NOT_SUPPORTED.withMsg(`Model "${model}" must be from Gemini family.`)];
-    }
-
-    return [model, null];
+function createModelGenerateUrl(projectId: string): string {
+    const baseUrl =
+        GOOGLE_GEMINI_URL ||
+        `https://europe-west1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/europe-west1/publishers/google/models/gemini-2.0-flash-001`;
+    return `${baseUrl}:generateContent`;
 }
