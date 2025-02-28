@@ -1,4 +1,3 @@
-import {getOptions} from '../google/options';
 import {logDebug, LogDebugGroups} from '../logger';
 import {GeminiProxy} from './gemini';
 import {ModelProxy, ModelProxyConfig} from './model';
@@ -11,12 +10,6 @@ export function connect({instructions, messages}: ConnectionConfig): Try<ModelPr
         `proxy.connect([instructions: ${instructions?.length ?? 0}], [messages: ${messages.length}]})`,
     );
 
-    const [options, err] = getOptions();
-    if (err) {
-        return [null, err];
-    }
-    const {model} = options;
-
-    const config = {model, instructions, messages};
+    const config = {instructions, messages};
     return [new GeminiProxy(config), null];
 }

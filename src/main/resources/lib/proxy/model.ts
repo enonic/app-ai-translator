@@ -5,7 +5,6 @@ export type ModelProxy = {
 };
 
 export type ModelProxyConfig = {
-    model: string;
     instructions?: string;
     messages: Message[];
 };

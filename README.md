@@ -25,24 +25,34 @@ First, obtain a Google Service Account Key (SAK) to access the Vertex AI API. Th
     Create a configuration file in the `$XP_HOME/config` directory named `com.enonic.app.ai.translator.cfg`.
 
 2. **Add the Following Properties**
-  - `google.api.gemini.url`: URL of a model from the Gemini family on Vertex AI. We recommend using Flash models for faster responses.
 
   - `google.api.sak.path`: Path to the Google Service Account Key (SAK) file on your system. Use Unix-style paths or properly escape backslashes.
 
-For a list of available models, visit the [Model Garden](https://console.cloud.google.com/vertex-ai/model-garden). Note that not all models are available in every region; for region-specific availability, refer to [Vertex AI Locations](https://cloud.google.com/vertex-ai/docs/general/locations).
+3. **(Optional) Configure the Model**
+
+    You can set custom model URL by adding the following property:
+
+  - `google.api.gemini.url`: URL of a model from the Gemini family on Vertex AI. We recommend using Flash models for faster responses.
+
 
 You can find the example of the configuration file below.
+
+For a list of available models, visit the [Model Garden](https://console.cloud.google.com/vertex-ai/model-garden).
+
+> [!WARNING]
+> Not all models are available in every region; for region-specific availability, refer to [Vertex AI Locations](https://cloud.google.com/vertex-ai/docs/general/locations).
 
 ## Configuration File
 
 `com.enonic.app.ai.translator.cfg`
 ```properties
-# Gemini Model URL on Google APIs
-# `*:generateContent` last part must be dropped, as streaming support handled by the application
-google.api.gemini.url=https://europe-west1-aiplatform.googleapis.com/v1/projects/playground-186616/locations/europe-west1/publishers/google/models/gemini-2.0-flash-001
-
 # Path to Google's Service Account Key (a JSON file)
 google.api.sak.path=/Users/enonic/config/playground-123456-e13cb1841f87.json
+
+
+# (Optional) Gemini Model URL on Google APIs
+# `*:generateContent` last part must be dropped, as streaming support handled by the application
+google.api.gemini.url=https://europe-west1-aiplatform.googleapis.com/v1/projects/playground-186616/locations/europe-west1/publishers/google/models/gemini-2.0-flash-001
 
 # (Optional) (Default: "all") A comma separated list of debug groups to limit the debug output, not enforce it.
 # Possible values: all, none, google, func, cron, ws
