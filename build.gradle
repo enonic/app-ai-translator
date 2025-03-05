@@ -28,6 +28,7 @@ dependencies {
     include "com.enonic.xp:lib-task:${xpVersion}"
     include "com.enonic.lib:lib-cron:1.1.4"
     include "com.enonic.xp:lib-schema:${xpVersion}"
+    include "com.enonic.lib:lib-license:3.1.0"
 }
 
 repositories {

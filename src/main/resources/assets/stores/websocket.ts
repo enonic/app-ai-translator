@@ -228,6 +228,10 @@ function getErrorMessageByCode(code: number): string {
             return t('text.error.google.parse');
         case ERRORS.GOOGLE_CANDIDATES_EMPTY.code:
             return t('text.error.google.empty');
+        case ERRORS.LICENSE_ERROR_MISSING.code:
+            return t('text.error.licence.invalid');
+        case ERRORS.LICENSE_ERROR_EXPIRED.code:
+            return t('text.error.licence.expired');
         default:
             return t('text.error.unknown', {code});
     }

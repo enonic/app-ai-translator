@@ -1,6 +1,7 @@
 export enum AiEvents {
     // Translator
     //   Outgoing
+    NO_LICENSE = 'AiTranslatorNoLicenseEvent',
     DIALOG_SHOWN = 'AiTranslatorDialogShownEvent',
     DIALOG_HIDDEN = 'AiTranslatorDialogHiddenEvent',
     STARTED = 'AiTranslatorStartedEvent',
@@ -54,6 +55,10 @@ export function dispatchCompleted(detail: CompletedDetail): void {
 
 export function dispatchAllCompleted(detail: AllCompletedDetail): void {
     window.dispatchEvent(new CustomEvent(AiEvents.ALL_COMPLETED, {detail}));
+}
+
+export function dispatchNoLicense(): void {
+    window.dispatchEvent(new CustomEvent(AiEvents.NO_LICENSE));
 }
 
 function addGlobalHandler(eventType: AiEvents, handler: CustomEventHandler): FnVoid {
