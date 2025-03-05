@@ -2,6 +2,7 @@ import * as taskLib from '/lib/xp/task';
 import * as websocketLib from '/lib/xp/websocket';
 import cron from '/lib/cron';
 
+import * as licenseManager from '../../lib/license/license-manager';
 import {getTranslatableDataFromContent} from '../../lib/content/content';
 import {DataEntry} from '../../lib/content/data';
 import {logDebug, LogDebugGroups, logError} from '../../lib/logger';
@@ -109,6 +110,19 @@ function sendMessage(id: string, message: Omit<ServerMessage, 'metadata'>): void
 
 function startTranslation(session: Enonic.WebSocketSession, message: TranslateMessage): void {
     const {contentId, project, targetLanguage, customInstructions} = message.payload;
+    const [licenseState, licenseError] = licenseManager.getLicenseState();
+
+    if (licenseError) {
+        sendMessage(session.id, makeFailedMessage(licenseError, contentId));
+        return;
+    }
+
+    if (licenseState !== 'OK') {
+        const error = licenseState === 'EXPIRED' ? ERRORS.LICENSE_ERROR_EXPIRED : ERRORS.LICENSE_ERROR_MISSING;
+        const msg = makeFailedMessage(error, contentId);
+        sendMessage(session.id, msg);
+        return;
+    }
 
     const [fields, err] = getTranslatableDataFromContent(contentId, project, session.user);
 

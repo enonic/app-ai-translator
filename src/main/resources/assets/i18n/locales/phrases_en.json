@@ -16,5 +16,7 @@
     "text.error.response.safety": "Safety violation detected.",
     "text.error.google.request": "Error communicating with AI.",
     "text.error.google.parse": "Failed to parse AI response.",
-    "text.error.google.empty": "AI returned empty response."
+    "text.error.google.empty": "AI returned empty response.",
+    "text.error.licence.invalid": "AI Translator: No valid license found.",
+    "text.error.licence.expired": "AI Translator: License expired."
 }

@@ -1,51 +1,41 @@
 import React from 'react';
 import {createRoot} from 'react-dom/client';
 
+import {dispatchNoLicense} from './common/events';
 import App from './components/App/App';
 import './i18n/i18n';
 import './index.css';
-import {requestTranslation} from './requests/translation';
-import {$config, setRestServiceUrl, setWsServiceUrl} from './stores/config';
-import {getContentId, getLanguage, getProject} from './stores/data';
-import {TranslationParams} from './stores/data/RequestData';
+import {fetchLicenseState} from './requests/license';
+import {$config, setLicenseServiceUrl, setWsServiceUrl} from './stores/config';
 
 type SetupConfig = {
-    restServiceUrl: string;
+    licenseServiceUrl: string;
     wsServiceUrl: string;
 };
 
-export function render(container: HTMLElement): void {
-    if ($config.get().restServiceUrl === '' || $config.get().wsServiceUrl === '') {
+export async function render(container: HTMLElement): Promise<void> {
+    if ($config.get().licenseServiceUrl === '' || $config.get().wsServiceUrl === '') {
         console.warn('[Enonic AI] Translator dialog was rendered before configured.');
     }
 
-    container.classList.add('ai-translator');
+    const fetchLicenseStateResult = await fetchLicenseState();
 
-    const root = createRoot(container);
+    if (fetchLicenseStateResult !== 'OK') {
+        dispatchNoLicense();
+    } else {
+        container.classList.add('ai-translator');
 
-    root.render(
-        <React.StrictMode>
-            <App />
-        </React.StrictMode>,
-    );
-}
+        const root = createRoot(container);
 
-export function setup({restServiceUrl, wsServiceUrl}: SetupConfig): void {
-    setRestServiceUrl(restServiceUrl);
-    setWsServiceUrl(wsServiceUrl);
-}
-
-export function translate(instructions?: string, language?: string): Promise<void> {
-    if ($config.get().restServiceUrl === '' || $config.get().wsServiceUrl === '') {
-        console.warn('[Enonic AI] Translator was used before configured.');
+        root.render(
+            <React.StrictMode>
+                <App />
+            </React.StrictMode>,
+        );
     }
+}
 
-    const params: TranslationParams = {
-        contentId: getContentId(),
-        language: language ?? getLanguage().tag,
-        project: getProject(),
-        instructions,
-    };
-
-    return requestTranslation(params);
+export function setup({licenseServiceUrl, wsServiceUrl}: SetupConfig): void {
+    setLicenseServiceUrl(licenseServiceUrl);
+    setWsServiceUrl(wsServiceUrl);
 }
