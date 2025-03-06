@@ -17,6 +17,6 @@
     "text.error.google.request": "Error communicating with AI.",
     "text.error.google.parse": "Failed to parse AI response.",
     "text.error.google.empty": "AI returned empty response.",
-    "text.error.licence.invalid": "AI Translator: No valid license found.",
-    "text.error.licence.expired": "AI Translator: License expired."
+    "text.error.licence.invalid": "AI Translation failed. No valid license found.",
+    "text.error.licence.expired": "AI Translation failed. License expired."
 }
