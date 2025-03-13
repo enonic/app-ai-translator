@@ -54,7 +54,7 @@ export function translate(item: TranslateContentParams): Try<string> {
         return [null, error];
     }
 
-    return [response.content, null];
+    return [response.content?.trim(), null];
 }
 
 function connectModel(messages: Message[], instructions?: string): Try<ModelProxy> {
