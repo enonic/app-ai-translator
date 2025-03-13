@@ -1,6 +1,6 @@
 # Juke AI: Translator
 
-Translator, the Enonic's Juke AI plugin, is designed to enhance your productivity by leveraging advanced Large Language Models for translation tasks.
+Translator, one of the Enonic Juke AI skills, is designed to enhance your productivity by leveraging advanced Large Language Models for translation tasks.
 
 ## Installation
 
@@ -12,50 +12,27 @@ Translator, the Enonic's Juke AI plugin, is designed to enhance your productivit
 
 ### 1. Google Service Account Key (SAK)
 
-First, obtain a Google Service Account Key (SAK) to access the Vertex AI API. This key is a JSON file named in the format `%project_name%-%12_digit_number%.json`.
-
-- **If you already have the JSON file**, you can skip this step.
-- **Otherwise**, create a new one by following the steps in the [Service Account Key guide](docs/SERVICE_ACCOUNT_KEY.MD).
-
+In order to use this application, you need to obtain a Google Service Account Key (SAK) in JSON format and have it accessible in your file system. [Contact us](https://www.enonic.com/company/contact-us) if you need assistance with this step.
 
 ### 2. Application Configuration
 
 1. **Create the Configuration File**
 
-    Create a configuration file in the `$XP_HOME/config` directory named `com.enonic.app.ai.translator.cfg`.
+   Create a configuration file in the `$XP_HOME/config` directory named `com.enonic.app.ai.translator.cfg`.
 
 2. **Add the Following Properties**
 
-  - `google.api.sak.path`: Path to the Google Service Account Key (SAK) file on your system. Use Unix-style paths or properly escape backslashes.
-
-3. **(Optional) Configure the Model**
-
-    You can set custom model URL by adding the following property:
-
-  - `google.api.gemini.url`: URL of a model from the Gemini family on Vertex AI. We recommend using Flash models for faster responses.
-
-
-You can find the example of the configuration file below.
-
-For a list of available models, visit the [Model Garden](https://console.cloud.google.com/vertex-ai/model-garden).
-
-> [!WARNING]
-> Not all models are available in every region; for region-specific availability, refer to [Vertex AI Locations](https://cloud.google.com/vertex-ai/docs/general/locations).
+- `google.api.sak.path`: Path to the Google Service Account Key (SAK) file on your system. Use Unix-style paths or properly escape backslashes.
 
 ## Configuration File
 
-`com.enonic.app.ai.translator.cfg`
+`com.enonic.app.ai.contentoperator.cfg (sample)`
 ```properties
 # Path to Google's Service Account Key (a JSON file)
-google.api.sak.path=/Users/enonic/config/playground-123456-e13cb1841f87.json
-
-
-# (Optional) Gemini Model URL on Google APIs
-# `*:generateContent` last part must be dropped, as streaming support handled by the application
-google.api.gemini.url=https://europe-west1-aiplatform.googleapis.com/v1/projects/playground-186616/locations/europe-west1/publishers/google/models/gemini-2.0-flash-001
+google.api.sak.path=${xp.home}/config/playground-123456-e13cb1841f87.json
 
 # (Optional) (Default: "all") A comma separated list of debug groups to limit the debug output, not enforce it.
-# Possible values: all, none, google, func, cron, ws
+# Possible values: all, none, google, func, ws
 # Leaving empty or adding "all" to list will log all debug groups.
 log.debug.groups=all
 ```
