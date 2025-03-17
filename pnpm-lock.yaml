@@ -55,8 +55,8 @@ importers:
         version: 3.4.10(postcss@8.5.3)(tailwindcss@3.4.17)
     devDependencies:
       '@enonic-types/core':
-        specifier: ^7.14.4
-        version: 7.14.4
+        specifier: ^7.15.0
+        version: 7.15.0
       '@enonic-types/global':
         specifier: ^7.15.0
         version: 7.15.0
@@ -383,9 +383,6 @@ packages:
 
   '@emnapi/wasi-threads@1.0.1':
     resolution: {integrity: sha512-iIBu7mwkq4UQGeMEM8bLwNK962nXdhodeScX4slfQnRhEMMzvYivHhutCIk8uojvmASXXPC2WNEjwxFWk72Oqw==}
-
-  '@enonic-types/core@7.14.4':
-    resolution: {integrity: sha512-AzMe/DixiaNH8X3OEvy0AREwr3GcmmcQ5lQ3k8AQWK4rQVKmSVatuNslkQFvzakjc7BOcTHGSBxr5lhN9+qD8g==}
 
   '@enonic-types/core@7.15.0':
     resolution: {integrity: sha512-I0NG8tcb1vW5zBnzqBvF2B7uJExI9holuQrrREXI+qPiZ0e9HHNxDKRWMQ6+VY5p4X8ishxmbRhoBbHv5CUyeA==}
@@ -4287,8 +4284,6 @@ snapshots:
     dependencies:
       tslib: 2.8.1
     optional: true
-
-  '@enonic-types/core@7.14.4': {}
 
   '@enonic-types/core@7.15.0': {}
 
