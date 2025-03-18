@@ -1,12 +1,16 @@
 {
     "action.translate": "Translate",
     "action.cancel": "Cancel",
+    "action.close": "Close",
     "action.addInstructions": "Add translation instructions",
     "field.title": "AI Automated Translation",
     "field.instructions.title": "Translation instructions",
     "field.instructions.placeholder": "Write text translation instructions. The general instructions configured via site will also be added here.",
     "text.greeting": "Hey! Want me to translate texts to <0/> ?",
     "text.assistant.name": "Juke AI",
+    "text.translating.progress": "Translating to {{language}}: {{progress}} of {{total}} done.",
+    "text.result.completed": "Translation completed and saved. You can now close this dialog.",
+    "text.result.failed": "Translation completed with <0/> errors. Close this dialog to review them.",
     "text.error.unknown": "Something went wrong. Code: <{{code}}>.",
     "text.error.configuration": "Invalid application configuration.",
     "text.error.websocket.protocol": "Invalid WebSocket protocol.",
@@ -17,6 +21,6 @@
     "text.error.google.request": "Error communicating with AI.",
     "text.error.google.parse": "Failed to parse AI response.",
     "text.error.google.empty": "AI returned empty response.",
-    "text.error.licence.invalid": "AI translation failed: No valid license found.",
-    "text.error.licence.expired": "AI translation failed: License expired."
+    "text.error.license.invalid": "AI translation failed: No valid license found.",
+    "text.error.license.expired": "AI translation failed: License expired."
 }

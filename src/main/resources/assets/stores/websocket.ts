@@ -7,19 +7,18 @@ import {ClientMessage, MessageMetadata, MessageType, ServerMessage} from '../../
 import {dispatchAllCompleted, dispatchCompleted, dispatchStarted} from '../common/events';
 import {$config} from './config';
 import {$data, getLanguage} from './data';
-import {$instructions} from './dialog';
+import {$instructions, setDialogView} from './dialog';
+import {$isAllItemsProcessed, $items, addFailed, addSucceeded, resetItems, setPaths} from './items';
 
 type WebSocketStore = {
     state: 'connecting' | 'connected' | 'disconnecting' | 'disconnected';
     connection: Optional<WebSocket>;
-    paths: string[];
     success: boolean;
 };
 
 export const $websocket = map<WebSocketStore>({
     state: 'disconnected',
     connection: null,
-    paths: [],
     success: true,
 });
 
@@ -32,6 +31,8 @@ export function startTranslation(): void {
     if ($translating.get() || !contentId || !project) {
         return;
     }
+
+    resetItems();
 
     const targetLanguage = getLanguage().tag;
     const customInstructions = $instructions.get();
@@ -98,7 +99,6 @@ function cleanup(): void {
     clearInterval(pingInterval);
     $websocket.set({
         state: 'disconnected',
-        paths: [],
         connection: null,
         success: true,
     });
@@ -118,7 +118,7 @@ function handleMessage(event: MessageEvent<string>): void {
 
         case MessageType.ACCEPTED: {
             const {paths} = msg.payload;
-            $websocket.setKey('paths', paths);
+            setPaths(paths);
             paths.forEach(path => {
                 dispatchStarted({path});
             });
@@ -127,8 +127,8 @@ function handleMessage(event: MessageEvent<string>): void {
 
         case MessageType.COMPLETED: {
             const {path, text} = msg.payload;
+            addSucceeded(path);
             dispatchCompleted({path, text, success: true});
-            removePath(path);
             break;
         }
 
@@ -137,12 +137,12 @@ function handleMessage(event: MessageEvent<string>): void {
             const message = getErrorMessageByCode(Number(code));
             if (path) {
                 $websocket.setKey('success', false);
-                removePath(path);
+                addFailed(path, message);
                 dispatchCompleted({path, message, success: false});
             } else {
                 // Global error
-                const {paths} = $websocket.get();
-                paths.forEach(path => dispatchCompleted({path, message, success: false}));
+                const {remaining} = $items.get();
+                remaining.forEach(path => dispatchCompleted({path, message, success: false}));
                 dispatchAllCompleted({message, success: false});
                 closeConnection();
             }
@@ -155,14 +155,22 @@ function handleMessage(event: MessageEvent<string>): void {
     }
 }
 
-function removePath(path: string): void {
-    const paths = $websocket.get().paths.filter(p => p !== path);
-    $websocket.setKey('paths', paths);
-    if (paths.length === 0) {
-        dispatchAllCompleted({success: $websocket.get().success});
-        closeConnection();
-    }
+export function stopTranslation(success?: boolean): void {
+    const {remaining} = $items.get();
+    remaining.forEach(path => dispatchCompleted({path, success: true}));
+    dispatchAllCompleted({success: success ?? $websocket.get().success});
+    closeConnection();
 }
+
+const unsubscribe = $isAllItemsProcessed.subscribe(processed => {
+    if (processed) {
+        unsubscribe?.();
+        setTimeout(() => {
+            setDialogView('completed');
+            stopTranslation(true);
+        }, 1000);
+    }
+});
 
 //
 //* Send
@@ -229,9 +237,9 @@ function getErrorMessageByCode(code: number): string {
         case ERRORS.GOOGLE_CANDIDATES_EMPTY.code:
             return t('text.error.google.empty');
         case ERRORS.LICENSE_ERROR_MISSING.code:
-            return t('text.error.licence.invalid');
+            return t('text.error.license.invalid');
         case ERRORS.LICENSE_ERROR_EXPIRED.code:
-            return t('text.error.licence.expired');
+            return t('text.error.license.expired');
         default:
             return t('text.error.unknown', {code});
     }

@@ -20,9 +20,15 @@ export default {
                 'enonic-green': {
                     DEFAULT: '#609e24',
                 },
+                'enonic-red': {
+                    DEFAULT: '#cb0300',
+                },
                 'enonic-blue': {
                     DEFAULT: '#2c76e9',
-                    light: '#5a94ee',
+                    400: '#5a94ee',
+                    500: '#4279d9',
+                    700: '#1a56b8',
+                    800: '#123d8a',
                 },
             },
             screens: {
@@ -34,7 +40,11 @@ export default {
                 '1/2': '50%',
                 '4/5': '80%',
             },
+            margin: {
+                17: '4.25rem',
+            },
             padding: {
+                0.25: '.0625rem',
                 2.5: '.625rem',
                 7.5: '1.875rem',
             },
@@ -47,8 +57,17 @@ export default {
                 '2xs': '.625rem',
                 'header-title': '1.725rem',
             },
+            backgroundImage: {
+                'gradient-middle':
+                    'linear-gradient(90deg, var(--tw-gradient-from) 25%, var(--tw-gradient-to) 50%, var(--tw-gradient-from) 75%)',
+                'gradient-fade-to-t': 'linear-gradient(0deg, var(--tw-gradient-from) 0%, var(--tw-gradient-to) 15%)',
+            },
+            backgroundSize: {
+                'text-gradient-size': '200% 100%',
+            },
             flex: {
                 max: '1 0 100%',
+                '1-0-auto': '1 0 auto',
             },
             gridTemplateColumns: {
                 auto: 'auto',
@@ -63,6 +82,35 @@ export default {
             },
             blur: {
                 xs: '2px',
+            },
+            transitionProperty: {
+                padding: 'padding',
+            },
+            keyframes: {
+                'slide-fade-in': {
+                    '0%': {
+                        opacity: '0',
+                        'padding-bottom': '0',
+                        'padding-top': '0.5rem',
+                    },
+                    '100%': {
+                        opacity: '1',
+                        'padding-bottom': '0.5rem',
+                        'padding-top': '0',
+                    },
+                },
+                'move-gradient': {
+                    '0%': {
+                        'background-position': '200% 0%',
+                    },
+                    '100%': {
+                        'background-position': '-200% 0%',
+                    },
+                },
+            },
+            animation: {
+                'slide-fade-in': 'slide-fade-in 300ms ease-in-out forwards',
+                'move-gradient': 'move-gradient 3000ms linear infinite',
             },
         },
     },

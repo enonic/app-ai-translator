@@ -1,17 +1,32 @@
+import {useStore} from '@nanostores/react';
 import {twMerge} from 'tailwind-merge';
 
-import AssistantMessage from '../AssistantMessage/AssistantMessage';
-import InstructionsInput from '../InstructionsInput/InstructionsInput';
+import {$dialog, DialogView} from '../../../stores/dialog';
+import CompletedView from './CompletedView';
+import PreparationView from './PreparationView';
+import ProcessingView from './ProcessingView';
 
 type Props = {
     className?: string;
 };
 
+function createView(view: DialogView): React.ReactNode {
+    switch (view) {
+        case 'preparation':
+            return <PreparationView />;
+        case 'processing':
+            return <ProcessingView />;
+        case 'completed':
+            return <CompletedView />;
+    }
+}
+
 export default function DialogContent({className}: Props): React.ReactNode {
+    const {view} = useStore($dialog, {keys: ['view']});
+
     return (
         <div className={twMerge('DialogContent flex flex-col gap-4 h-max px-5 pt-3 overflow-y-auto', className)}>
-            <AssistantMessage />
-            <InstructionsInput />
+            {createView(view)}
         </div>
     );
 }

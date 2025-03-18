@@ -3,17 +3,21 @@ import {computed, map} from 'nanostores';
 import {addGlobalOpenDialogHandler, AiEvents, dispatch} from '../common/events';
 import {$config} from './config';
 
+export type DialogView = 'preparation' | 'processing' | 'completed';
+
 export type Dialog = {
     visible: boolean;
     instructions?: string;
     instructionsEnabled: boolean;
     instructionsVisible: boolean;
+    view: DialogView;
 };
 
 export const $dialog = map<Dialog>({
     visible: false,
     instructionsEnabled: false,
     instructionsVisible: false,
+    view: 'preparation',
 });
 
 export const $instructions = computed([$dialog, $config], (dialog, config) => {
@@ -38,8 +42,9 @@ export const setDialogInstructions = (instructions: string): void => {
 };
 
 export const toggleDialog = (): void => {
-    dispatch($dialog.get().visible ? AiEvents.DIALOG_HIDDEN : AiEvents.DIALOG_SHOWN);
-    $dialog.setKey('visible', !$dialog.get().visible);
+    const {visible} = $dialog.get();
+    dispatch(visible ? AiEvents.DIALOG_HIDDEN : AiEvents.DIALOG_SHOWN);
+    $dialog.setKey('visible', !visible);
 };
 
 export const toggleDialogInstructions = (): void => {
@@ -51,8 +56,13 @@ export const enableInstructions = (): void => {
     $dialog.setKey('instructionsVisible', true);
 };
 
+export const setDialogView = (view: DialogView): void => {
+    $dialog.setKey('view', view);
+};
+
 addGlobalOpenDialogHandler(() => {
     if (!$dialog.get().visible) {
+        setDialogView('preparation');
         toggleDialog();
     }
 });
