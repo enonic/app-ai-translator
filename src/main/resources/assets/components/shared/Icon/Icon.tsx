@@ -1,12 +1,22 @@
 import {twMerge} from 'tailwind-merge';
 
-import {HeroIconChevronDown, HeroIconChevronRight, HeroIconClose, HeroIconPlus, SvgIconSpinner} from '../icons';
+import {
+    HeroIconCheckCircle,
+    HeroIconChevronDown,
+    HeroIconChevronRight,
+    HeroIconClose,
+    HeroIconPlus,
+    HeroIconXCircle,
+    SvgIconSpinner,
+} from '../icons';
 
 const outlineIcons = {
     close: HeroIconClose,
     plus: HeroIconPlus,
     chevronDown: HeroIconChevronDown,
     chevronRight: HeroIconChevronRight,
+    checkCircle: HeroIconCheckCircle,
+    xCircle: HeroIconXCircle,
 } as const;
 
 const svgIcons = {

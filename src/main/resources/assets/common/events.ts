@@ -27,7 +27,7 @@ type StartedDetail = {
 type CompletedDetail =
     | {
           path: string;
-          text: string;
+          text?: string;
           success: true;
       }
     | {
