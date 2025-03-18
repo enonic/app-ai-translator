@@ -2,9 +2,9 @@ import {useStore} from '@nanostores/react';
 import {twMerge} from 'tailwind-merge';
 
 import {$dialog, DialogView} from '../../../stores/dialog';
-import CompletedView from './CompletedView';
-import PreparationView from './PreparationView';
-import ProcessingView from './ProcessingView';
+import CompletedView from '../view/CompletedView/CompletedView';
+import PreparationView from '../view/PreparationView/PreparationView';
+import ProcessingView from '../view/ProcessingView/ProcessingView';
 
 type Props = {
     className?: string;

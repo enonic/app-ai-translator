@@ -1,4 +1,6 @@
-import {computed, map} from 'nanostores';
+import {batched, map} from 'nanostores';
+
+export type ItemsState = 'initial' | 'processing' | 'completed' | 'failed';
 
 export type FailedItem = {
     path: string;
@@ -10,6 +12,7 @@ export type ItemsStore = {
     remaining: string[];
     succeeded: string[];
     failed: FailedItem[];
+    globalFailure?: string;
 };
 
 export const $items = map<ItemsStore>({
@@ -19,8 +22,17 @@ export const $items = map<ItemsStore>({
     failed: [],
 });
 
-export const $isAllItemsProcessed = computed($items, ({paths, remaining}) => {
-    return paths.length > 0 && remaining.length === 0;
+export const $itemsState = batched($items, ({paths, remaining, globalFailure}): ItemsState => {
+    if (globalFailure) {
+        return 'failed';
+    }
+    if (paths.length > 0 && remaining.length === 0) {
+        return 'completed';
+    }
+    if (paths.length > 0 && remaining.length > 0) {
+        return 'processing';
+    }
+    return 'initial';
 });
 
 export function setPaths(paths: string[]): void {
@@ -52,4 +64,11 @@ export function addFailed(path: string, reason: string): void {
         $items.setKey('failed', [...failed, {path, reason}]);
         $items.setKey('remaining', newRemaining);
     }
+}
+
+export function setGlobalFailure(reason: string): void {
+    const {failed, remaining} = $items.get();
+    $items.setKey('globalFailure', reason);
+    $items.setKey('failed', [...failed, ...remaining.map(p => ({path: p, reason}))]);
+    $items.setKey('remaining', []);
 }

@@ -2,7 +2,7 @@ import {twMerge} from 'tailwind-merge';
 
 type Props = {
     className?: string;
-    children: React.ReactNode;
+    children?: React.ReactNode;
 };
 
 export default function FramedText({children, className}: Props): React.ReactNode {

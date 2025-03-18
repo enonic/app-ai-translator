@@ -71,9 +71,9 @@ export const ERRORS = {
     GOOGLE_BLOCKED: err(5041, 'Generation was blocked.'),
 
     // License errors
-    LICENSE_ERROR_MISSING: err(6000, 'AI Translator: No valid license found'),
-    LICENSE_ERROR_EXPIRED: err(6001, 'AI Translator: License expired'),
-    LICENSE_ERROR_UNKNOWN: err(6002, 'AI Translator: Error while fetching license state'),
+    LICENSE_ERROR_MISSING: err(6000, 'No valid license found.'),
+    LICENSE_ERROR_EXPIRED: err(6001, 'License expired.'),
+    LICENSE_ERROR_UNKNOWN: err(6002, 'Error while fetching license state.'),
 
     // Other Errors 9000
     UNKNOWN_ERROR: err(9000, 'Unknown error.'),

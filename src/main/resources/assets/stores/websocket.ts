@@ -8,7 +8,7 @@ import {dispatchAllCompleted, dispatchCompleted, dispatchStarted} from '../commo
 import {$config} from './config';
 import {$data, getLanguage} from './data';
 import {$instructions, setDialogView} from './dialog';
-import {$isAllItemsProcessed, $items, addFailed, addSucceeded, resetItems, setPaths} from './items';
+import {$items, $itemsState, addFailed, addSucceeded, resetItems, setGlobalFailure, setPaths} from './items';
 
 type WebSocketStore = {
     state: 'connecting' | 'connected' | 'disconnecting' | 'disconnected';
@@ -135,12 +135,16 @@ function handleMessage(event: MessageEvent<string>): void {
         case MessageType.FAILED: {
             const {code, path} = msg.payload;
             const message = getErrorMessageByCode(Number(code));
+
+            console.error(`AI <${code}> error: ${msg.payload.message}`);
+
             if (path) {
-                $websocket.setKey('success', false);
                 addFailed(path, message);
                 dispatchCompleted({path, message, success: false});
             } else {
                 // Global error
+                $websocket.setKey('success', false);
+                setGlobalFailure(message);
                 const {remaining} = $items.get();
                 remaining.forEach(path => dispatchCompleted({path, message, success: false}));
                 dispatchAllCompleted({message, success: false});
@@ -155,20 +159,28 @@ function handleMessage(event: MessageEvent<string>): void {
     }
 }
 
-export function stopTranslation(success?: boolean): void {
+export function stopTranslation(): void {
     const {remaining} = $items.get();
-    remaining.forEach(path => dispatchCompleted({path, success: true}));
-    dispatchAllCompleted({success: success ?? $websocket.get().success});
+    if (remaining.length > 0) {
+        remaining.forEach(path => dispatchCompleted({path, success: true}));
+        const {success} = $websocket.get();
+        dispatchAllCompleted({success});
+    }
     closeConnection();
 }
 
-const unsubscribe = $isAllItemsProcessed.subscribe(processed => {
-    if (processed) {
+const unsubscribe = $itemsState.subscribe(state => {
+    if (state === 'completed' || state === 'failed') {
         unsubscribe?.();
-        setTimeout(() => {
+        if (state === 'completed') {
+            setTimeout(() => {
+                setDialogView('completed');
+                stopTranslation();
+            }, 1000);
+        } else {
             setDialogView('completed');
-            stopTranslation(true);
-        }, 1000);
+            stopTranslation();
+        }
     }
 });
 
@@ -227,7 +239,7 @@ function getErrorMessageByCode(code: number): string {
         case ERRORS.MODEL_UNKNOWN_ERROR.code:
         case ERRORS.MODEL_INVALID_ARGUMENT.code:
         case ERRORS.MODEL_FAILED_PRECONDITION.code:
-            return t('text.error.model');
+            return t('text.error.model', {code});
         case ERRORS.GOOGLE_BLOCKED.code:
             return t('text.error.response.safety');
         case ERRORS.GOOGLE_REQUEST_FAILED.code:
