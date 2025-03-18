@@ -11,7 +11,7 @@
     "text.error.google.empty": "KI gav ingen svar.",
     "text.error.google.parse": "Kunne ikke analysere KI svaret.",
     "text.error.google.request": "Feil i kommunikasjon med KI.",
-    "text.error.model": "KI-modellfeil oppstod.",
+    "text.error.model": "KI-modellfeil oppstod. Kode: <{{code}}>.",
     "text.error.query.notFound": "Problem med å finne felt å oversette.",
     "text.error.response.safety": "Sikkerhetsbrudd oppdaget.",
     "text.error.unknown": "Noe gikk galt. Kode: <{{code}}>.",

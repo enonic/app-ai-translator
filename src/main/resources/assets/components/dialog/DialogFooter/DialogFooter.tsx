@@ -4,7 +4,6 @@ import {useTranslation} from 'react-i18next';
 import {twMerge} from 'tailwind-merge';
 
 import {$dialog, setDialogView, setDialogVisible} from '../../../stores/dialog';
-import {$items} from '../../../stores/items';
 import {$translating, startTranslation, stopTranslation} from '../../../stores/websocket';
 import ActionButton from '../../shared/ActionButton/ActionButton';
 
@@ -15,9 +14,6 @@ type Props = {
 export default function DialogFooter({className}: Props): React.ReactNode {
     const isTranslating = useStore($translating);
     const {view} = useStore($dialog);
-    const {paths, failed, remaining} = useStore($items);
-    const canSave = failed.length !== paths.length && remaining.length !== paths.length;
-    const isDone = view === 'completed';
     const isPreparing = view === 'preparation';
 
     const {t} = useTranslation();
@@ -48,13 +44,11 @@ export default function DialogFooter({className}: Props): React.ReactNode {
             />
             <ActionButton
                 className='h-8.5 px-5 rounded-none text-white bg-enonic-gray-500 enabled:hover:bg-enonic-gray-400'
-                name={t(isDone ? 'action.close' : 'action.cancel')}
+                name={t(view === 'completed' ? 'action.close' : 'action.cancel')}
                 size='sm'
                 mode='text-only'
                 clickHandler={() => {
-                    if (!isDone) {
-                        stopTranslation(!canSave);
-                    }
+                    stopTranslation();
                     setDialogVisible(false);
                 }}
             />

@@ -12,7 +12,7 @@
     "text.error.websocket.protocol": "Неверный протокол WebSocket.",
     "text.error.query.notFound": "Поля для перевода не найдены.",
     "text.error.function": "Сбой выполнения функции на сервере.",
-    "text.error.model": "Произошла ошибка в модели ИИ.",
+    "text.error.model": "Произошла ошибка в модели ИИ. Код: <{{code}}>.",
     "text.error.response.safety": "Ответ нарушает правила безопасности.",
     "text.error.google.request": "Не удалось связаться с ИИ.",
     "text.error.google.parse": "Не удалось обработать ответ ИИ.",
