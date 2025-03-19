@@ -72,3 +72,9 @@ export function setGlobalFailure(reason: string): void {
     $items.setKey('failed', [...failed, ...remaining.map(p => ({path: p, reason}))]);
     $items.setKey('remaining', []);
 }
+
+export function skipRemaining(): void {
+    const {remaining, succeeded} = $items.get();
+    $items.setKey('remaining', []);
+    $items.setKey('succeeded', [...succeeded, ...remaining]);
+}
