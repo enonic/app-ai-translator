@@ -7,8 +7,17 @@ import {ClientMessage, MessageMetadata, MessageType, ServerMessage} from '../../
 import {dispatchAllCompleted, dispatchCompleted, dispatchStarted} from '../common/events';
 import {$config} from './config';
 import {$data, getLanguage} from './data';
-import {$instructions, setDialogView} from './dialog';
-import {$items, $itemsState, addFailed, addSucceeded, resetItems, setGlobalFailure, setPaths} from './items';
+import {$dialog, $instructions, setDialogView} from './dialog';
+import {
+    $items,
+    $itemsState,
+    addFailed,
+    addSucceeded,
+    resetItems,
+    setGlobalFailure,
+    setPaths,
+    skipRemaining,
+} from './items';
 
 type WebSocketStore = {
     state: 'connecting' | 'connected' | 'disconnecting' | 'disconnected';
@@ -161,28 +170,12 @@ function handleMessage(event: MessageEvent<string>): void {
 
 export function stopTranslation(): void {
     const {remaining} = $items.get();
-    if (remaining.length > 0) {
-        remaining.forEach(path => dispatchCompleted({path, success: true}));
-        const {success} = $websocket.get();
-        dispatchAllCompleted({success});
-    }
+
+    remaining.forEach(path => dispatchCompleted({path, success: true}));
+    skipRemaining();
+
     closeConnection();
 }
-
-const unsubscribe = $itemsState.subscribe(state => {
-    if (state === 'completed' || state === 'failed') {
-        unsubscribe?.();
-        if (state === 'completed') {
-            setTimeout(() => {
-                setDialogView('completed');
-                stopTranslation();
-            }, 1000);
-        } else {
-            setDialogView('completed');
-            stopTranslation();
-        }
-    }
-});
 
 //
 //* Send
@@ -255,4 +248,33 @@ function getErrorMessageByCode(code: number): string {
         default:
             return t('text.error.unknown', {code});
     }
+}
+
+//
+//* Completion
+//
+
+let completeTimeoutId: number;
+
+$itemsState.subscribe(state => {
+    const {view} = $dialog.get();
+
+    if ((state === 'completed' || state === 'failed') && view === 'processing') {
+        clearTimeout(completeTimeoutId);
+
+        if (state === 'completed') {
+            completeTimeoutId = setTimeout(finalizeTranslation, 500);
+        } else {
+            finalizeTranslation();
+        }
+    }
+});
+
+function finalizeTranslation(): void {
+    setDialogView('completed');
+
+    const {success} = $websocket.get();
+    dispatchAllCompleted({success});
+
+    stopTranslation();
 }
