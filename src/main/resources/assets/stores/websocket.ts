@@ -262,19 +262,17 @@ $itemsState.subscribe(state => {
     if ((state === 'completed' || state === 'failed') && view === 'processing') {
         clearTimeout(completeTimeoutId);
 
+        const {success} = $websocket.get();
+        dispatchAllCompleted({success});
+
         if (state === 'completed') {
-            completeTimeoutId = setTimeout(finalizeTranslation, 500);
+            completeTimeoutId = setTimeout(() => {
+                setDialogView('completed');
+                stopTranslation();
+            }, 500);
         } else {
-            finalizeTranslation();
+            setDialogView('completed');
+            stopTranslation();
         }
     }
 });
-
-function finalizeTranslation(): void {
-    setDialogView('completed');
-
-    const {success} = $websocket.get();
-    dispatchAllCompleted({success});
-
-    stopTranslation();
-}
