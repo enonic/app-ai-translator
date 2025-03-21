@@ -34,21 +34,21 @@ class TaskQueue {
         this.runNextTask();
     }
 
-    private runNextTask(): void {
+    private runNextTask(): boolean {
         const hasNoTasks = this.queue.length === 0 && this.activeTasks.size === 0;
         if (hasNoTasks) {
             this.stopPolling();
-            return;
+            return false;
         }
 
         const isActiveTasksLimitReached = this.activeTasks.size >= this.poolSize;
         if (isActiveTasksLimitReached) {
-            return;
+            return false;
         }
 
         const task = this.queue.shift();
         if (!task) {
-            return;
+            return false;
         }
 
         const taskId = taskLib.executeFunction({
@@ -57,7 +57,16 @@ class TaskQueue {
         });
 
         this.activeTasks.set(taskId, task);
+
         this.startPolling();
+
+        return true;
+    }
+
+    private runNextTasks(): void {
+        while (this.runNextTask()) {
+            // Run tasks while possible
+        }
     }
 
     private startPolling(): void {
@@ -71,7 +80,7 @@ class TaskQueue {
             name: TaskQueue.TASK_NAME,
             fixedDelay: 1000,
             delay: 1000,
-            times: 60,
+            times: 480,
             callback: () => {
                 logDebug(
                     LogDebugGroups.CRON,
@@ -91,7 +100,7 @@ class TaskQueue {
                     }
                 });
 
-                this.runNextTask();
+                this.runNextTasks();
             },
         });
     }
