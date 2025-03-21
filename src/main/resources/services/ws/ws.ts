@@ -208,7 +208,7 @@ function pollAndSendMessages(
         name: POLL_MESSAGES_TASK,
         fixedDelay: 500,
         delay: 1000,
-        times: 240, // 500ms * 240 = 120s, run for 2 minutes
+        times: 960, // 500ms * 960 = 480s, run for 8 minutes
         callback: () => {
             messages.forEach((path, result) => {
                 const [text, err] = result;
