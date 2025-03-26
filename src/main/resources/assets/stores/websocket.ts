@@ -43,7 +43,8 @@ export function startTranslation(): void {
 
     resetItems();
 
-    const targetLanguage = getLanguage().tag;
+    const {tag, name} = getLanguage();
+    const targetLanguage = `${tag} (${name})`;
     const customInstructions = $instructions.get();
 
     connect();
