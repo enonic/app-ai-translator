@@ -16,6 +16,7 @@ import {ComponentDescriptor, ComponentDescriptorType, XDataSchema} from '@enonic
 
 import {TOPIC_NAME} from '../../shared/constants';
 import {ERRORS} from '../../shared/errors';
+import type {TextType} from '../../shared/types/text';
 import {logError, logWarn} from '../logger';
 import {isRecordEmpty} from '../utils/objects';
 import {DataEntry, flattenData} from './data';
@@ -136,7 +137,7 @@ function mapDataToFormItems(
     return result;
 }
 
-function getPathType(path: Optional<InputWithPath>): 'html' | 'text' {
+function getPathType(path: Optional<InputWithPath>): TextType {
     return path?.inputType === 'HtmlArea' ? 'html' : 'text';
 }
 

@@ -1,3 +1,5 @@
+import type {TextType} from './types/text';
+
 export const TRANSLATION_INSTRUCTIONS = `
 # INSTRUCTIONS
 
@@ -10,12 +12,13 @@ You MUST follow the instructions for answering:
 - ALWAYS keep the links and other HTML tags in the text.
 - DO NOT JUDGE or give your opinion, only translate.
 - Do not alter or remove any formatting elements unless explicitly instructed.
+- DO NOT enclose the translated HTML in any markdown code blocks (e.g., \`\`\`html, \`\`\`). Return only the raw HTML.
 `.trim();
 
 export type TranslateTextParams = {
     text: string;
     language: string;
-    type?: 'text' | 'html';
+    type?: TextType;
     context?: string;
 };
 

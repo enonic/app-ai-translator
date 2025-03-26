@@ -17,6 +17,7 @@
     "text.error.websocket.protocol": "Invalid WebSocket protocol.",
     "text.error.query.notFound": "Problem finding fields to translate.",
     "text.error.function": "Function execution failed.",
+    "text.error.function.translationEmpty": "Translation returned empty result.",
     "text.error.model": "AI model error occurred. Code: {{code}}.",
     "text.error.response.safety": "Safety violation detected.",
     "text.error.google.request": "Error communicating with AI.",
