@@ -230,6 +230,8 @@ function getErrorMessageByCode(code: number): string {
         case ERRORS.FUNC_UNKNOWN_MODE.code:
         case ERRORS.FUNC_NO_TRANSLATABLE_FIELDS.code:
             return t('text.error.function');
+        case ERRORS.FUNC_TRANSLATION_EMPTY.code:
+            return t('text.error.function.translationEmpty');
         case ERRORS.MODEL_UNKNOWN_ERROR.code:
         case ERRORS.MODEL_INVALID_ARGUMENT.code:
         case ERRORS.MODEL_FAILED_PRECONDITION.code:

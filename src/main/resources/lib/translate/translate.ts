@@ -1,6 +1,7 @@
 import {ERRORS} from '../../shared/errors';
 import {createTranslationPrompt} from '../../shared/prompts';
 import {Message} from '../../shared/types/model';
+import type {TextType} from '../../shared/types/text';
 import {DataEntry} from '../content/data';
 import {ModelProxy} from '../proxy/model';
 import {connect} from '../proxy/proxy';
@@ -54,7 +55,13 @@ export function translate(item: TranslateContentParams): Try<string> {
         return [null, error];
     }
 
-    return [response.content?.trim(), null];
+    const text = cleanContent(response.content, item.entry.type);
+
+    if (text == null || (text === '' && item.entry.value !== '')) {
+        return [null, ERRORS.FUNC_TRANSLATION_EMPTY];
+    }
+
+    return [text, null];
 }
 
 function connectModel(messages: Message[], instructions?: string): Try<ModelProxy> {
@@ -71,4 +78,16 @@ function createMessage(entry: DataEntry, language: string): Message[] {
     });
 
     return [{role: 'user', text: prompt}];
+}
+
+function cleanContent(content: Optional<string>, type: TextType): string | null {
+    if (content == null) {
+        return null;
+    }
+
+    return (type === 'html' ? cleanBackticks(content) : content).trim();
+}
+
+function cleanBackticks(input: string): string {
+    return input.replace(/^```(?:\w+)?\s*|^`+|`+$|```$/g, '');
 }

@@ -54,6 +54,7 @@ export const ERRORS = {
     FUNC_INSUFFICIENT_DATA: err(3000, 'Insufficient data.'),
     FUNC_UNKNOWN_MODE: err(3001, 'Unknown AI mode.'),
     FUNC_NO_TRANSLATABLE_FIELDS: err(3002, 'No translatable fields found.'),
+    FUNC_TRANSLATION_EMPTY: err(3003, 'Translation is empty.'),
 
     // Model Errors 4000
     MODEL_UNKNOWN_ERROR: err(4000, 'Model: Unknown error.'),
