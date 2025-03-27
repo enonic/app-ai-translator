@@ -232,6 +232,12 @@ function getErrorMessageByCode(code: number): string {
             return t('text.error.function');
         case ERRORS.FUNC_TRANSLATION_EMPTY.code:
             return t('text.error.function.translationEmpty');
+        case ERRORS.MODEL_SAFETY.code:
+            return t('text.error.model.safety');
+        case ERRORS.MODEL_PROHIBITED_CONTENT.code:
+            return t('text.error.model.prohibitedContent');
+        case ERRORS.MODEL_SPII.code:
+            return t('text.error.model.spii');
         case ERRORS.MODEL_UNKNOWN_ERROR.code:
         case ERRORS.MODEL_INVALID_ARGUMENT.code:
         case ERRORS.MODEL_FAILED_PRECONDITION.code:

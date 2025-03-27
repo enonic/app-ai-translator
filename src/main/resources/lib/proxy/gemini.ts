@@ -3,7 +3,7 @@ import type {Content, GenerateContentRequest, POSSIBLE_ROLES} from '@google/gene
 import {HarmBlockThreshold, HarmCategory} from '../../shared/enums';
 import {ERRORS} from '../../shared/errors';
 import {TRANSLATION_INSTRUCTIONS} from '../../shared/prompts';
-import type {ModelResponseGenerateData} from '../../shared/types/model';
+import type {FinishReason, ModelResponseGenerateData} from '../../shared/types/model';
 import {generate} from '../google/api/generate';
 import {logDebug, LogDebugGroups} from '../logger';
 import {ModelProxy, ModelProxyConfig} from './model';
@@ -86,18 +86,26 @@ export class GeminiProxy implements ModelProxy {
         }
 
         const {candidates, promptFeedback} = response;
-        if (promptFeedback?.blockReason != null) {
-            return [{content: '', finishReason: promptFeedback.blockReason}, null];
-        }
 
         const [content] = candidates ?? [];
         if (!content) {
             return [null, ERRORS.GOOGLE_CANDIDATES_EMPTY];
         }
 
+        const finishReason: FinishReason = content.finishReason || promptFeedback?.blockReason;
+
+        switch (finishReason) {
+            case 'SAFETY':
+                return [null, ERRORS.MODEL_SAFETY];
+            case 'PROHIBITED_CONTENT':
+                return [null, ERRORS.MODEL_PROHIBITED_CONTENT];
+            case 'SPII':
+                return [null, ERRORS.MODEL_SPII];
+        }
+
         const data: ModelResponseGenerateData = {
             content: GeminiProxy.extractText(content.content),
-            finishReason: content.finishReason,
+            finishReason,
         };
 
         return [data, null];

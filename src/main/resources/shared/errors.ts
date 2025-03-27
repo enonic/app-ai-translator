@@ -57,9 +57,14 @@ export const ERRORS = {
     FUNC_TRANSLATION_EMPTY: err(3003, 'Translation is empty.'),
 
     // Model Errors 4000
-    MODEL_UNKNOWN_ERROR: err(4000, 'Model: Unknown error.'),
-    MODEL_INVALID_ARGUMENT: err(4001, 'Model: Invalid argument.'),
-    MODEL_FAILED_PRECONDITION: err(4002, 'Model: Failed precondition.'),
+    MODEL_UNEXPECTED: err(4000, 'Generation finished unexpectedly.'),
+    MODEL_MAX_TOKENS: err(4001, 'Max tokens limit reached.'),
+    MODEL_SAFETY: err(4002, 'Generation was stopped due to safety reasons.'),
+    MODEL_PROHIBITED_CONTENT: err(4003, 'Generation was stopped, because of prohibited content.'),
+    MODEL_SPII: err(4004, 'Generation was stopped, because of Sensitive Personally Identifiable Information.'),
+    MODEL_UNKNOWN_ERROR: err(4010, 'Model: Unknown error.'),
+    MODEL_INVALID_ARGUMENT: err(4011, 'Model: Invalid argument.'),
+    MODEL_FAILED_PRECONDITION: err(4012, 'Model: Failed precondition.'),
 
     // Google Errors 5000
     GOOGLE_SAK_MISSING: err(5000, 'Google Service Account Key is missing or invalid.'),
