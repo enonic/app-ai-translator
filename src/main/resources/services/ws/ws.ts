@@ -22,8 +22,6 @@ import {
     TranslateMessage,
 } from '../../shared/types/websocket';
 
-const POLL_MESSAGES_TASK = 'send-ws-messages';
-
 export function get(request: Enonic.Request): Enonic.Response {
     if (!request.webSocket) {
         const error = ERRORS.REST_NOT_FOUND.withMsg('Trying to access WebSocket with "webSocket" set to "false"');
@@ -56,7 +54,7 @@ export function webSocketEvent(event: Enonic.WebSocketEvent): void {
                 handleMessage(event);
                 break;
             case 'close':
-                handleClose();
+                handleClose(event);
                 break;
             case 'error':
                 break;
@@ -204,27 +202,35 @@ function pollAndSendMessages(
     contentId: string,
     messages: ConcurrentHashMap<string, Try<string>>,
 ): void {
-    cron.schedule({
-        name: POLL_MESSAGES_TASK,
-        fixedDelay: 500,
-        delay: 1000,
-        times: 960, // 500ms * 960 = 480s, run for 8 minutes
-        callback: () => {
-            messages.forEach((path, result) => {
-                const [text, err] = result;
+    try {
+        cron.schedule({
+            name: getTaskName(sessionId),
+            fixedDelay: 500,
+            delay: 1000,
+            times: 960, // 500ms * 960 = 480s, run for 8 minutes
+            callback: () => {
+                messages.forEach((path, result) => {
+                    const [text, err] = result;
 
-                if (err) {
-                    sendMessage(sessionId, makeFailedMessage(err, contentId, path));
-                } else {
-                    sendMessage(sessionId, makeCompletedMessage(contentId, path, text));
-                }
+                    if (err) {
+                        sendMessage(sessionId, makeFailedMessage(err, contentId, path));
+                    } else {
+                        sendMessage(sessionId, makeCompletedMessage(contentId, path, text));
+                    }
 
-                messages.remove(path);
-            });
-        },
-    });
+                    messages.remove(path);
+                });
+            },
+        });
+    } catch (e) {
+        logError(e);
+    }
 }
 
-function handleClose(): void {
-    cron.unschedule({name: POLL_MESSAGES_TASK});
+function handleClose(event: Enonic.WebSocketEvent): void {
+    cron.unschedule({name: getTaskName(event.session.id)});
+}
+
+function getTaskName(sessionId: string): string {
+    return `send-ws-messages-${sessionId}`;
 }
