@@ -26,6 +26,7 @@
     "text.error.google.request": "Error communicating with AI.",
     "text.error.google.parse": "Failed to parse AI response.",
     "text.error.google.empty": "AI returned empty response.",
-    "text.error.license.invalid": "No valid license found. Please contact your administrator",
-    "text.error.license.expired": "License expired. Please contact your administrator"
+    "text.error.license.invalid": "No valid license found. Please contact your administrator.",
+    "text.error.license.expired": "License expired. Please contact your administrator.",
+    "text.error.client.longRunningTask": "Translation took too long and was aborted."
 }
