@@ -62,7 +62,17 @@ export function startTranslation(): void {
 //
 
 const PING_INTERVAL = 50000; // ms
-let pingInterval: number;
+let pingIntervalId: number;
+
+const ABORT_TIMEOUT = 30000; // ms
+let abortTimeoutId: number;
+
+function abortOnNextLongRunningTask(): void {
+    clearTimeout(abortTimeoutId);
+    abortTimeoutId = setTimeout(() => {
+        failGlobally(t('text.error.client.longRunningTask'));
+    }, ABORT_TIMEOUT);
+}
 
 function connect(): void {
     const {wsServiceUrl} = $config.get();
@@ -77,7 +87,7 @@ function connect(): void {
             metadata: createMetadata(),
         });
 
-        pingInterval = window.setInterval(() => {
+        pingIntervalId = window.setInterval(() => {
             sendMessage({
                 type: MessageType.PING,
                 metadata: createMetadata(),
@@ -106,7 +116,8 @@ function closeConnection(): void {
 }
 
 function cleanup(): void {
-    clearInterval(pingInterval);
+    clearInterval(pingIntervalId);
+    clearTimeout(abortTimeoutId);
     $websocket.set({
         state: 'disconnected',
         connection: null,
@@ -132,6 +143,7 @@ function handleMessage(event: MessageEvent<string>): void {
             paths.forEach(path => {
                 dispatchStarted({path});
             });
+            abortOnNextLongRunningTask();
             break;
         }
 
@@ -139,6 +151,7 @@ function handleMessage(event: MessageEvent<string>): void {
             const {path, text} = msg.payload;
             addSucceeded(path);
             dispatchCompleted({path, text, success: true});
+            abortOnNextLongRunningTask();
             break;
         }
 
@@ -151,14 +164,9 @@ function handleMessage(event: MessageEvent<string>): void {
             if (path) {
                 addFailed(path, message);
                 dispatchCompleted({path, message, success: false});
+                abortOnNextLongRunningTask();
             } else {
-                // Global error
-                $websocket.setKey('success', false);
-                setGlobalFailure(message);
-                const {remaining} = $items.get();
-                remaining.forEach(path => dispatchCompleted({path, message, success: false}));
-                dispatchAllCompleted({message, success: false});
-                closeConnection();
+                failGlobally(message);
             }
             break;
         }
@@ -167,6 +175,15 @@ function handleMessage(event: MessageEvent<string>): void {
             cleanup();
             break;
     }
+}
+
+function failGlobally(message: string): void {
+    const remaining = [...$items.get().remaining];
+    $websocket.setKey('success', false);
+    setGlobalFailure(message);
+    remaining.forEach(path => dispatchCompleted({path, message, success: false}));
+    dispatchAllCompleted({message, success: false});
+    closeConnection();
 }
 
 export function stopTranslation(): void {
