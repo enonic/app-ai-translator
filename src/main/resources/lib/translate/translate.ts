@@ -26,7 +26,7 @@ type TranslationConfig = TranslationData & {
 
 type Callback = (path: string, result: Try<string>) => void;
 
-export function translateFields(config: TranslationConfig, callback: Callback): void {
+export function translateFields(config: TranslationConfig, callback: Callback, sessionId: string): void {
     const {fields, contentId, project, targetLanguage, customInstructions} = config;
     for (const path in fields) {
         const params: TranslateContentParams = {
@@ -38,7 +38,7 @@ export function translateFields(config: TranslationConfig, callback: Callback): 
             description: `Translating content '${contentId}' in repo '${project}', field: ${path}`,
             func: () => callback(path, translate(params)),
             onError: () => callback(path, [null, ERRORS.UNKNOWN_ERROR.withMsg('Translation task execution failed')]),
-        });
+        }, sessionId);
     }
 }
 

@@ -153,6 +153,7 @@ function startTranslation(session: Enonic.WebSocketSession, message: TranslateMe
             (path, result) => {
                 wsMessagesMap.put(path, result);
             },
+            session.id,
         );
     } catch (e) {
         const msg = makeFailedMessage(ERRORS.UNKNOWN_ERROR.withMsg(`Failed to translate: ${contentId}`), contentId);
