@@ -1,14 +1,8 @@
 import * as taskLib from '/lib/xp/task';
 import cron from '/lib/cron';
 
-
-
-import { TRANSLATION_POOL_SIZE } from '../config';
-import { logDebug, LogDebugGroups } from '../logger';
-
-
-
-
+import {TRANSLATION_POOL_SIZE} from '../config';
+import {logDebug, LogDebugGroups} from '../logger';
 
 type Task = {
     description?: string;

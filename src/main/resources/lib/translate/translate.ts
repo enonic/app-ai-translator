@@ -34,11 +34,15 @@ export function translateFields(config: TranslationConfig, callback: Callback, s
             language: targetLanguage,
             instructions: customInstructions,
         };
-        addTask({
-            description: `Translating content '${contentId}' in repo '${project}', field: ${path}`,
-            func: () => callback(path, translate(params)),
-            onError: () => callback(path, [null, ERRORS.UNKNOWN_ERROR.withMsg('Translation task execution failed')]),
-        }, sessionId);
+        addTask(
+            {
+                description: `Translating content '${contentId}' in repo '${project}', field: ${path}`,
+                func: () => callback(path, translate(params)),
+                onError: () =>
+                    callback(path, [null, ERRORS.UNKNOWN_ERROR.withMsg('Translation task execution failed')]),
+            },
+            sessionId,
+        );
     }
 }
 
