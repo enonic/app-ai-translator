@@ -1,4 +1,6 @@
-import {Component, LayoutComponent, PageComponent, PartComponent, TextComponent} from '@enonic-types/core';
+import {FragmentComponent, LayoutComponent, PageComponent, PartComponent, TextComponent} from '@enonic-types/core';
+
+type Component = PageComponent | FragmentComponent | LayoutComponent | PartComponent | TextComponent;
 
 export const isLayoutComponent = (component: Component): component is LayoutComponent => component.type === 'layout';
 
