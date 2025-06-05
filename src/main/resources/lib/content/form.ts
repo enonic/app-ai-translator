@@ -1,7 +1,8 @@
-import {FormItem, FormItemInput} from '/lib/xp/content';
-import {FormItemLayout, FormItemOptionSet, FormItemSet} from '/lib/xp/core';
+import type {FormItem, FormItemInlineMixin, FormItemInput} from '/lib/xp/content';
+import type {FormItemLayout, FormItemOptionSet, FormItemSet} from '/lib/xp/core';
 
 import {Path} from './path';
+import {getMixinSchema} from './schema';
 
 export type FormOptionSetOption = {
     name: string;
@@ -9,13 +10,15 @@ export type FormOptionSetOption = {
     items: FormItem[];
 };
 
-export const isInput = (item: FormItem): item is FormItemInput => item.formItemType === 'Input';
+export const isInput = <T extends FormItem>(item: T): item is T & FormItemInput => item.formItemType === 'Input';
 
 export const isFormItemSet = (item: FormItem): item is FormItemSet => item.formItemType === 'ItemSet';
 
 export const isFieldSet = (item: FormItem): item is FormItemLayout => item.formItemType === 'Layout';
 
 export const isFormItemOptionSet = (item: FormItem): item is FormItemOptionSet => item.formItemType === 'OptionSet';
+
+export const isInlineMixin = (item: FormItem): item is FormItemInlineMixin => item.formItemType === 'InlineMixin';
 
 export type FormItemWithPath = FormItem & Path;
 
@@ -26,9 +29,7 @@ export type FormItemSetWithPath = FormItemSet & Path;
 export type FormOptionSetWithPath = FormItemOptionSet & Path;
 
 export function getPathsToTranslatableFields(formItems: FormItem[]): FormItemWithPath[] {
-    const result: FormItemWithPath[] = [];
-    result.push(...getPathsOfMentionableItems(formItems, {elements: []}));
-    return result;
+    return getPathsOfMentionableItems(formItems, {elements: []});
 }
 
 function getPathsOfMentionableItems(formItems: FormItem[], path: Path): FormItemWithPath[] {
@@ -56,6 +57,10 @@ function fetchFormItemPath(item: FormItem, path: Path): FormItemWithPath[] {
 
     if (isFormItemOptionSet(item)) {
         return getFormOptionSetPathEntries(item, path);
+    }
+
+    if (isInlineMixin(item)) {
+        return getInlineMixinPathEntries(item, path);
     }
 
     return [];
@@ -118,4 +123,9 @@ function getFormOptionSetOptionPathEntries(option: FormOptionSetOption, path: Pa
     };
 
     return [optionFormItemWithPath, ...getPathsOfMentionableItems(option.items, {elements: pathElements})];
+}
+
+function getInlineMixinPathEntries(item: FormItemInlineMixin, path: Path): FormItemWithPath[] {
+    const schema = getMixinSchema(item.name);
+    return schema ? getPathsOfMentionableItems(schema.form, {elements: path.elements}) : [];
 }

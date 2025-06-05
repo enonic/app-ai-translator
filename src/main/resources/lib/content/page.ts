@@ -1,4 +1,4 @@
-import {FragmentComponent, LayoutComponent, PageComponent, PartComponent, TextComponent} from '@enonic-types/core';
+import type {FragmentComponent, LayoutComponent, PageComponent, PartComponent, TextComponent} from '/lib/xp/core';
 
 type Component = PageComponent | FragmentComponent | LayoutComponent | PartComponent | TextComponent;
 

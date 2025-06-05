@@ -1,29 +1,30 @@
 import * as contentLib from '/lib/xp/content';
 import * as contextLib from '/lib/xp/context';
 import * as schemaLib from '/lib/xp/schema';
-import {Content, FormItem} from '/lib/xp/content';
-import {User} from '/lib/xp/context';
-
-import {
+import type {Content, FormItem} from '/lib/xp/content';
+import type {User} from '/lib/xp/context';
+import type {
     FragmentComponent,
     LayoutComponent,
     PageComponent,
     PartComponent,
     Region,
     TextComponent,
-} from '@enonic-types/core';
-import {ComponentDescriptor, ComponentDescriptorType, XDataSchema} from '@enonic-types/lib-schema';
+} from '/lib/xp/core';
+import type {ComponentDescriptor, ComponentDescriptorType} from '/lib/xp/schema';
 
 import {TOPIC_NAME} from '../../shared/constants';
 import {ERRORS} from '../../shared/errors';
 import type {TextType} from '../../shared/types/text';
-import {logError, logWarn} from '../logger';
+import {logError} from '../logger';
+import {runAsAdmin} from '../utils/context';
 import {isRecordEmpty} from '../utils/objects';
 import {DataEntry, flattenData} from './data';
 import {FormItemWithPath, getPathsToTranslatableFields, InputWithPath, isInput} from './form';
 import {isLayoutComponent, isPageComponent, isPartComponent, isTextComponent} from './page';
 import {pathToString} from './path';
 import {Property, PropertyValue} from './property';
+import {getXDataSchemas} from './schema';
 
 type ContextUser = Pick<User, 'login' | 'idProvider'> | undefined;
 
@@ -175,54 +176,6 @@ function getXDataFieldsToTranslate(xData: Record<string, PropertyValue>): Record
     return result;
 }
 
-// Grouping x data schemas by appName/xDataName key
-function getXDataSchemas(xData: Record<string, PropertyValue>): Record<string, XDataSchema> {
-    const schemas: Record<string, XDataSchema> = {};
-
-    for (const path in xData) {
-        const schemaPrefix = makeSchemaPrefix(path);
-
-        if (schemaPrefix && !schemas[schemaPrefix] && !isBuiltInSchema(schemaPrefix)) {
-            const schema = getSchema(schemaPrefix);
-
-            if (schema) {
-                schemas[schemaPrefix] = schema;
-            }
-        }
-    }
-
-    return schemas;
-}
-
-function makeSchemaPrefix(path: string): string | undefined {
-    const pathParts = path.split('/');
-    return pathParts.length > 2 ? `${pathParts[0]}/${pathParts[1]}` : undefined;
-}
-
-function isBuiltInSchema(schemaPrefix: string): boolean {
-    return schemaPrefix.startsWith('media/') || schemaPrefix.startsWith('base/');
-}
-
-function getSchema(xDataPath: string): XDataSchema | undefined {
-    const pathParts = xDataPath.split('/');
-    const schemaKey = `${pathParts[0].replace(/-/g, '.')}:${pathParts[1]}`; // replace dashes with dots
-    let schema;
-
-    try {
-        // https://github.com/enonic/xp/issues/10425, try-catch can be removed after xp version is set to 7.15
-        schema = contextLib.run(
-            {
-                principals: ['role:system.admin'],
-            },
-            () => schemaLib.getSchema({name: schemaKey, type: 'XDATA'}),
-        );
-    } catch (e) {
-        logWarn(`Failed to fetch schema for xData: ${schemaKey}`);
-    }
-
-    return schema;
-}
-
 function getXDataEntriesBySchemaPrefix(
     xData: Record<string, PropertyValue>,
     schemaPrefix: string,
@@ -252,12 +205,7 @@ function getPageDataEntries(content: Content): Record<string, DataEntry> {
 }
 
 function getComponent(key: string, type: ComponentDescriptorType): ComponentDescriptor {
-    return contextLib.run(
-        {
-            principals: ['role:system.admin'],
-        },
-        () => schemaLib.getComponent({key, type}),
-    ) as ComponentDescriptor;
+    return runAsAdmin(() => schemaLib.getComponent({key, type}) as ComponentDescriptor);
 }
 
 function getRegionFieldsToTranslate(
