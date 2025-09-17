@@ -27,12 +27,16 @@ export default function ProcessingView(): React.ReactNode {
                     ])}
                 >
                     <Trans
-                        i18nKey='text.translating.progress'
-                        values={{
-                            language: language.name,
-                            progress: isPreparing ? 'x' : countRemaining,
-                            total: isPreparing ? 'X' : countTotal,
-                        }}
+                        i18nKey={isPreparing ? 'text.translating.preparing' : 'text.translating.progress'}
+                        values={
+                            isPreparing
+                                ? {}
+                                : {
+                                      language: language.name,
+                                      progress: countRemaining,
+                                      total: countTotal,
+                                  }
+                        }
                         components={{
                             framed: <FramedText />,
                             bold: <span className='font-bold' />,
