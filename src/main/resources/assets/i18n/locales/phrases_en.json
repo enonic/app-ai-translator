@@ -8,6 +8,7 @@
     "field.instructions.placeholder": "Write text translation instructions. The general instructions configured via site will also be added here.",
     "text.greeting": "Hey! Want me to translate texts to <0/> ?",
     "text.assistant.name": "Juke AI",
+    "text.translating.preparing": "Initiating translation...",
     "text.translating.progress": "Translating to <framed>{{language}}</framed>: <bold>{{progress}}</bold> of <bold>{{total}}</bold> completed.",
     "text.result.completed": "All translations are finished! You can safely close this dialog now.",
     "text.result.failed.some": "Translation finished with <bold>{{count}}</bold> errors. Contact administrator or try again later.",
