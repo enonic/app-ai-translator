@@ -9,6 +9,7 @@
     "text.assistant.name": "Juke AI",
     "text.error.configuration": "Неверная конфигурация приложения.",
     "text.error.function": "Сбой выполнения функции на сервере.",
+    "text.error.function.translationEmpty": "Перевод вернул пустой результат.",
     "text.error.google.empty": "ИИ вернул пустой ответ.",
     "text.error.google.parse": "Не удалось обработать ответ ИИ.",
     "text.error.google.request": "Не удалось связаться с ИИ.",

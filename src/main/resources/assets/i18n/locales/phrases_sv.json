@@ -1,0 +1,20 @@
+{
+    "action.addInstructions": "Lägg till översättningsinstruktioner",
+    "action.cancel": "Avbryt",
+    "action.translate": "Översätt",
+    "field.instructions.placeholder": "Skriv instruktioner för textöversättning. De allmänna instruktionerna som konfigureras via webbplatsen kommer också att läggas till här.",
+    "field.instructions.title": "Översättningsinstruktioner",
+    "field.title": "AI-automatiserad översättning",
+    "text.assistant.name": "Juke AI",
+    "text.error.configuration": "Ogiltig applikationskonfiguration.",
+    "text.error.function": "Det gick inte att köra funktionen.",
+    "text.error.google.empty": "AI returnerade tomt svar.",
+    "text.error.google.parse": "Misslyckades med att analysera AI-svaret.",
+    "text.error.google.request": "Fel vid kommunikation med AI.",
+    "text.error.model": "AI-modellfel uppstod.",
+    "text.error.query.notFound": "Problem med att hitta fält att översätta.",
+    "text.error.response.safety": "Säkerhetsbrott upptäckt.",
+    "text.error.unknown": "Något gick fel. Kod: <{{code}}>.",
+    "text.error.websocket.protocol": "Ogiltigt WebSocket-protokoll.",
+    "text.greeting": "Hej! Vill du att jag ska översätta texter till <0\/> ?"
+}
