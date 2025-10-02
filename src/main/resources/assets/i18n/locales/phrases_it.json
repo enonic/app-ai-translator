@@ -1,0 +1,20 @@
+{
+    "action.addInstructions": "Aggiungere le istruzioni per la traduzione",
+    "action.cancel": "Annulla",
+    "action.translate": "Traduci",
+    "field.instructions.placeholder": "Scrivi le istruzioni per la traduzione del testo. Qui verranno aggiunte anche le istruzioni generali configurate tramite il sito.",
+    "field.instructions.title": "Istruzioni per la traduzione",
+    "field.title": "Traduzione automatica AI",
+    "text.assistant.name": "Juke AI",
+    "text.error.configuration": "Configurazione dell'applicazione non valida.",
+    "text.error.function": "Esecuzione della funzione non riuscita.",
+    "text.error.google.empty": "AI ha restituito una risposta vuota.",
+    "text.error.google.parse": "Impossibile analizzare la risposta di AI.",
+    "text.error.google.request": "Errore di comunicazione con l'AI.",
+    "text.error.model": "Si è verificato un errore del modello AI.",
+    "text.error.query.notFound": "Problema nel trovare i campi da tradurre.",
+    "text.error.response.safety": "Rilevata violazione della sicurezza.",
+    "text.error.unknown": "Qualcosa non è andato come previsto. Codice: <{{code}}>.",
+    "text.error.websocket.protocol": "Protocollo WebSocket non valido.",
+    "text.greeting": "Ehi! Vuoi che traduca testi in <0\/> ?"
+}
