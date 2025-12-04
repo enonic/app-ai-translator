@@ -7,6 +7,7 @@
     "field.instructions.title": "Инструкции для перевода",
     "field.title": "Автоматический Перевод",
     "text.assistant.name": "Juke AI",
+    "text.error.client.longRunningTask": "Перевод занял слишком много времени и был прерван.",
     "text.error.configuration": "Неверная конфигурация приложения.",
     "text.error.function": "Сбой выполнения функции на сервере.",
     "text.error.function.translationEmpty": "Перевод вернул пустой результат.",
@@ -16,6 +17,9 @@
     "text.error.license.expired": "Лицензия истекла. Обратитесь к администратору",
     "text.error.license.invalid": "Действующая лицензия не найдена. Обратитесь к администратору",
     "text.error.model": "Произошла ошибка в модели ИИ.",
+    "text.error.model.prohibitedContent": "Генерация остановлена из-за обнаружения запрещенного содержимого.",
+    "text.error.model.safety": "Генерация была остановлена по соображениям безопасности.",
+    "text.error.model.spii": "Генерация была остановлена, поскольку была обнаружена конфиденциальная персональная информация.",
     "text.error.query.notFound": "Поля для перевода не найдены.",
     "text.error.response.safety": "Ответ нарушает правила безопасности.",
     "text.error.unknown": "Что-то пошло не так. Код: <{{code}}>.",
@@ -24,5 +28,6 @@
     "text.result.completed": "Все переводы завершены! Теперь вы можете смело закрыть этот диалог.",
     "text.result.failed.all": "Не удалось завершить перевод. Причина: <italic>{{reason}}<\/italic>",
     "text.result.failed.some": "Перевод завершен с ошибками (<bold>{{count}} <\/bold>). Обратитесь к администратору или повторите попытку позже.",
+    "text.translating.preparing": "Начинаю перевод...",
     "text.translating.progress": "Перевод на <framed> {{language}} <\/framed> : <bold> {{progress}} <\/bold> из <bold> {{total}} <\/bold> завершен."
 }
