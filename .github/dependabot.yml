@@ -9,7 +9,7 @@ updates:
           - 'rymsha'
       reviewers:
           - 'rymsha'
-    - package-ecosystem: 'pnpm'
+    - package-ecosystem: 'npm'
       directory: '/'
       schedule:
           interval: 'weekly'
