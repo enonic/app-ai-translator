@@ -32,7 +32,7 @@
         "react-dom": "^19.1.0",
         "react-i18next": "^16.5.1",
         "tailwind-merge": "^3.3.0",
-        "tailwindcss-scoped-preflight": "^3.4.12"
+        "tailwindcss-scoped-preflight": "^3.5.7"
     },
     "devDependencies": {
         "@enonic-types/core": "^7.15.1",
