@@ -20,7 +20,7 @@
     "dependencies": {
         "@nanostores/react": "^1.0.0",
         "clsx": "^2.1.1",
-        "focus-trap-react": "^11.0.3",
+        "focus-trap-react": "^11.0.5",
         "i18next": "^25.7.3",
         "i18next-http-backend": "^3.0.2",
         "lodash.clonedeep": "^4.5.0",
