@@ -1,14 +1,11 @@
-import type {Content, GenerateContentRequest, POSSIBLE_ROLES} from '@google/generative-ai';
-
 import {HarmBlockThreshold, HarmCategory} from '../../shared/enums';
 import {ERRORS} from '../../shared/errors';
 import {TRANSLATION_INSTRUCTIONS} from '../../shared/prompts';
 import type {FinishReason, ModelResponseGenerateData} from '../../shared/types/model';
 import {generate} from '../google/api/generate';
+import type {Content, GenerateContentRequest, Role} from '../google/types';
 import {logDebug, LogDebugGroups} from '../logger';
 import {ModelProxy, ModelProxyConfig} from './model';
-
-type Role = (typeof POSSIBLE_ROLES)[number];
 
 export class GeminiProxy implements ModelProxy {
     private readonly params: GenerateContentRequest;
@@ -74,7 +71,7 @@ export class GeminiProxy implements ModelProxy {
     }
 
     private static extractText(content: Content | undefined): string {
-        return content?.parts.map(({text}) => text).join('') ?? '';
+        return content?.parts?.map(({text}) => text).join('') ?? '';
     }
 
     generate(): Try<ModelResponseGenerateData> {
@@ -92,7 +89,7 @@ export class GeminiProxy implements ModelProxy {
             return [null, ERRORS.GOOGLE_CANDIDATES_EMPTY];
         }
 
-        const finishReason: FinishReason = content.finishReason || promptFeedback?.blockReason;
+        const finishReason = (content.finishReason || promptFeedback?.blockReason) as FinishReason;
 
         switch (finishReason) {
             case 'SAFETY':

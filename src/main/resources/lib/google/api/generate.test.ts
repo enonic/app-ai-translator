@@ -1,10 +1,9 @@
 import type {HttpClientResponse} from '/lib/http-client';
 import {createResponse} from '/tests/testUtils/testHelpers';
 
-import type {GenerateContentRequest} from '@google/generative-ai';
-
 import {content} from '../../../../../../tests/testUtils/fixtures/google';
 import {ERRORS} from '../../../shared/errors';
+import type {GenerateContentRequest} from '../types';
 import {generate} from './generate';
 
 type Client = typeof import('../client');
