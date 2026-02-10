@@ -23,3 +23,7 @@ package-lock.json
 
 tmp.*
 .DS_Store
+
+# AI Assistant
+.claude/plans/
+settings.local.json
