@@ -1,4 +1,6 @@
-import {FinishReason, GenerateContentResponse, HarmCategory, HarmProbability} from '@google/generative-ai';
+import {FinishReason, HarmCategory, HarmProbability} from '@google/genai';
+
+import type {GenerateContentResponse} from '../../../src/main/resources/lib/google/types';
 
 // ------------------------------------
 // CONTENT

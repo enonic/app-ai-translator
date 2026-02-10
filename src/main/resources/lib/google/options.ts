@@ -59,8 +59,11 @@ export function parseOptions(): Try<ClientOptions> {
 }
 
 function createModelGenerateUrl(projectId: string): string {
+    // Regional endpoint with EU data residency (europe-west1). Preview models may not be available.
+    // Global endpoint routes to any available region (no data residency guarantee):
+    // https://aiplatform.googleapis.com/v1/projects/${projectId}/locations/global/publishers/google/models/<model>
     const baseUrl =
         GOOGLE_GEMINI_URL ||
-        `https://europe-west1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/europe-west1/publishers/google/models/gemini-2.0-flash-001`;
+        `https://europe-west1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/europe-west1/publishers/google/models/gemini-2.5-flash`;
     return `${baseUrl}:generateContent`;
 }
