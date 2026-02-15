@@ -92,7 +92,7 @@ function parseError({body, message}: HttpClientResponse): CustomAiError {
             return ERRORS.MODEL_FAILED_PRECONDITION.withMsg(errorMessage);
         }
         return ERRORS.MODEL_UNKNOWN_ERROR.withMsg(errorMessage);
-    } catch (e) {
+    } catch (_e) {
         return ERRORS.MODEL_UNKNOWN_ERROR.withMsg('Cannot parse error message.');
     }
 }
