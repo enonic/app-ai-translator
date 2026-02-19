@@ -55,8 +55,8 @@ importers:
         version: 3.5.7(postcss@8.5.6)(tailwindcss@3.4.19)
     devDependencies:
       '@enonic-types/core':
-        specifier: ^7.15.1
-        version: 7.16.1
+        specifier: ^7.16.2
+        version: 7.16.2
       '@enonic-types/global':
         specifier: ^7.15.1
         version: 7.16.1
