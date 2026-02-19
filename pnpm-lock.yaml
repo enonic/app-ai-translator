@@ -48,8 +48,8 @@ importers:
         specifier: ^16.5.4
         version: 16.5.4(i18next@25.8.6(typescript@5.9.3))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3)
       tailwind-merge:
-        specifier: ^3.3.0
-        version: 3.4.0
+        specifier: ^3.5.0
+        version: 3.5.0
       tailwindcss-scoped-preflight:
         specifier: ^3.5.7
         version: 3.5.7(postcss@8.5.6)(tailwindcss@3.4.19)
@@ -4062,8 +4062,8 @@ packages:
   tabbable@6.4.0:
     resolution: {integrity: sha512-05PUHKSNE8ou2dwIxTngl4EzcnsCDZGJ/iCLtDflR/SHB/ny14rXc+qU5P4mG9JkusiV7EivzY9Mhm55AzAvCg==}
 
-  tailwind-merge@3.4.0:
-    resolution: {integrity: sha512-uSaO4gnW+b3Y2aWoWfFpX62vn2sR3skfhbjsEnaBI81WD1wBLlHZe5sWf0AqjksNdYTbGBEd0UasQMT3SNV15g==}
+  tailwind-merge@3.5.0:
+    resolution: {integrity: sha512-I8K9wewnVDkL1NTGoqWmVEIlUcB9gFriAEkXkfCjX5ib8ezGxtR3xD7iZIxrfArjEsH7F1CHD4RFUtxefdqV/A==}
 
   tailwindcss-scoped-preflight@3.5.7:
     resolution: {integrity: sha512-+TXhksi7Ac6aCH0w9fk5eEHRvAwOaVP57JwkMSvIhhxTggFu5rdMIy83xImJ+jQYPE9nbQQEl34G2Ka8g+zrDg==}
@@ -9028,7 +9028,7 @@ snapshots:
 
   tabbable@6.4.0: {}
 
-  tailwind-merge@3.4.0: {}
+  tailwind-merge@3.5.0: {}
 
   tailwindcss-scoped-preflight@3.5.7(postcss@8.5.6)(tailwindcss@3.4.19):
     dependencies:
