@@ -39,7 +39,7 @@
         "@enonic-types/global": "^7.15.1",
         "@enonic-types/lib-auth": "^7.15.1",
         "@enonic-types/lib-content": "^7.15.1",
-        "@enonic-types/lib-context": "^7.15.1",
+        "@enonic-types/lib-context": "^7.16.2",
         "@enonic-types/lib-task": "^7.15.1",
         "@enonic-types/lib-websocket": "^7.15.1",
         "@enonic-types/lib-schema": "^7.15.1",
