@@ -42,7 +42,7 @@
         "@enonic-types/lib-context": "^7.16.2",
         "@enonic-types/lib-task": "^7.15.1",
         "@enonic-types/lib-websocket": "^7.15.1",
-        "@enonic-types/lib-schema": "^7.15.1",
+        "@enonic-types/lib-schema": "^7.16.2",
         "@enonic/esbuild-plugin-copy-with-hash": "^0.2.0",
         "@enonic/eslint-config": "^2.2.1",
         "@enonic/mock-xp": "^1.0.0",
