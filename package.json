@@ -59,7 +59,7 @@
         "@types/react-dom": "^19.1.5",
         "typescript-eslint": "^8.56.0",
         "@vitejs/plugin-react": "^5.1.4",
-        "autoprefixer": "^10.4.24",
+        "autoprefixer": "^10.4.27",
         "eslint": "^9.39.2",
         "eslint-import-resolver-typescript": "^4.3.5",
         "eslint-plugin-import": "^2.31.0",
