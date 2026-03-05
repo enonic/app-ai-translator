@@ -88,8 +88,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0(@types/node@25.0.2)
       '@google/genai':
-        specifier: ^1.43.0
-        version: 1.43.0
+        specifier: ^1.44.0
+        version: 1.44.0
       '@swc/core':
         specifier: ^1.15.17
         version: 1.15.17
@@ -835,8 +835,8 @@ packages:
     resolution: {integrity: sha512-43/qtrDUokr7LJqoF2c3+RInu/t4zfrpYdoSDfYyhg52rwLV6TnOvdG4fXm7IkSB3wErkcmJS9iEhjVtOSEjjA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@google/genai@1.43.0':
-    resolution: {integrity: sha512-hklCsJNdMlDM1IwcCVcGQFBg2izY0+t5BIGbRsxi2UnKi6AGKL7pqJqmBDNRbw0bYCs4y3NA7TB+fkKfP/Nrdw==}
+  '@google/genai@1.44.0':
+    resolution: {integrity: sha512-kRt9ZtuXmz+tLlcNntN/VV4LRdpl6ZOu5B1KbfNgfR65db15O6sUQcwnwLka8sT/V6qysD93fWrgJHF2L7dA9A==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
       '@modelcontextprotocol/sdk': ^1.25.2
@@ -1559,6 +1559,9 @@ packages:
 
   '@types/node@25.3.2':
     resolution: {integrity: sha512-RpV6r/ij22zRRdyBPcxDeKAzH43phWVKEjL2iksqo1Vz3CuBUrgmPpPhALKiRfU7OMCmeeO9vECBMsV0hMTG8Q==}
+
+  '@types/node@25.3.3':
+    resolution: {integrity: sha512-DpzbrH7wIcBaJibpKo9nnSQL0MTRdnWttGyE5haGwK86xgMOkFLp7vEyfQPGLOJh5wNYiJ3V9PmUMDhV9u8kkQ==}
 
   '@types/react-dom@19.2.3':
     resolution: {integrity: sha512-jp2L/eY6fn+KgVVQAOqYItbF0VY/YApe5Mz2F0aykSO8gx31bYCZyvSeYxCHKvzHG5eZjc+zyaS5BrBWya2+kQ==}
@@ -5051,7 +5054,7 @@ snapshots:
       '@eslint/core': 0.17.0
       levn: 0.4.1
 
-  '@google/genai@1.43.0':
+  '@google/genai@1.44.0':
     dependencies:
       google-auth-library: 10.6.1
       p-retry: 4.6.2
@@ -5095,7 +5098,7 @@ snapshots:
   '@jest/console@29.7.0':
     dependencies:
       '@jest/types': 29.6.3
-      '@types/node': 25.3.2
+      '@types/node': 25.3.3
       chalk: 4.1.2
       jest-message-util: 29.7.0
       jest-util: 29.7.0
@@ -5104,7 +5107,7 @@ snapshots:
   '@jest/console@30.2.0':
     dependencies:
       '@jest/types': 30.2.0
-      '@types/node': 25.3.2
+      '@types/node': 25.3.3
       chalk: 4.1.2
       jest-message-util: 30.2.0
       jest-util: 30.2.0
@@ -5198,7 +5201,7 @@ snapshots:
     dependencies:
       '@jest/fake-timers': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 25.3.2
+      '@types/node': 25.3.3
       jest-mock: 29.7.0
 
   '@jest/environment@30.2.0':
@@ -5234,7 +5237,7 @@ snapshots:
     dependencies:
       '@jest/types': 29.6.3
       '@sinonjs/fake-timers': 10.3.0
-      '@types/node': 25.3.2
+      '@types/node': 25.3.3
       jest-message-util: 29.7.0
       jest-mock: 29.7.0
       jest-util: 29.7.0
@@ -5243,7 +5246,7 @@ snapshots:
     dependencies:
       '@jest/types': 30.2.0
       '@sinonjs/fake-timers': 13.0.5
-      '@types/node': 25.3.2
+      '@types/node': 25.3.3
       jest-message-util: 30.2.0
       jest-mock: 30.2.0
       jest-util: 30.2.0
@@ -5270,7 +5273,7 @@ snapshots:
 
   '@jest/pattern@30.0.1':
     dependencies:
-      '@types/node': 25.3.2
+      '@types/node': 25.3.3
       jest-regex-util: 30.0.1
 
   '@jest/reporters@29.7.0':
@@ -5281,7 +5284,7 @@ snapshots:
       '@jest/transform': 29.7.0
       '@jest/types': 29.6.3
       '@jridgewell/trace-mapping': 0.3.31
-      '@types/node': 25.3.2
+      '@types/node': 25.3.3
       chalk: 4.1.2
       collect-v8-coverage: 1.0.3
       exit: 0.1.2
@@ -5310,7 +5313,7 @@ snapshots:
       '@jest/transform': 30.2.0
       '@jest/types': 30.2.0
       '@jridgewell/trace-mapping': 0.3.31
-      '@types/node': 25.3.2
+      '@types/node': 25.3.3
       chalk: 4.1.2
       collect-v8-coverage: 1.0.3
       exit-x: 0.2.2
@@ -5813,7 +5816,7 @@ snapshots:
 
   '@types/graceful-fs@4.1.9':
     dependencies:
-      '@types/node': 25.3.2
+      '@types/node': 25.3.3
 
   '@types/istanbul-lib-coverage@2.0.6': {}
 
@@ -5863,6 +5866,10 @@ snapshots:
       undici-types: 7.16.0
 
   '@types/node@25.3.2':
+    dependencies:
+      undici-types: 7.18.2
+
+  '@types/node@25.3.3':
     dependencies:
       undici-types: 7.18.2
 
@@ -7538,7 +7545,7 @@ snapshots:
       '@jest/expect': 29.7.0
       '@jest/test-result': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 25.3.2
+      '@types/node': 25.3.3
       chalk: 4.1.2
       co: 4.6.0
       dedent: 1.7.0
@@ -7564,7 +7571,7 @@ snapshots:
       '@jest/expect': 30.2.0
       '@jest/test-result': 30.2.0
       '@jest/types': 30.2.0
-      '@types/node': 25.3.2
+      '@types/node': 25.3.3
       chalk: 4.1.2
       co: 4.6.0
       dedent: 1.7.0
@@ -7769,7 +7776,7 @@ snapshots:
       '@jest/environment': 29.7.0
       '@jest/fake-timers': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 25.3.2
+      '@types/node': 25.3.3
       jest-mock: 29.7.0
       jest-util: 29.7.0
 
@@ -7778,7 +7785,7 @@ snapshots:
       '@jest/environment': 30.2.0
       '@jest/fake-timers': 30.2.0
       '@jest/types': 30.2.0
-      '@types/node': 25.3.2
+      '@types/node': 25.3.3
       jest-mock: 30.2.0
       jest-util: 30.2.0
       jest-validate: 30.2.0
@@ -7789,7 +7796,7 @@ snapshots:
     dependencies:
       '@jest/types': 29.6.3
       '@types/graceful-fs': 4.1.9
-      '@types/node': 25.3.2
+      '@types/node': 25.3.3
       anymatch: 3.1.3
       fb-watchman: 2.0.2
       graceful-fs: 4.2.11
@@ -7804,7 +7811,7 @@ snapshots:
   jest-haste-map@30.2.0:
     dependencies:
       '@jest/types': 30.2.0
-      '@types/node': 25.3.2
+      '@types/node': 25.3.3
       anymatch: 3.1.3
       fb-watchman: 2.0.2
       graceful-fs: 4.2.11
@@ -7867,13 +7874,13 @@ snapshots:
   jest-mock@29.7.0:
     dependencies:
       '@jest/types': 29.6.3
-      '@types/node': 25.3.2
+      '@types/node': 25.3.3
       jest-util: 29.7.0
 
   jest-mock@30.2.0:
     dependencies:
       '@jest/types': 30.2.0
-      '@types/node': 25.3.2
+      '@types/node': 25.3.3
       jest-util: 30.2.0
 
   jest-pnp-resolver@1.2.3(jest-resolve@29.7.0):
@@ -7932,7 +7939,7 @@ snapshots:
       '@jest/test-result': 29.7.0
       '@jest/transform': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 25.3.2
+      '@types/node': 25.3.3
       chalk: 4.1.2
       emittery: 0.13.1
       graceful-fs: 4.2.11
@@ -7958,7 +7965,7 @@ snapshots:
       '@jest/test-result': 30.2.0
       '@jest/transform': 30.2.0
       '@jest/types': 30.2.0
-      '@types/node': 25.3.2
+      '@types/node': 25.3.3
       chalk: 4.1.2
       emittery: 0.13.1
       exit-x: 0.2.2
@@ -7987,7 +7994,7 @@ snapshots:
       '@jest/test-result': 29.7.0
       '@jest/transform': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 25.3.2
+      '@types/node': 25.3.3
       chalk: 4.1.2
       cjs-module-lexer: 1.4.3
       collect-v8-coverage: 1.0.3
@@ -8014,7 +8021,7 @@ snapshots:
       '@jest/test-result': 30.2.0
       '@jest/transform': 30.2.0
       '@jest/types': 30.2.0
-      '@types/node': 25.3.2
+      '@types/node': 25.3.3
       chalk: 4.1.2
       cjs-module-lexer: 2.1.1
       collect-v8-coverage: 1.0.3
@@ -8086,7 +8093,7 @@ snapshots:
   jest-util@29.7.0:
     dependencies:
       '@jest/types': 29.6.3
-      '@types/node': 25.3.2
+      '@types/node': 25.3.3
       chalk: 4.1.2
       ci-info: 3.9.0
       graceful-fs: 4.2.11
@@ -8095,7 +8102,7 @@ snapshots:
   jest-util@30.2.0:
     dependencies:
       '@jest/types': 30.2.0
-      '@types/node': 25.3.2
+      '@types/node': 25.3.3
       chalk: 4.1.2
       ci-info: 4.3.1
       graceful-fs: 4.2.11
@@ -8123,7 +8130,7 @@ snapshots:
     dependencies:
       '@jest/test-result': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 25.3.2
+      '@types/node': 25.3.3
       ansi-escapes: 4.3.2
       chalk: 4.1.2
       emittery: 0.13.1
@@ -8134,7 +8141,7 @@ snapshots:
     dependencies:
       '@jest/test-result': 30.2.0
       '@jest/types': 30.2.0
-      '@types/node': 25.3.2
+      '@types/node': 25.3.3
       ansi-escapes: 4.3.2
       chalk: 4.1.2
       emittery: 0.13.1
@@ -8143,14 +8150,14 @@ snapshots:
 
   jest-worker@29.7.0:
     dependencies:
-      '@types/node': 25.3.2
+      '@types/node': 25.3.3
       jest-util: 29.7.0
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
   jest-worker@30.2.0:
     dependencies:
-      '@types/node': 25.3.2
+      '@types/node': 25.3.3
       '@ungap/structured-clone': 1.3.0
       jest-util: 30.2.0
       merge-stream: 2.0.0
@@ -8691,7 +8698,7 @@ snapshots:
       '@protobufjs/path': 1.1.2
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
-      '@types/node': 25.3.2
+      '@types/node': 25.3.3
       long: 5.3.2
 
   punycode@2.3.1: {}
