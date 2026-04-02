@@ -88,8 +88,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0(@types/node@25.5.0)
       '@google/genai':
-        specifier: ^1.46.0
-        version: 1.46.0
+        specifier: ^1.48.0
+        version: 1.48.0
       '@swc/core':
         specifier: ^1.15.21
         version: 1.15.21
@@ -835,8 +835,8 @@ packages:
     resolution: {integrity: sha512-43/qtrDUokr7LJqoF2c3+RInu/t4zfrpYdoSDfYyhg52rwLV6TnOvdG4fXm7IkSB3wErkcmJS9iEhjVtOSEjjA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@google/genai@1.46.0':
-    resolution: {integrity: sha512-ewPMN5JkKfgU5/kdco9ZhXBHDPhVqZpMQqIFQhwsHLf8kyZfx1cNpw1pHo1eV6PGEW7EhIBFi3aYZraFndAXqg==}
+  '@google/genai@1.48.0':
+    resolution: {integrity: sha512-plonYK4ML2PrxsRD9SeqmFt76eREWkQdPCglOA6aYDzL1AAbE+7PUnT54SvpWGfws13L0AZEqGSpL7+1IPnTxQ==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
       '@modelcontextprotocol/sdk': ^1.25.2
@@ -4482,8 +4482,8 @@ packages:
     resolution: {integrity: sha512-+QU2zd6OTD8XWIJCbffaiQeH9U73qIqafo1x6V1snCWYGJf6cVE0cDR4D8xRzcEnfI21IFrUPzPGtcPf8AC+Rw==}
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
 
-  ws@8.19.0:
-    resolution: {integrity: sha512-blAT2mjOEIi0ZzruJfIhb3nps74PRWTCz1IjglWEEpQl5XS/UNama6u2/rjFkDDouqr4L67ry+1aGIALViWjDg==}
+  ws@8.20.0:
+    resolution: {integrity: sha512-sAt8BhgNbzCtgGbt2OxmpuryO63ZoDk/sqaB/znQm94T4fCEsy/yV+7CdC1kJhOU9lboAEU7R3kquuycDoibVA==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
       bufferutil: ^4.0.1
@@ -5088,12 +5088,12 @@ snapshots:
       '@eslint/core': 0.17.0
       levn: 0.4.1
 
-  '@google/genai@1.46.0':
+  '@google/genai@1.48.0':
     dependencies:
       google-auth-library: 10.6.2
       p-retry: 4.6.2
       protobufjs: 7.5.4
-      ws: 8.19.0
+      ws: 8.20.0
     transitivePeerDependencies:
       - bufferutil
       - supports-color
@@ -8287,7 +8287,7 @@ snapshots:
       whatwg-encoding: 3.1.1
       whatwg-mimetype: 4.0.0
       whatwg-url: 14.2.0
-      ws: 8.19.0
+      ws: 8.20.0
       xml-name-validator: 5.0.0
     transitivePeerDependencies:
       - bufferutil
@@ -9575,7 +9575,7 @@ snapshots:
       imurmurhash: 0.1.4
       signal-exit: 4.1.0
 
-  ws@8.19.0: {}
+  ws@8.20.0: {}
 
   xml-name-validator@5.0.0: {}
 
