@@ -4,6 +4,10 @@ export type {Content, Part};
 
 export type Role = 'user' | 'model' | 'system';
 
+export type ThinkingConfig = {
+    thinkingBudget?: number;
+};
+
 export type GenerationConfig = {
     candidateCount?: number;
     temperature?: number;
@@ -12,6 +16,7 @@ export type GenerationConfig = {
     maxOutputTokens?: number;
     stopSequences?: string[];
     responseMimeType?: string;
+    thinkingConfig?: ThinkingConfig;
 };
 
 export type GenerateContentRequest = {
