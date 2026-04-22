@@ -21,8 +21,8 @@ importers:
         specifier: ^26.0.5
         version: 26.0.5(typescript@5.9.3)
       i18next-http-backend:
-        specifier: ^3.0.4
-        version: 3.0.4
+        specifier: ^3.0.5
+        version: 3.0.5
       lodash.clonedeep:
         specifier: ^4.5.0
         version: 4.5.0
@@ -2750,8 +2750,8 @@ packages:
     resolution: {integrity: sha512-Y93lCzHYgGWdrJ66yIktxiaGULYc6oGiABxhcO5AufBeOyoIdZF7bIfLaOrbM0iGIOXQQgxxRrFEnb+Y6w1n4A==}
     engines: {node: '>=10.18'}
 
-  i18next-http-backend@3.0.4:
-    resolution: {integrity: sha512-udwrBIE6cNpqn1gRAqRULq3+7MzIIuaiKRWrz++dVz5SqWW2VwXmPJtAgkI0JtMLFaADC9qNmnZAxWAhsxXx2g==}
+  i18next-http-backend@3.0.5:
+    resolution: {integrity: sha512-QaWHnsxieEDcqKe+vo/RFqpiIFRi/KBqlOSPcUlvinBaISCeiTRCbtrazHAjtHtsLC66oDsROAH8frWkQzfMMQ==}
 
   i18next@26.0.5:
     resolution: {integrity: sha512-9uHb4T27TdV36phJXcbpnRPt5yzAfqHXVrdASvmHZyPuZJtrLythd+GyXhiaHV5LlpuuskbAqhwPjmfTbKbi8w==}
@@ -7334,7 +7334,7 @@ snapshots:
 
   hyperdyperid@1.2.0: {}
 
-  i18next-http-backend@3.0.4:
+  i18next-http-backend@3.0.5:
     dependencies:
       cross-fetch: 4.1.0
     transitivePeerDependencies:
