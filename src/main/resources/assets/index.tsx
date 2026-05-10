@@ -1,12 +1,12 @@
-import React from 'react';
-import {createRoot} from 'react-dom/client';
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
 
-import {dispatchNoLicense} from './common/events';
+import { dispatchNoLicense } from './common/events';
 import App from './components/App/App';
 import './i18n/i18n';
 import './index.css';
-import {fetchLicenseState} from './requests/license';
-import {$config, setLicenseServiceUrl, setWsServiceUrl} from './stores/config';
+import { fetchLicenseState } from './requests/license';
+import { $config, setLicenseServiceUrl, setWsServiceUrl } from './stores/config';
 
 type SetupConfig = {
     licenseServiceUrl: string;
@@ -28,14 +28,14 @@ export async function render(container: HTMLElement): Promise<void> {
         const root = createRoot(container);
 
         root.render(
-            <React.StrictMode>
+            <StrictMode>
                 <App />
-            </React.StrictMode>,
+            </StrictMode>,
         );
     }
 }
 
-export function setup({licenseServiceUrl, wsServiceUrl}: SetupConfig): void {
+export function setup({ licenseServiceUrl, wsServiceUrl }: SetupConfig): void {
     setLicenseServiceUrl(licenseServiceUrl);
     setWsServiceUrl(wsServiceUrl);
 }

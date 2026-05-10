@@ -86,8 +86,8 @@ export function addGlobalOpenDialogHandler(handler: CustomEventHandler): FnVoid 
 //
 //* KEYBOARD & MOUSE
 //
-export type ReactKeyboardHandler<T> = (event: React.KeyboardEvent<T>) => void;
-export type ReactMouseHandler<T> = (event: React.MouseEvent<T>) => void;
+export type ReactKeyboardHandler<T extends EventTarget = HTMLElement> = (event: React.KeyboardEvent<T>) => void;
+export type ReactMouseHandler<T extends EventTarget = HTMLElement> = (event: React.MouseEvent<T>) => void;
 
 export type KeyboardHandler = (event: KeyboardEvent) => void;
 export type MouseHandler = (event: MouseEvent) => void;
@@ -129,14 +129,14 @@ export function addGlobalKeydownHandler(handler: KeyboardHandler): FnVoid {
     return () => document.removeEventListener('keydown', wrappedHandler);
 }
 
-export function isEscapeKey(event: KeyboardEvent | React.KeyboardEvent): boolean {
+export function isEscapeKey(event: KeyboardEvent | React.KeyboardEvent<HTMLElement>): boolean {
     return event.code === 'Escape';
 }
 
-export function isApplyKey(event: KeyboardEvent | React.KeyboardEvent): boolean {
+export function isApplyKey(event: KeyboardEvent | React.KeyboardEvent<HTMLElement>): boolean {
     return event.code === 'Enter' || event.code === 'NumpadEnter';
 }
 
-export function isSelectKey(event: KeyboardEvent | React.KeyboardEvent): boolean {
+export function isSelectKey(event: KeyboardEvent | React.KeyboardEvent<HTMLElement>): boolean {
     return isApplyKey(event) || event.code === 'Space';
 }

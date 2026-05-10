@@ -5,7 +5,7 @@ import type {FinishReason, ModelResponseGenerateData} from '../../shared/types/m
 import {generate} from '../google/api/generate';
 import type {Content, GenerateContentRequest, Role} from '../google/types';
 import {logDebug, LogDebugGroups} from '../logger';
-import {ModelProxy, ModelProxyConfig} from './model';
+import type {ModelProxy, ModelProxyConfig} from './model';
 
 export class GeminiProxy implements ModelProxy {
     private readonly params: GenerateContentRequest;

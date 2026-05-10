@@ -1,4 +1,6 @@
-import {flattenData} from './data';
+import { describe, expect, it } from 'vitest';
+
+import { flattenData } from './data';
 
 const dataJson = {
     'level-1': {

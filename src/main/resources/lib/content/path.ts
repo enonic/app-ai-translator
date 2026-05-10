@@ -14,5 +14,5 @@ export function pathToString(path: Path): string {
 
 function pathElementToString(element: PathElement): string {
     const text = element.name;
-    return element.index == undefined || element.index === 0 ? text : `${text}[${element.index}]`;
+    return element.index == null || element.index === 0 ? text : `${text}[${element.index}]`;
 }

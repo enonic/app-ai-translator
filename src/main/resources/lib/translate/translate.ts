@@ -1,9 +1,9 @@
 import {ERRORS} from '../../shared/errors';
 import {createTranslationPrompt} from '../../shared/prompts';
-import {Message} from '../../shared/types/model';
+import type {Message} from '../../shared/types/model';
 import type {TextType} from '../../shared/types/text';
-import {DataEntry} from '../content/data';
-import {ModelProxy} from '../proxy/model';
+import type {DataEntry} from '../content/data';
+import type {ModelProxy} from '../proxy/model';
 import {connect} from '../proxy/proxy';
 import {addTask} from './queue';
 

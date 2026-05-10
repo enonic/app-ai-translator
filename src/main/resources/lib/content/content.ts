@@ -1,8 +1,7 @@
-import * as contentLib from '/lib/xp/content';
-import * as contextLib from '/lib/xp/context';
-import * as schemaLib from '/lib/xp/schema';
 import type {Content, FormItem} from '/lib/xp/content';
+import * as contentLib from '/lib/xp/content';
 import type {User} from '/lib/xp/context';
+import * as contextLib from '/lib/xp/context';
 import type {
     FragmentComponent,
     LayoutComponent,
@@ -12,6 +11,7 @@ import type {
     TextComponent,
 } from '/lib/xp/core';
 import type {ComponentDescriptor, ComponentDescriptorType} from '/lib/xp/schema';
+import * as schemaLib from '/lib/xp/schema';
 
 import {TOPIC_NAME} from '../../shared/constants';
 import {ERRORS} from '../../shared/errors';
@@ -19,12 +19,14 @@ import type {TextType} from '../../shared/types/text';
 import {logError} from '../logger';
 import {runAsAdmin} from '../utils/context';
 import {isRecordEmpty} from '../utils/objects';
-import {DataEntry, flattenData} from './data';
-import {FormItemWithPath, getPathsToTranslatableFields, InputWithPath, isInput} from './form';
+import type {DataEntry} from './data';
+import {flattenData} from './data';
+import type {FormItemWithPath, InputWithPath} from './form';
+import {getPathsToTranslatableFields, isInput} from './form';
 import {isLayoutComponent, isPageComponent, isPartComponent, isTextComponent} from './page';
 import {pathToString} from './path';
-import {Property, PropertyValue} from './property';
-import {getXDataSchemas} from './schema';
+import type {Property, PropertyValue} from './property';
+import {getFormFragmentSchemas} from './schema';
 
 type ContextUser = Pick<User, 'login' | 'idProvider'> | undefined;
 
@@ -162,7 +164,7 @@ function makeDisplayNameDataEntry(displayName: string, context: string): DataEnt
  */
 function getXDataFieldsToTranslate(xData: Record<string, PropertyValue>): Record<string, DataEntry> {
     const result: Record<string, DataEntry> = {};
-    const schemas = getXDataSchemas(xData);
+    const schemas = getFormFragmentSchemas(xData);
 
     for (const schemaPrefix in schemas) {
         const entriesByXData = getXDataEntriesBySchemaPrefix(xData, schemaPrefix);

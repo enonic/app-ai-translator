@@ -1,10 +1,10 @@
 import {map} from 'nanostores';
 
 import {addGlobalUpdateDataHandler} from '../common/events';
-import {ContentData} from './data/ContentData';
-import {EventData} from './data/EventData';
-import {Language} from './data/Language';
-import {Schema} from './data/Schema';
+import type {ContentData} from './data/ContentData';
+import type {EventData} from './data/EventData';
+import type {Language} from './data/Language';
+import type {Schema} from './data/Schema';
 
 export type Data = {
     language: Language;

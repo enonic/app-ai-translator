@@ -3,7 +3,8 @@ import {computed, map} from 'nanostores';
 
 import {WS_PROTOCOL} from '../../shared/constants';
 import {ERRORS} from '../../shared/errors';
-import {ClientMessage, MessageMetadata, MessageType, ServerMessage} from '../../shared/types/websocket';
+import type {ClientMessage, MessageMetadata, ServerMessage} from '../../shared/types/websocket';
+import { MessageType} from '../../shared/types/websocket';
 import {dispatchAllCompleted, dispatchCompleted, dispatchStarted} from '../common/events';
 import {$config} from './config';
 import {$data, getLanguage} from './data';

@@ -1,4 +1,5 @@
-import libHttpClient, {HttpClientResponse} from '/lib/http-client';
+import type {HttpClientResponse} from '/lib/http-client';
+import libHttpClient from '/lib/http-client';
 
 import {ERRORS} from '../shared/errors';
 import type {ErrorResponse} from '../shared/types/model';

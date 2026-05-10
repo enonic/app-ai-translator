@@ -1,4 +1,6 @@
-import {mergeContent} from './data';
+import { describe, expect, it } from 'vitest';
+
+import { mergeContent } from './data';
 
 describe('mergeContent', () => {
     it('should merge simple objects', () => {

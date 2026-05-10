@@ -1,7 +1,8 @@
-import licenseLib, {LicenseDetails} from '/lib/license';
+import type {LicenseDetails} from '/lib/license';
+import licenseLib from '/lib/license';
 
 import {ERRORS} from '../../shared/errors';
-import {LicenseState} from '../../shared/types/license';
+import type {LicenseState} from '../../shared/types/license';
 
 const subscriptionKey = 'enonic.platform.subscription';
 

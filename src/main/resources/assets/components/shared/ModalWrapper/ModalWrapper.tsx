@@ -32,7 +32,7 @@ export default function ModalWrapper({className, children, trapFocus, closeHandl
                     className='absolute inset-0 bg-black bg-opacity-60 backdrop-blur-xs -z-10'
                     role='presentation'
                     onClick={closeHandler}
-                ></div>
+                 />
                 {children}
             </div>
         </FocusTrap>

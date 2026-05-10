@@ -1,37 +1,26 @@
-import {content} from '../../../../../tests/testUtils/fixtures/google';
-import {TRANSLATION_INSTRUCTIONS} from '../../shared/prompts';
-import {generate} from '../google/api/generate';
-import {GeminiProxy} from './gemini';
+import { describe, expect, it, vi } from 'vitest';
 
-type GoogleApi = typeof import('../google/api/generate');
+import { content } from '../../../../../tests/testUtils/fixtures/google';
+import { TRANSLATION_INSTRUCTIONS } from '../../shared/prompts';
+import * as GoogleApi from '../google/api/generate';
+import { GeminiProxy } from './gemini';
 
-type MockedGenerate = jest.MockedFunction<typeof generate>;
-
-type MockedGoogleApi = GoogleApi & {
-    generate: MockedGenerate;
-};
-
-jest.mock('../google/api/generate', () => {
-    const originalModule = jest.requireActual<GoogleApi>('../google/api/generate');
+vi.mock('../google/api/generate', async importOriginal => {
+    const original = await importOriginal<typeof GoogleApi>();
     return {
-        ...originalModule,
-        generate: jest.fn(),
-    } satisfies MockedGoogleApi;
-});
-
-let mocks: MockedGoogleApi;
-
-beforeAll(() => {
-    mocks = jest.requireMock<MockedGoogleApi>('../google/api/generate');
+        ...original,
+        generate: vi.fn(),
+    };
 });
 
 describe('GeminiProxy', () => {
     it('should disable thinking in the model generation config', () => {
-        mocks.generate.mockImplementationOnce(() => [content, null]);
+        const mockedGenerate = vi.mocked(GoogleApi.generate);
+        mockedGenerate.mockImplementationOnce(() => [content, null]);
 
         const proxy = new GeminiProxy({
             instructions: 'Prefer glossary-approved terms.',
-            messages: [{role: 'user', text: 'Translate this content.'}],
+            messages: [{ role: 'user', text: 'Translate this content.' }],
         });
 
         const [result, err] = proxy.generate();
@@ -43,15 +32,15 @@ describe('GeminiProxy', () => {
         });
         expect(err).toBeNull();
 
-        expect(mocks.generate).toHaveBeenCalledWith({
+        expect(mockedGenerate).toHaveBeenCalledWith({
             contents: [
                 {
                     role: 'user',
-                    parts: [{text: 'Prefer glossary-approved terms.'}],
+                    parts: [{ text: 'Prefer glossary-approved terms.' }],
                 },
                 {
                     role: 'user',
-                    parts: [{text: 'Translate this content.'}],
+                    parts: [{ text: 'Translate this content.' }],
                 },
             ],
             generationConfig: {
@@ -83,7 +72,7 @@ describe('GeminiProxy', () => {
             ],
             systemInstruction: {
                 role: 'system',
-                parts: [{text: TRANSLATION_INSTRUCTIONS}],
+                parts: [{ text: TRANSLATION_INSTRUCTIONS }],
             },
         });
     });

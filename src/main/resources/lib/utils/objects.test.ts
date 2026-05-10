@@ -1,4 +1,6 @@
-import {emptyToUndefined} from './objects';
+import { describe, expect, it } from 'vitest';
+
+import { emptyToUndefined } from './objects';
 
 describe('emptyToUndefined', () => {
     it('should return `undefined` if the input is `null` or `undefined`', () => {

@@ -75,7 +75,7 @@ export default function InstructionsInput({className}: Props): React.ReactNode {
                 )}
                 placeholder={t('field.instructions.placeholder')}
                 onChange={e => {
-                    setDialogInstructions(e.target.value);
+                    setDialogInstructions(e.currentTarget.value);
                     adjustHeight(ref.current);
                 }}
                 value={instructions}

@@ -1,7 +1,8 @@
 import {useStore} from '@nanostores/react';
 import {twMerge} from 'tailwind-merge';
 
-import {$dialog, DialogView} from '../../../stores/dialog';
+import type { DialogView} from '../../../stores/dialog';
+import {$dialog} from '../../../stores/dialog';
 import CompletedView from '../view/CompletedView/CompletedView';
 import PreparationView from '../view/PreparationView/PreparationView';
 import ProcessingView from '../view/ProcessingView/ProcessingView';

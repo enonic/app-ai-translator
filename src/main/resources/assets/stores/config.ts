@@ -1,7 +1,7 @@
 import {map} from 'nanostores';
 
 import {addGlobalConfigureHandler} from '../common/events';
-import {ConfigData} from './data/ConfigData';
+import type {ConfigData} from './data/ConfigData';
 
 export type Config = {
     licenseServiceUrl: string;

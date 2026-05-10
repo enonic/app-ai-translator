@@ -4,22 +4,23 @@ import cron from '/lib/cron';
 
 import * as licenseManager from '../../lib/license/license-manager';
 import {getTranslatableDataFromContent} from '../../lib/content/content';
-import {DataEntry} from '../../lib/content/data';
+import type {DataEntry} from '../../lib/content/data';
 import {logDebug, LogDebugGroups, logError} from '../../lib/logger';
 import {respondError} from '../../lib/requests';
 import {translateFields} from '../../lib/translate/translate';
 import {unsafeUUIDv4} from '../../lib/utils/uuid';
 import {WS_PROTOCOL} from '../../shared/constants';
 import {ERRORS} from '../../shared/errors';
-import {
+import type {
     AcceptedMessage,
     ClientMessage,
     CompletedMessage,
     FailedMessage,
     MessageMetadata,
-    MessageType,
     ServerMessage,
-    TranslateMessage,
+    TranslateMessage} from '../../shared/types/websocket';
+import {
+    MessageType
 } from '../../shared/types/websocket';
 
 export function get(request: Enonic.Request): Enonic.Response {

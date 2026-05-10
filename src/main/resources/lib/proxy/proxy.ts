@@ -1,6 +1,6 @@
 import {logDebug, LogDebugGroups} from '../logger';
 import {GeminiProxy} from './gemini';
-import {ModelProxy, ModelProxyConfig} from './model';
+import type {ModelProxy, ModelProxyConfig} from './model';
 
 type ConnectionConfig = Omit<ModelProxyConfig, 'model'>;
 
