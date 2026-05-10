@@ -92,7 +92,7 @@ export default defineConfig({
         },
     },
     staged: {
-        '*': 'vp lint --fix',
+        '*.{js,jsx,ts,tsx,mjs,cjs}': 'vp lint --fix',
     },
     test: {
         environment: 'node',
