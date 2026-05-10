@@ -1,7 +1,7 @@
 import React from 'react';
 
-import AssistantMessage from '../../AssistantMessage/AssistantMessage';
-import TranslationResult from '../TranslationResult/TranslationResult';
+import AssistantMessage from '@/components/dialog/AssistantMessage/AssistantMessage';
+import TranslationResult from '@/components/dialog/view/TranslationResult/TranslationResult';
 
 export default function CompletedView(): React.ReactNode {
     return (

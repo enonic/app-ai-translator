@@ -1,7 +1,7 @@
 import {useTranslation} from 'react-i18next';
 import {twMerge} from 'tailwind-merge';
 
-import JukeIcon from '../../shared/JukeIcon/JukeIcon';
+import JukeIcon from '@/ui/primitives/JukeIcon';
 
 type Props = {
     className?: string;

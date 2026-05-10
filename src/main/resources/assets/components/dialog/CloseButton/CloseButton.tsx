@@ -1,9 +1,9 @@
 import {useTranslation} from 'react-i18next';
 import {twMerge} from 'tailwind-merge';
 
-import {setDialogVisible} from '../../../stores/dialog';
-import {stopTranslation} from '../../../stores/websocket';
-import ActionButton from '../../shared/ActionButton/ActionButton';
+import ActionButton from '@/ui/primitives/ActionButton';
+import {setDialogVisible} from '@/store/dialog';
+import {stopTranslation} from '@/store/websocket';
 
 type Props = {
     className?: string;

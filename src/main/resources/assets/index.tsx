@@ -1,12 +1,13 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import { dispatchNoLicense } from './common/events';
-import App from './components/App/App';
+import { dispatchNoLicense } from '@/common/events';
+import App from '@/components/App/App';
+import { fetchLicenseState } from '@/requests/license';
+import { $config, setLicenseServiceUrl, setWsServiceUrl } from '@/store/config';
+
 import './i18n/i18n';
 import './index.css';
-import { fetchLicenseState } from './requests/license';
-import { $config, setLicenseServiceUrl, setWsServiceUrl } from './stores/config';
 
 type SetupConfig = {
     licenseServiceUrl: string;

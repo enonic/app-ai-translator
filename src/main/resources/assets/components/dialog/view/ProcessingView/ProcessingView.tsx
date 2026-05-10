@@ -3,14 +3,15 @@ import React from 'react';
 import {Trans} from 'react-i18next';
 import {twJoin} from 'tailwind-merge';
 
-import {$data} from '../../../../stores/data';
-import {$items} from '../../../../stores/items';
-import FramedText from '../../../shared/FramedText/FramedText';
-import AssistantMessage from '../../AssistantMessage/AssistantMessage';
+import FramedText from '@/ui/primitives/FramedText';
+import {$content} from '@/store/content';
+import {$items} from '@/store/items';
+
+import AssistantMessage from '@/components/dialog/AssistantMessage/AssistantMessage';
 
 export default function ProcessingView(): React.ReactNode {
     const {paths, remaining} = useStore($items);
-    const {language} = useStore($data, {keys: ['language']});
+    const {language} = useStore($content, {keys: ['language']});
 
     const countTotal = paths.length;
     const countRemaining = countTotal - remaining.length;

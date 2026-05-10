@@ -1,11 +1,21 @@
 import preact from '@preact/preset-vite';
 import tailwindcss from '@tailwindcss/vite';
+import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vite-plus';
 
 const isProduction = process.env.NODE_ENV === 'production';
 
+const assetsPath = fileURLToPath(new URL('./src/main/resources/assets', import.meta.url));
+const sharedPath = fileURLToPath(new URL('./src/main/resources/shared', import.meta.url));
+
 export default defineConfig({
     plugins: [preact(), tailwindcss()],
+    resolve: {
+        alias: {
+            '@': assetsPath,
+            '@shared': sharedPath,
+        },
+    },
     build: {
         lib: {
             entry: 'src/main/resources/assets/index.tsx',
@@ -100,6 +110,8 @@ export default defineConfig({
         setupFiles: ['./tests/vitest.setup.ts'],
         passWithNoTests: true,
         alias: {
+            '@': assetsPath,
+            '@shared': sharedPath,
             '/lib/http-client': new URL('./tests/stubs/http-client.js', import.meta.url).pathname,
         },
     },

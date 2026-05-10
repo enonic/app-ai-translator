@@ -2,7 +2,7 @@ import {useStore} from '@nanostores/react';
 import React from 'react';
 import {Trans} from 'react-i18next';
 
-import {$items} from '../../../../stores/items';
+import {$items} from '@/store/items';
 
 export default function TranslationResult(): React.ReactNode {
     const {failed, globalFailure} = useStore($items);

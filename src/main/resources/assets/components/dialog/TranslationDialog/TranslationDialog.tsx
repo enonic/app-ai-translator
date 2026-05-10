@@ -1,11 +1,12 @@
 import {useStore} from '@nanostores/react';
 import {twMerge} from 'tailwind-merge';
 
-import {$dialog, setDialogVisible} from '../../../stores/dialog';
-import ModalWrapper from '../../shared/ModalWrapper/ModalWrapper';
-import DialogContent from '../DialogContent/DialogContent';
-import DialogFooter from '../DialogFooter/DialogFooter';
-import DialogHeader from '../DialogHeader/DialogHeader';
+import ModalWrapper from '@/ui/primitives/ModalWrapper';
+import {$dialog, setDialogVisible} from '@/store/dialog';
+
+import DialogContent from '@/components/dialog/DialogContent/DialogContent';
+import DialogFooter from '@/components/dialog/DialogFooter/DialogFooter';
+import DialogHeader from '@/components/dialog/DialogHeader/DialogHeader';
 
 export type Props = {
     className?: string;

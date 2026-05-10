@@ -2,13 +2,14 @@ import {useStore} from '@nanostores/react';
 import React from 'react';
 import {Trans} from 'react-i18next';
 
-import {$data} from '../../../../stores/data';
-import FramedText from '../../../shared/FramedText/FramedText';
-import AssistantMessage from '../../AssistantMessage/AssistantMessage';
-import InstructionsInput from '../../InstructionsInput/InstructionsInput';
+import FramedText from '@/ui/primitives/FramedText';
+import {$content} from '@/store/content';
+
+import AssistantMessage from '@/components/dialog/AssistantMessage/AssistantMessage';
+import InstructionsInput from '@/components/dialog/InstructionsInput/InstructionsInput';
 
 export default function PreparationView(): React.ReactNode {
-    const {language} = useStore($data, {keys: ['language']});
+    const {language} = useStore($content, {keys: ['language']});
 
     return (
         <>

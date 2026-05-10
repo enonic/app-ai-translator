@@ -1,7 +1,7 @@
 import {useTranslation} from 'react-i18next';
 import {twJoin} from 'tailwind-merge';
 
-import CloseButton from '../CloseButton/CloseButton';
+import CloseButton from '@/components/dialog/CloseButton/CloseButton';
 
 type Props = {
     className?: string;

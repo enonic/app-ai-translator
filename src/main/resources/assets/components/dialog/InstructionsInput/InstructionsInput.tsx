@@ -3,14 +3,14 @@ import {useEffect, useId, useRef} from 'react';
 import {useTranslation} from 'react-i18next';
 import {twJoin, twMerge} from 'tailwind-merge';
 
+import ActionButton from '@/ui/primitives/ActionButton';
 import {
     $dialog,
     $instructions,
     enableInstructions,
     setDialogInstructions,
     toggleDialogInstructions,
-} from '../../../stores/dialog';
-import ActionButton from '../../shared/ActionButton/ActionButton';
+} from '@/store/dialog';
 
 type Props = {
     className?: string;

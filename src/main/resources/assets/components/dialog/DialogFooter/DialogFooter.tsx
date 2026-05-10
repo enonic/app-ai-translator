@@ -3,9 +3,9 @@ import {useEffect, useRef} from 'react';
 import {useTranslation} from 'react-i18next';
 import {twMerge} from 'tailwind-merge';
 
-import {$dialog, setDialogView, setDialogVisible} from '../../../stores/dialog';
-import {$translating, startTranslation, stopTranslation} from '../../../stores/websocket';
-import ActionButton from '../../shared/ActionButton/ActionButton';
+import ActionButton from '@/ui/primitives/ActionButton';
+import {$dialog, setDialogView, setDialogVisible} from '@/store/dialog';
+import {$translating, startTranslation, stopTranslation} from '@/store/websocket';
 
 type Props = {
     className?: string;
