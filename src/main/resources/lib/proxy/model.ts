@@ -1,10 +1,10 @@
-import type {Message, ModelResponseGenerateData} from '../../shared/types/model';
+import type { Message, ModelResponseGenerateData } from '../../shared/types/model';
 
 export type ModelProxy = {
-    generate(): Try<ModelResponseGenerateData>;
+  generate(): Try<ModelResponseGenerateData>;
 };
 
 export type ModelProxyConfig = {
-    instructions?: string;
-    messages: Message[];
+  instructions?: string;
+  messages: Message[];
 };

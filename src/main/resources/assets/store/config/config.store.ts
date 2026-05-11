@@ -1,42 +1,44 @@
-import {map} from 'nanostores';
+import { map } from 'nanostores';
 
-import {addGlobalConfigureHandler} from '@/common/events';
+import { addGlobalConfigureHandler } from '@/common/events';
 
-import type {ConfigData} from './ConfigData';
+import type { ConfigData } from './ConfigData';
 
 export type Config = {
-    licenseServiceUrl: string;
-    wsServiceUrl: string;
-    user: {
-        fullName: string;
-        shortName: string;
-    };
-    instructions: string;
+  licenseServiceUrl: string;
+  wsServiceUrl: string;
+  user: {
+    fullName: string;
+    shortName: string;
+  };
+  instructions: string;
 };
 
 export const $config = map<Config>({
-    licenseServiceUrl: '',
-    wsServiceUrl: '',
-    user: {
-        fullName: 'You',
-        shortName: 'Y',
-    },
-    instructions: '',
+  licenseServiceUrl: '',
+  wsServiceUrl: '',
+  user: {
+    fullName: 'You',
+    shortName: 'Y',
+  },
+  instructions: '',
 });
 
 export const setLicenseServiceUrl = (serviceRestUrl: string): void =>
-    $config.setKey('licenseServiceUrl', serviceRestUrl);
-export const setWsServiceUrl = (serviceWsUrl: string): void => $config.setKey('wsServiceUrl', serviceWsUrl);
+  $config.setKey('licenseServiceUrl', serviceRestUrl);
+export const setWsServiceUrl = (serviceWsUrl: string): void =>
+  $config.setKey('wsServiceUrl', serviceWsUrl);
 export const setUser = (user: Config['user']): void => $config.setKey('user', user);
-export const setInstructions = (instructions: string): void => $config.setKey('instructions', instructions);
+export const setInstructions = (instructions: string): void =>
+  $config.setKey('instructions', instructions);
 
 addGlobalConfigureHandler((event: CustomEvent<ConfigData>) => {
-    const {user, instructions} = event.detail.payload;
+  const { user, instructions } = event.detail.payload;
 
-    if (user) {
-        setUser(user);
-    }
-    if (instructions) {
-        setInstructions(instructions);
-    }
+  if (user) {
+    setUser(user);
+  }
+  if (instructions) {
+    setInstructions(instructions);
+  }
 });

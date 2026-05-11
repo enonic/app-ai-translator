@@ -1,27 +1,24 @@
-import {useStore} from '@nanostores/react';
-import React from 'react';
-import {Trans} from 'react-i18next';
-
-import FramedText from '@/ui/primitives/FramedText';
-import {$content} from '@/store/content';
-
 import AssistantMessage from '@/components/dialog/AssistantMessage/AssistantMessage';
 import InstructionsInput from '@/components/dialog/InstructionsInput/InstructionsInput';
+import { $content } from '@/store/content';
+import FramedText from '@/ui/primitives/FramedText';
+import { useStore } from '@nanostores/react';
+import { Trans } from 'react-i18next';
 
 export default function PreparationView(): React.ReactNode {
-    const {language} = useStore($content, {keys: ['language']});
+  const { language } = useStore($content, { keys: ['language'] });
 
-    return (
-        <>
-            <AssistantMessage>
-                <p className='inline-block mr-auto px-3 py-2 text-sm rounded-[1.5rem] bg-enonic-gray-100'>
-                    <Trans
-                        i18nKey='text.greeting'
-                        components={[<FramedText key='language'>{language.name}</FramedText>]}
-                    />
-                </p>
-            </AssistantMessage>
-            <InstructionsInput />
-        </>
-    );
+  return (
+    <div className="flex flex-col gap-6">
+      <AssistantMessage>
+        <p className="text-main text-base">
+          <Trans
+            i18nKey="text.greeting"
+            components={[<FramedText key="language">{language.name}</FramedText>]}
+          />
+        </p>
+      </AssistantMessage>
+      <InstructionsInput />
+    </div>
+  );
 }

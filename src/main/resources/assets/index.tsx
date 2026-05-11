@@ -10,33 +10,33 @@ import './i18n/i18n';
 import './index.css';
 
 type SetupConfig = {
-    licenseServiceUrl: string;
-    wsServiceUrl: string;
+  licenseServiceUrl: string;
+  wsServiceUrl: string;
 };
 
 export async function render(container: HTMLElement): Promise<void> {
-    if ($config.get().licenseServiceUrl === '' || $config.get().wsServiceUrl === '') {
-        console.warn('[Enonic AI] Translator dialog was rendered before configured.');
-    }
+  if ($config.get().licenseServiceUrl === '' || $config.get().wsServiceUrl === '') {
+    console.warn('[Enonic AI] Translator dialog was rendered before configured.');
+  }
 
-    const fetchLicenseStateResult = await fetchLicenseState();
+  const fetchLicenseStateResult = await fetchLicenseState();
 
-    if (fetchLicenseStateResult !== 'OK') {
-        dispatchNoLicense();
-    } else {
-        container.classList.add('ai-translator');
+  if (fetchLicenseStateResult !== 'OK') {
+    dispatchNoLicense();
+  } else {
+    container.classList.add('ai-translator');
 
-        const root = createRoot(container);
+    const root = createRoot(container);
 
-        root.render(
-            <StrictMode>
-                <App />
-            </StrictMode>,
-        );
-    }
+    root.render(
+      <StrictMode>
+        <App />
+      </StrictMode>,
+    );
+  }
 }
 
 export function setup({ licenseServiceUrl, wsServiceUrl }: SetupConfig): void {
-    setLicenseServiceUrl(licenseServiceUrl);
-    setWsServiceUrl(wsServiceUrl);
+  setLicenseServiceUrl(licenseServiceUrl);
+  setWsServiceUrl(wsServiceUrl);
 }

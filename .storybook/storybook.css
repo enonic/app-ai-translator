@@ -1,22 +1,42 @@
 @import 'tailwindcss';
+@import 'tw-animate-css';
 @import '@enonic/ui/preset.css';
 
-@source "../.storybook";
-@source "../src/main/resources/assets";
+@source '../.storybook';
+@source '../src/main/resources/assets';
+@source '../node_modules/@enonic/ui/';
 
-body,
-.docs-story {
-    background:
-        radial-gradient(circle at top left, rgb(221 241 255 / 75%), transparent 40%),
-        linear-gradient(180deg, #f7fafc 0%, #edf3f7 100%);
-    color: #1a202c;
-    font-family: 'Open Sans', 'Segoe UI', sans-serif;
+@theme {
+  --animate-move-gradient: move-gradient 3000ms linear infinite;
 }
 
-.dark body,
-.dark .docs-story {
-    background:
-        radial-gradient(circle at top left, rgb(61 77 94 / 55%), transparent 40%),
-        linear-gradient(180deg, #10151b 0%, #18212b 100%);
-    color: #f8fafc;
+@keyframes move-gradient {
+  0% {
+    background-position: 200% 0%;
+  }
+  100% {
+    background-position: -200% 0%;
+  }
+}
+
+@utility bg-gradient-middle {
+  background-image: linear-gradient(
+    90deg,
+    var(--tw-gradient-from) 25%,
+    var(--tw-gradient-to) 50%,
+    var(--tw-gradient-from) 75%
+  );
+}
+
+@utility grid-cols-fit-1fr {
+  grid-template-columns: minmax(auto, min-content) 1fr;
+}
+
+@layer base {
+  body,
+  .docs-story {
+    background-color: var(--color-surface-neutral);
+    color: var(--color-main);
+    font-family: 'Open Sans', sans-serif;
+  }
 }

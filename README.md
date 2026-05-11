@@ -27,6 +27,7 @@ In order to use this application, you need to obtain a Google Service Account Ke
 ## Configuration File
 
 `com.enonic.app.ai.contentoperator.cfg (sample)`
+
 ```properties
 # Path to Google's Service Account Key (a JSON file)
 google.api.sak.path=${xp.home}/config/playground-123456-e13cb1841f87.json

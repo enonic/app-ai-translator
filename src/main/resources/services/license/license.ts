@@ -1,12 +1,12 @@
 import * as licenseManager from '../../lib/license/license-manager';
-import type {LicenseResponse} from '../../shared/types/license';
+import type { LicenseResponse } from '../../shared/types/license';
 
 export function get(): LicenseResponse {
-    const [licenseState, error] = licenseManager.getLicenseState();
+  const [licenseState, error] = licenseManager.getLicenseState();
 
-    return {
-        status: error ? 500 : 200,
-        contentType: 'application/json',
-        body: error ?? {licenseState},
-    };
+  return {
+    status: error ? 500 : 200,
+    contentType: 'application/json',
+    body: error ?? { licenseState },
+  };
 }

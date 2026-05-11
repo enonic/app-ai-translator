@@ -1,19 +1,19 @@
-import {$config} from '@/store/config';
-import {CustomAiError} from '@shared/errors';
-import type {LicenseResponseState, LicenseState} from '@shared/types/license';
+import { $config } from '@/store/config';
+import { CustomAiError } from '@shared/errors';
+import type { LicenseResponseState, LicenseState } from '@shared/types/license';
 
 export async function fetchLicenseState(): Promise<LicenseState | AiError> {
-    try {
-        const response = await fetch($config.get().licenseServiceUrl);
-        const responseBody = (await response.json()) as LicenseResponseState | AiError;
+  try {
+    const response = await fetch($config.get().licenseServiceUrl);
+    const responseBody = (await response.json()) as LicenseResponseState | AiError;
 
-        if (response.status === 200) {
-            return (responseBody as LicenseResponseState).licenseState;
-        }
-
-        return responseBody as AiError;
-    } catch (error) {
-        const msg = error instanceof Error ? error.message : String(error);
-        return new CustomAiError(500, msg);
+    if (response.status === 200) {
+      return (responseBody as LicenseResponseState).licenseState;
     }
+
+    return responseBody as AiError;
+  } catch (error) {
+    const msg = error instanceof Error ? error.message : String(error);
+    return new CustomAiError(500, msg);
+  }
 }

@@ -1,3 +1,3 @@
-import {validateOptions as validateGoogleOptions} from './lib/google/options';
+import { validateOptions as validateGoogleOptions } from './lib/google/options';
 
 validateGoogleOptions();

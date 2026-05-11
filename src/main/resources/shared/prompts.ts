@@ -1,4 +1,4 @@
-import type {TextType} from './types/text';
+import type { TextType } from './types/text';
 
 export const TRANSLATION_INSTRUCTIONS = `
 # INSTRUCTIONS
@@ -16,18 +16,18 @@ You MUST follow the instructions for answering:
 `.trim();
 
 export type TranslateTextParams = {
-    text: string;
-    language: string;
-    type?: TextType;
-    context?: string;
+  text: string;
+  language: string;
+  type?: TextType;
+  context?: string;
 };
 
 export function createTranslationPrompt(params: TranslateTextParams): string {
-    return [
-        `Detect the language of the provided text and translate it into \`${params.language}\`.`,
-        `* The format of the text is \`${params?.type || 'text'}\`, so preserve ALL formatting (e.g., HTML tags, Markdown elements, etc.).`,
-        `* The text is used in the context of "${params.context}". Only use this context if it is MEANINGFUL. If it is unclear or irrelevant, ignore it.`,
-        'The text to translate:',
-        params.text,
-    ].join('\n');
+  return [
+    `Detect the language of the provided text and translate it into \`${params.language}\`.`,
+    `* The format of the text is \`${params?.type || 'text'}\`, so preserve ALL formatting (e.g., HTML tags, Markdown elements, etc.).`,
+    `* The text is used in the context of "${params.context}". Only use this context if it is MEANINGFUL. If it is unclear or irrelevant, ignore it.`,
+    'The text to translate:',
+    params.text,
+  ].join('\n');
 }

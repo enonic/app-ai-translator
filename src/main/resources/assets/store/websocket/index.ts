@@ -1,1 +1,1 @@
-export {$websocket, $translating, startTranslation, stopTranslation} from './websocket.store';
+export { $websocket, $translating, startTranslation, stopTranslation } from './websocket.store';

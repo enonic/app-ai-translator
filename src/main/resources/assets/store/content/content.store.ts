@@ -1,29 +1,29 @@
-import {map} from 'nanostores';
+import { map } from 'nanostores';
 
-import {addGlobalUpdateDataHandler} from '@/common/events';
+import { addGlobalUpdateDataHandler } from '@/common/events';
 
-import type {ContentData} from './ContentData';
-import type {EventData} from './EventData';
-import type {Language} from './Language';
-import type {Schema} from './Schema';
+import type { ContentData } from './ContentData';
+import type { EventData } from './EventData';
+import type { Language } from './Language';
+import type { Schema } from './Schema';
 
 export type Content = {
-    language: Language;
-    persisted: Optional<ContentData>;
-    schema: Optional<Schema>;
+  language: Language;
+  persisted: Optional<ContentData>;
+  schema: Optional<Schema>;
 };
 
 export const $content = map<Content>({
-    language: {
-        tag: navigator?.language ?? 'en',
-        name: 'English',
-    },
-    persisted: null,
-    schema: null,
+  language: {
+    tag: navigator?.language ?? 'en',
+    name: 'English',
+  },
+  persisted: null,
+  schema: null,
 });
 
 addGlobalUpdateDataHandler((event: CustomEvent<EventData>) => {
-    putEventDataToStore(event.detail);
+  putEventDataToStore(event.detail);
 });
 
 export const getContentId = (): string => $content.get().persisted?.contentId ?? '';
@@ -39,17 +39,17 @@ export const setPersistedData = (data: ContentData): void => $content.setKey('pe
 export const setSchema = (schema: Schema): void => $content.setKey('schema', schema);
 
 function putEventDataToStore(eventData: EventData): void {
-    const {language, data, schema} = eventData.payload;
+  const { language, data, schema } = eventData.payload;
 
-    if (language) {
-        setLanguage(language);
-    }
+  if (language) {
+    setLanguage(language);
+  }
 
-    if (data) {
-        setPersistedData(data);
-    }
+  if (data) {
+    setPersistedData(data);
+  }
 
-    if (schema) {
-        setSchema(schema);
-    }
+  if (schema) {
+    setSchema(schema);
+  }
 }

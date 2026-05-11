@@ -1,1 +1,1 @@
-export {default} from './JukeIcon';
+export { default } from './JukeIcon';

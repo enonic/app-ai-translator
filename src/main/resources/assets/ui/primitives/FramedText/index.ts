@@ -1,1 +1,1 @@
-export {default} from './FramedText';
+export { default } from './FramedText';

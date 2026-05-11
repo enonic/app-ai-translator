@@ -1,43 +1,112 @@
-import {useStore} from '@nanostores/react';
-import {twMerge} from 'tailwind-merge';
+import { Button, Dialog } from '@enonic/ui';
+import { useStore } from '@nanostores/react';
+import { useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 
-import ModalWrapper from '@/ui/primitives/ModalWrapper';
-import {$dialog, setDialogVisible} from '@/store/dialog';
+import { $dialog, setDialogView, setDialogVisible, type DialogView } from '@/store/dialog';
+import { $translating, startTranslation, stopTranslation } from '@/store/websocket';
 
-import DialogContent from '@/components/dialog/DialogContent/DialogContent';
-import DialogFooter from '@/components/dialog/DialogFooter/DialogFooter';
-import DialogHeader from '@/components/dialog/DialogHeader/DialogHeader';
+import CompletedView from '@/components/dialog/view/CompletedView/CompletedView';
+import PreparationView from '@/components/dialog/view/PreparationView/PreparationView';
+import ProcessingView from '@/components/dialog/view/ProcessingView/ProcessingView';
 
-export type Props = {
-    className?: string;
-};
+const TRANSLATION_DIALOG_NAME = 'TranslationDialog';
 
-export default function TranslationDialog({className = ''}: Props): React.ReactNode {
-    const {visible} = useStore($dialog, {keys: ['visible']});
+export default function TranslationDialog(): React.ReactNode {
+  const { visible } = useStore($dialog, { keys: ['visible'] });
 
-    return (
-        <ModalWrapper
-            className={twMerge('TranslationDialog', !visible && 'hidden')}
-            closeHandler={() => setDialogVisible(false)}
-            trapFocus={visible}
+  const { t } = useTranslation();
+
+  return (
+    <Dialog.Root
+      open={visible}
+      onOpenChange={(open) => {
+        if (!open) {
+          stopTranslation();
+          setDialogVisible(false);
+        }
+      }}
+    >
+      <Dialog.Portal>
+        <Dialog.Overlay />
+        <Dialog.Content
+          data-component={TRANSLATION_DIALOG_NAME}
+          className="TranslationDialog max-w-3xl rounded-lg"
         >
-            <div
-                className={twMerge(
-                    'w-full sm2:max-w-2xl',
-                    'h-dvh sm2:h-auto',
-                    'flex flex-col',
-                    'bg-white',
-                    'sm2:shadow-xl',
-                    'rounded-sm',
-                    className,
-                )}
-                role='dialog'
-                aria-modal='true'
-            >
-                <DialogHeader />
-                <DialogContent className='sm2:max-h-[calc(100vh-8.5rem)]' />
-                <DialogFooter className='mt-auto sm2:mt-0' />
-            </div>
-        </ModalWrapper>
-    );
+          <Dialog.DefaultHeader title={t('field.title')} withClose />
+          <DialogBody />
+          <DialogFooter />
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
+  );
+}
+
+TranslationDialog.displayName = TRANSLATION_DIALOG_NAME;
+
+//
+// * Body
+//
+
+function renderView(view: DialogView): React.ReactNode {
+  switch (view) {
+    case 'preparation':
+      return <PreparationView />;
+    case 'processing':
+      return <ProcessingView />;
+    case 'completed':
+      return <CompletedView />;
+  }
+}
+
+function DialogBody(): React.ReactNode {
+  const { view } = useStore($dialog, { keys: ['view'] });
+
+  return (
+    <Dialog.Body className="-mx-2 -mb-2 flex flex-col gap-4 px-2 pb-2">
+      {renderView(view)}
+    </Dialog.Body>
+  );
+}
+
+//
+// * Footer
+//
+
+function DialogFooter(): React.ReactNode {
+  const isTranslating = useStore($translating);
+  const { view } = useStore($dialog, { keys: ['view'] });
+  const isPreparing = view === 'preparation';
+
+  const { t } = useTranslation();
+  const ref = useRef<HTMLButtonElement | null>(null);
+
+  useEffect(() => {
+    ref.current?.focus();
+  }, []);
+
+  return (
+    <Dialog.Footer className="gap-2.5 px-2.5">
+      <Dialog.Close asChild>
+        <Button
+          variant="outline"
+          size="md"
+          label={t(view === 'completed' ? 'action.close' : 'action.cancel')}
+        />
+      </Dialog.Close>
+      {isPreparing && (
+        <Button
+          ref={ref}
+          variant="solid"
+          size="md"
+          label={t('action.translate')}
+          disabled={isTranslating}
+          onClick={() => {
+            startTranslation();
+            setDialogView('processing');
+          }}
+        />
+      )}
+    </Dialog.Footer>
+  );
 }
