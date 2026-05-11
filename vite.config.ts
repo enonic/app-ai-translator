@@ -17,6 +17,9 @@ export default defineConfig({
     },
   },
   plugins: [preact(), tailwindcss()],
+  define: {
+    'process.env.NODE_ENV': JSON.stringify(isProduction ? 'production' : 'development'),
+  },
   resolve: {
     alias: {
       '@': assetsPath,
