@@ -1,8 +1,8 @@
-import * as taskLib from '/lib/xp/task';
 import cron from '/lib/cron';
+import * as taskLib from '/lib/xp/task';
 
 import { TRANSLATION_POOL_SIZE } from '../config';
-import { logDebug, LogDebugGroups } from '../logger';
+import { logDebug, LogDebugGroups, logError } from '../logger';
 
 type Task = {
   description?: string;
@@ -131,35 +131,41 @@ class TaskHandler {
 
     this.isPolling = true;
 
-    cron.schedule({
-      name: TaskHandler.TASK_NAME,
-      fixedDelay: 1000,
-      delay: 1000,
-      times: 480,
-      callback: () => {
-        logDebug(
-          LogDebugGroups.CRON,
-          `Active tasks: ${this.activeTasks.size}, queue length: ${this.taskQueue.size()}`,
-        );
+    try {
+      cron.schedule({
+        name: TaskHandler.TASK_NAME,
+        fixedDelay: 1000,
+        delay: 1000,
+        times: 480,
+        callback: () => {
+          logDebug(
+            LogDebugGroups.CRON,
+            `Active tasks: ${this.activeTasks.size}, queue length: ${this.taskQueue.size()}`,
+          );
 
-        this.runFuncThreadSafely(() => {
-          this.activeTasks.forEach((task, taskId) => {
-            const state = taskLib.get(taskId)?.state ?? 'FINISHED';
-            switch (state) {
-              case 'FINISHED':
-                this.activeTasks.delete(taskId);
-                break;
-              case 'FAILED':
-                this.activeTasks.delete(taskId);
-                task.onError?.();
-                break;
-            }
+          this.runFuncThreadSafely(() => {
+            this.activeTasks.forEach((task, taskId) => {
+              const state = taskLib.get(taskId)?.state ?? 'FINISHED';
+              switch (state) {
+                case 'FINISHED':
+                  this.activeTasks.delete(taskId);
+                  break;
+                case 'FAILED':
+                  this.activeTasks.delete(taskId);
+                  task.onError?.();
+                  break;
+              }
+            });
+
+            this.runNextTasks();
           });
-
-          this.runNextTasks();
-        });
-      },
-    });
+        },
+      });
+    } catch (e) {
+      this.isPolling = false;
+      logError('queue.startPolling: cron.schedule threw:');
+      logError(e);
+    }
   }
 
   private runNextTasks(): void {
@@ -170,7 +176,12 @@ class TaskHandler {
 
   private stopPolling(): void {
     if (this.isPolling) {
-      cron.unschedule({ name: TaskHandler.TASK_NAME });
+      try {
+        cron.unschedule({ name: TaskHandler.TASK_NAME });
+      } catch (e) {
+        logError('queue.stopPolling: cron.unschedule threw:');
+        logError(e);
+      }
     }
 
     this.isPolling = false;

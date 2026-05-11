@@ -3,6 +3,7 @@ import { createTranslationPrompt } from '../../shared/prompts';
 import type { Message } from '../../shared/types/model';
 import type { TextType } from '../../shared/types/text';
 import type { DataEntry } from '../content/data';
+import { logError } from '../logger';
 import type { ModelProxy } from '../proxy/model';
 import { connect } from '../proxy/proxy';
 import { addTask } from './queue';
@@ -42,8 +43,10 @@ export function translateFields(
       {
         description: `Translating content '${contentId}' in repo '${project}', field: ${path}`,
         func: () => callback(path, translate(params)),
-        onError: () =>
-          callback(path, [null, ERRORS.UNKNOWN_ERROR.withMsg('Translation task execution failed')]),
+        onError: () => {
+          logError(`translateFields.onError: queue reported FAILED for path=${path}`);
+          callback(path, [null, ERRORS.UNKNOWN_ERROR.withMsg('Translation task execution failed')]);
+        },
       },
       sessionId,
     );
@@ -54,12 +57,14 @@ export function translate(item: TranslateContentParams): Try<string> {
   const [model, err] = connectModel(createMessage(item.entry, item.language), item.instructions);
 
   if (err) {
+    logError(`translate: connectModel failed code=${err.code}, message=${err.message}`);
     return [null, err];
   }
 
   const [response, error] = model.generate();
 
   if (error) {
+    logError(`translate: model.generate failed code=${error.code}, message=${error.message}`);
     return [null, error];
   }
 

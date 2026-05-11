@@ -10,22 +10,29 @@ export enum LogDebugGroups {
   WS = 'ws',
 }
 
-function stringifyCode(code: object): string {
+function stringifyCode(code: object): string | undefined {
   return JSON.stringify(code, null, 4);
 }
 
 function parseMessage(message: unknown): string {
-  if (!message) {
-    return '';
-  } else if (message instanceof CustomAiError) {
-    return String(message);
-  } else if (message instanceof Error) {
-    return message.stack || message.message;
-  } else if (typeof message === 'object') {
-    return stringifyCode(message);
-  } else {
+  if (message == null) {
+    return '<empty>';
+  }
+  if (message instanceof CustomAiError) {
     return String(message);
   }
+  if (message instanceof Error) {
+    return message.stack || message.message || String(message);
+  }
+  if (typeof message === 'object') {
+    // ? Java exceptions surface as objects; their toString() is more useful than JSON.stringify
+    const text = String(message);
+    if (text !== '[object Object]') {
+      return text;
+    }
+    return stringifyCode(message) || text;
+  }
+  return String(message);
 }
 
 export const logInfo = (message: unknown): void => log.info(parseMessage(message));

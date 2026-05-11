@@ -8,6 +8,7 @@ import type { DataEntry } from '../../lib/content/data';
 import { logDebug, LogDebugGroups, logError } from '../../lib/logger';
 import { respondError } from '../../lib/requests';
 import { translateFields } from '../../lib/translate/translate';
+import { runAsAdmin } from '../../lib/utils/context';
 import { unsafeUUIDv4 } from '../../lib/utils/uuid';
 import { WS_PROTOCOL } from '../../shared/constants';
 import { ERRORS } from '../../shared/errors';
@@ -59,9 +60,11 @@ export function webSocketEvent(event: Enonic.WebSocketEvent): void {
         handleClose(event);
         break;
       case 'error':
+        logError(`ws.error: session=${event.session.id}`);
         break;
     }
   } catch (e) {
+    logError('webSocketEvent failed:');
     logError(e);
   }
 }
@@ -156,6 +159,10 @@ function startTranslation(session: Enonic.WebSocketSession, message: TranslateMe
         customInstructions,
       },
       (path, result) => {
+        const [, error] = result;
+        if (error != null) {
+          logError(`translation failed: path=${path}, code=${error.code}, message=${error.message}`);
+        }
         wsMessagesMap.put(path, result);
       },
       session.id,
@@ -166,6 +173,7 @@ function startTranslation(session: Enonic.WebSocketSession, message: TranslateMe
       contentId,
     );
     sendMessage(session.id, msg);
+    logError(`startTranslation: translateFields threw for contentId=${contentId}`);
     logError(e);
   }
 }
@@ -219,33 +227,49 @@ function pollAndSendMessages(
   contentId: string,
   messages: ConcurrentHashMap<string, Try<string>>,
 ): void {
+  const taskName = getTaskName(sessionId);
   try {
-    cron.schedule({
-      name: getTaskName(sessionId),
-      fixedDelay: 500,
-      delay: 1000,
-      times: 960, // 500ms * 960 = 480s, run for 8 minutes
-      callback: () => {
-        messages.forEach((path, result) => {
-          const [text, err] = result;
+    // ! lib-cron 2.0 on XP 8 reads the current Jetty request at schedule() time; run inside an XP context so it doesn't NPE on WS/task threads
+    runAsAdmin(() => {
+      cron.schedule({
+        name: taskName,
+        fixedDelay: 500,
+        delay: 1000,
+        times: 960, // 500ms * 960 = 480s, run for 8 minutes
+        callback: () => {
+          try {
+            messages.forEach((path, result) => {
+              const [text, err] = result;
 
-          if (err) {
-            sendMessage(sessionId, makeFailedMessage(err, contentId, path));
-          } else {
-            sendMessage(sessionId, makeCompletedMessage(contentId, path, text));
+              if (err) {
+                sendMessage(sessionId, makeFailedMessage(err, contentId, path));
+              } else {
+                sendMessage(sessionId, makeCompletedMessage(contentId, path, text));
+              }
+
+              messages.remove(path);
+            });
+          } catch (e) {
+            logError(`pollAndSendMessages.tick failed for session=${sessionId}:`);
+            logError(e);
           }
-
-          messages.remove(path);
-        });
-      },
+        },
+      });
     });
   } catch (e) {
+    logError(`pollAndSendMessages: cron.schedule threw for '${taskName}':`);
     logError(e);
   }
 }
 
 function handleClose(event: Enonic.WebSocketEvent): void {
-  cron.unschedule({ name: getTaskName(event.session.id) });
+  const taskName = getTaskName(event.session.id);
+  try {
+    runAsAdmin(() => cron.unschedule({ name: taskName }));
+  } catch (e) {
+    logError(`handleClose: cron.unschedule threw for '${taskName}':`);
+    logError(e);
+  }
 }
 
 function getTaskName(sessionId: string): string {
