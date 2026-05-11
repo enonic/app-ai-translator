@@ -77,16 +77,23 @@ export function parseResponse<Data, Body = unknown>(
   }
 }
 
-function parseError({ body, message }: HttpClientResponse): CustomAiError {
+function parseError(response: HttpClientResponse): CustomAiError {
+  const { body, message, status: httpStatus, contentType } = response;
   logDebug(LogDebugGroups.GOOGLE, 'client.parseError()');
 
-  if (body == null) {
-    return message ? ERRORS.GOOGLE_REQUEST_FAILED.withMsg(message) : ERRORS.GOOGLE_REQUEST_FAILED;
+  // ? Empty body or non-JSON content-type: report the HTTP status directly so the caller sees the real cause
+  const isJsonBody = body != null && body.length > 0 && contentType?.includes('json');
+  if (!isJsonBody) {
+    const httpInfo = `HTTP ${httpStatus}${message ? ` ${message}` : ''}`;
+    return ERRORS.GOOGLE_REQUEST_FAILED.withMsg(httpInfo);
   }
 
   try {
-    const { error } = (JSON.parse(body) ?? { error: {} }) as GoogleErrorResponseBody;
-    const { message: errorMessage = '', status } = error;
+    const parsed = (JSON.parse(body) ?? { error: {} }) as GoogleErrorResponseBody | GoogleErrorResponseBody[];
+    // ? Vertex AI sometimes wraps the error response in an array; unwrap before reading
+    const wrapper = Array.isArray(parsed) ? parsed[0] : parsed;
+    const { error } = wrapper ?? { error: {} };
+    const { message: errorMessage = '', status } = error ?? {};
     if (status === 'INVALID_ARGUMENT') {
       return ERRORS.MODEL_INVALID_ARGUMENT.withMsg(errorMessage);
     }
@@ -94,7 +101,9 @@ function parseError({ body, message }: HttpClientResponse): CustomAiError {
       return ERRORS.MODEL_FAILED_PRECONDITION.withMsg(errorMessage);
     }
     return ERRORS.MODEL_UNKNOWN_ERROR.withMsg(errorMessage);
-  } catch (_e) {
-    return ERRORS.MODEL_UNKNOWN_ERROR.withMsg('Cannot parse error message.');
+  } catch (e) {
+    logError(`client.parseError: JSON.parse failed for HTTP ${httpStatus} body:`);
+    logError(e);
+    return ERRORS.MODEL_UNKNOWN_ERROR.withMsg(`Cannot parse error body (HTTP ${httpStatus}).`);
   }
 }
