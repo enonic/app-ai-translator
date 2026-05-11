@@ -4,10 +4,12 @@ import { createRoot } from 'react-dom/client';
 import { dispatchNoLicense } from '@/common/events';
 import { App } from '@/components/App/App';
 import { fetchLicenseState } from '@/requests/license';
+import { ShadowHostContext } from '@/shadow/ShadowHostContext';
+import { injectStyles } from '@/shadow/inject-styles';
+import { registerThemeHost } from '@/shadow/theme-sync';
 import { $config, setLicenseServiceUrl, setWsServiceUrl } from '@/store/config';
 
 import './i18n/i18n';
-import './index.css';
 
 type SetupConfig = {
   licenseServiceUrl: string;
@@ -23,17 +25,25 @@ export async function render(container: HTMLElement): Promise<void> {
 
   if (fetchLicenseStateResult !== 'OK') {
     dispatchNoLicense();
-  } else {
-    container.classList.add('ai-translator');
-
-    const root = createRoot(container);
-
-    root.render(
-      <StrictMode>
-        <App />
-      </StrictMode>,
-    );
+    return;
   }
+
+  const shadow = container.shadowRoot ?? container.attachShadow({ mode: 'open' });
+  injectStyles(shadow);
+  registerThemeHost(container);
+
+  const mount = document.createElement('div');
+  shadow.appendChild(mount);
+
+  const root = createRoot(mount);
+
+  root.render(
+    <StrictMode>
+      <ShadowHostContext.Provider value={mount}>
+        <App />
+      </ShadowHostContext.Provider>
+    </StrictMode>,
+  );
 }
 
 export function setup({ licenseServiceUrl, wsServiceUrl }: SetupConfig): void {

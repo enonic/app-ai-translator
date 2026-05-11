@@ -1,13 +1,12 @@
-@import 'tailwindcss' important;
-@import 'tw-animate-css';
+@layer theme, base, legacy, utilities, overrides;
+
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/preflight.css' layer(base);
 @import '@enonic/ui/preset.css';
+@import 'tw-animate-css';
+@import 'tailwindcss/utilities.css' layer(utilities);
 
 @source '../../../../node_modules/@enonic/ui/';
-
-@plugin 'tailwindcss-scoped-preflight' {
-  isolation-strategy: inside;
-  selector: .ai-translator;
-}
 
 @theme {
   --animate-move-gradient: move-gradient 2000ms linear infinite;
