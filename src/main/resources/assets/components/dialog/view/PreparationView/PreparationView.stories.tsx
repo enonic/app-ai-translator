@@ -3,7 +3,8 @@ import { useEffect } from 'react';
 
 import { setLanguage } from '@/store/content';
 import { setDialogInstructions } from '@/store/dialog';
-import PreparationView from '@/components/dialog/view/PreparationView/PreparationView';
+
+import { PreparationView } from './PreparationView';
 
 const useSeeded = (instructions: string = ''): void => {
   useEffect(() => {
@@ -18,7 +19,7 @@ const meta = {
   title: 'Translator/Dialog/Views/PreparationView',
   component: PreparationView,
   decorators: [
-    (Story): React.ReactNode => (
+    (Story) => (
       <div className="flex max-w-150 justify-center">
         <Story />
       </div>

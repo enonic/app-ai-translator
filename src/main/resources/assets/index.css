@@ -10,7 +10,7 @@
 }
 
 @theme {
-  --animate-move-gradient: move-gradient 3000ms linear infinite;
+  --animate-move-gradient: move-gradient 2000ms linear infinite;
 }
 
 @keyframes move-gradient {
@@ -25,9 +25,10 @@
 @utility bg-gradient-middle {
   background-image: linear-gradient(
     90deg,
-    var(--tw-gradient-from) 25%,
-    var(--tw-gradient-to) 50%,
-    var(--tw-gradient-from) 75%
+    var(--tw-gradient-from) 20%,
+    var(--tw-gradient-to) 40%,
+    var(--tw-gradient-to) 60%,
+    var(--tw-gradient-from) 80%
   );
 }
 

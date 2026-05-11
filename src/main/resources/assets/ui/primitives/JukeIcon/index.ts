@@ -1,1 +1,1 @@
-export { default } from './JukeIcon';
+export { JukeIcon, type JukeIconProps } from './JukeIcon';

@@ -2,7 +2,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import { dispatchNoLicense } from '@/common/events';
-import App from '@/components/App/App';
+import { App } from '@/components/App/App';
 import { fetchLicenseState } from '@/requests/license';
 import { $config, setLicenseServiceUrl, setWsServiceUrl } from '@/store/config';
 

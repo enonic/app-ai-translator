@@ -1,13 +1,23 @@
 import { useStore } from '@nanostores/react';
-import React from 'react';
 import { Trans } from 'react-i18next';
 
 import { $items } from '@/store/items';
 
-export default function TranslationResult(): React.ReactNode {
-  const { failed, globalFailure } = useStore($items);
-  const failedCount = failed.length;
+const TRANSLATION_RESULT_NAME = 'TranslationResult';
 
+export function TranslationResult(): React.ReactNode {
+  const { failed, globalFailure } = useStore($items);
+
+  return (
+    <span data-component={TRANSLATION_RESULT_NAME}>
+      {renderResult(globalFailure, failed.length)}
+    </span>
+  );
+}
+
+TranslationResult.displayName = TRANSLATION_RESULT_NAME;
+
+function renderResult(globalFailure: string | undefined, failedCount: number): React.ReactNode {
   if (globalFailure) {
     return (
       <Trans

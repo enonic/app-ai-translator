@@ -74,7 +74,7 @@ let abortTimeoutId: number;
 
 function abortOnNextLongRunningTask(): void {
   clearTimeout(abortTimeoutId);
-  abortTimeoutId = setTimeout(() => {
+  abortTimeoutId = window.setTimeout(() => {
     failGlobally(t('text.error.client.longRunningTask'));
   }, ABORT_TIMEOUT);
 }
@@ -297,7 +297,7 @@ $itemsState.subscribe((state) => {
     dispatchAllCompleted({ success });
 
     if (state === 'completed') {
-      completeTimeoutId = setTimeout(() => {
+      completeTimeoutId = window.setTimeout(() => {
         setDialogView('completed');
         stopTranslation();
       }, 500);

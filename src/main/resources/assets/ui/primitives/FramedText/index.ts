@@ -1,1 +1,1 @@
-export { default } from './FramedText';
+export { FramedText, type FramedTextProps } from './FramedText';

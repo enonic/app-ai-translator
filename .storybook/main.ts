@@ -7,7 +7,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const preactPath = path.resolve(__dirname, '../node_modules/preact');
 
 const config: StorybookConfig = {
-  stories: ['../.storybook/**/*.stories.@(ts|tsx)'],
+  stories: ['../src/main/resources/assets/**/*.stories.@(ts|tsx)'],
   addons: ['@storybook/addon-docs', '@storybook/addon-themes'],
   framework: '@storybook/preact-vite',
   viteFinal(config) {

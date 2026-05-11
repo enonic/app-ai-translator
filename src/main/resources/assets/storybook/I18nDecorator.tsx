@@ -19,6 +19,9 @@ const phrases: Record<string, string> = {
   'text.translating.progress':
     'Translating to <framed>{{language}}</framed>: <bold>{{progress}}</bold> of <bold>{{total}}</bold> completed.',
   'text.result.completed': 'All translations are finished! You can safely close this dialog now.',
+  'text.result.failed.some':
+    'Translation finished with <bold>{{count}}</bold> errors. Contact administrator or try again later.',
+  'text.result.failed.all': 'Unable to complete translation. Reason: <italic>{{reason}}</italic>',
 };
 
 const i18n = createInstance();

@@ -1,5 +1,9 @@
-import TranslationDialog from '@/components/dialog/TranslationDialog/TranslationDialog';
+import { TranslationDialog } from '@/components/dialog/TranslationDialog/TranslationDialog';
 
-export default function App(): React.ReactNode {
+const APP_NAME = 'App';
+
+export function App(): React.ReactNode {
   return <TranslationDialog />;
 }
+
+App.displayName = APP_NAME;

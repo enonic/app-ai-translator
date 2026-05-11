@@ -3,12 +3,15 @@ import { TextArea } from '@enonic/ui';
 import { useStore } from '@nanostores/react';
 import { useTranslation } from 'react-i18next';
 
-export default function InstructionsInput(): React.ReactNode {
+const INSTRUCTIONS_INPUT_NAME = 'InstructionsInput';
+
+export function InstructionsInput(): React.ReactNode {
   const { t } = useTranslation();
   const instructions = useStore($instructions);
 
   return (
     <TextArea
+      data-component={INSTRUCTIONS_INPUT_NAME}
       label={t('field.instructions.title')}
       placeholder={t('field.instructions.placeholder')}
       value={instructions}
@@ -18,3 +21,5 @@ export default function InstructionsInput(): React.ReactNode {
     />
   );
 }
+
+InstructionsInput.displayName = INSTRUCTIONS_INPUT_NAME;

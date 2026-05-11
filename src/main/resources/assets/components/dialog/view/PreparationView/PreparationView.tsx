@@ -1,15 +1,17 @@
-import AssistantMessage from '@/components/dialog/AssistantMessage/AssistantMessage';
-import InstructionsInput from '@/components/dialog/InstructionsInput/InstructionsInput';
+import { AssistantMessage } from '@/components/dialog/AssistantMessage/AssistantMessage';
+import { InstructionsInput } from '@/components/dialog/InstructionsInput/InstructionsInput';
 import { $content } from '@/store/content';
-import FramedText from '@/ui/primitives/FramedText';
+import { FramedText } from '@/ui/primitives/FramedText';
 import { useStore } from '@nanostores/react';
 import { Trans } from 'react-i18next';
 
-export default function PreparationView(): React.ReactNode {
+const PREPARATION_VIEW_NAME = 'PreparationView';
+
+export function PreparationView(): React.ReactNode {
   const { language } = useStore($content, { keys: ['language'] });
 
   return (
-    <div className="flex flex-col gap-6">
+    <div data-component={PREPARATION_VIEW_NAME} className="flex flex-col gap-6">
       <AssistantMessage>
         <p className="text-main text-base">
           <Trans
@@ -22,3 +24,5 @@ export default function PreparationView(): React.ReactNode {
     </div>
   );
 }
+
+PreparationView.displayName = PREPARATION_VIEW_NAME;

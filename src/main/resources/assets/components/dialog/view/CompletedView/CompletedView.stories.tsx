@@ -3,7 +3,8 @@ import { useEffect } from 'react';
 
 import { setLanguage } from '@/store/content';
 import { addFailed, addSucceeded, resetItems, setGlobalFailure, setPaths } from '@/store/items';
-import CompletedView from '@/components/dialog/view/CompletedView/CompletedView';
+
+import { CompletedView } from './CompletedView';
 
 type Seed = {
   paths?: string[];
@@ -28,7 +29,7 @@ const meta = {
   title: 'Translator/Dialog/Views/CompletedView',
   component: CompletedView,
   decorators: [
-    (Story): React.ReactNode => (
+    (Story) => (
       <div className="flex max-w-150 justify-center">
         <Story />
       </div>

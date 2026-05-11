@@ -1,20 +1,21 @@
 import type { Meta, StoryObj } from '@storybook/preact-vite';
 import { Trans } from 'react-i18next';
 
-import AssistantMessage from '@/components/dialog/AssistantMessage/AssistantMessage';
-import FramedText from '@/ui/primitives/FramedText';
+import { FramedText } from '@/ui/primitives/FramedText';
 
-const meta = {
+import { AssistantMessage, type AssistantMessageProps } from './AssistantMessage';
+
+const meta: Meta<AssistantMessageProps> = {
   title: 'Translator/Dialog/AssistantMessage',
   component: AssistantMessage,
   decorators: [
-    (Story): React.ReactNode => (
+    (Story) => (
       <div className="flex max-w-150 justify-center">
         <Story />
       </div>
     ),
   ],
-} satisfies Meta<typeof AssistantMessage>;
+};
 
 export default meta;
 

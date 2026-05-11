@@ -4,7 +4,8 @@ import { useEffect } from 'react';
 
 import { setLanguage } from '@/store/content';
 import { $dialog, setDialogInstructions, setDialogView, setDialogVisible } from '@/store/dialog';
-import TranslationDialog from '@/components/dialog/TranslationDialog/TranslationDialog';
+
+import { TranslationDialog } from './TranslationDialog';
 
 const COMPLETION_DELAY_MS = 1500;
 

@@ -1,23 +1,18 @@
 import { cn } from '@enonic/ui';
-import { Globe } from 'lucide-react';
 
-type Props = {
+const FRAMED_TEXT_NAME = 'FramedText';
+
+export type FramedTextProps = {
   className?: string;
   children?: React.ReactNode;
 };
 
-export default function FramedText({ children, className }: Props): React.ReactNode {
+export function FramedText({ children, className }: FramedTextProps): React.ReactNode {
   return (
-    <span
-      className={cn(
-        'inline-flex max-w-xs items-center gap-1 align-middle',
-        'bg-surface-neutral-hover rounded-sm px-1 py-px',
-        'text-main text-sm font-semibold',
-        className,
-      )}
-    >
-      <Globe className="text-subtle size-3.5 shrink-0" strokeWidth={2} />
-      <span className="truncate">{children}</span>
+    <span data-component={FRAMED_TEXT_NAME} className={cn('font-semibold', className)}>
+      {children}
     </span>
   );
 }
+
+FramedText.displayName = FRAMED_TEXT_NAME;

@@ -3,7 +3,8 @@ import { useEffect } from 'react';
 
 import { setLanguage } from '@/store/content';
 import { addSucceeded, resetItems, setPaths } from '@/store/items';
-import ProcessingView from '@/components/dialog/view/ProcessingView/ProcessingView';
+
+import { ProcessingView } from './ProcessingView';
 
 const useSeeded = (paths: string[] = [], succeeded: string[] = []): void => {
   useEffect(() => {
@@ -19,7 +20,7 @@ const meta = {
   title: 'Translator/Dialog/Views/ProcessingView',
   component: ProcessingView,
   decorators: [
-    (Story): React.ReactNode => (
+    (Story) => (
       <div className="flex max-w-150 justify-center">
         <Story />
       </div>

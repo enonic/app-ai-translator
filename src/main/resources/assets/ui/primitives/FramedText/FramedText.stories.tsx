@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/preact-vite';
 
-import FramedText from '@/ui/primitives/FramedText';
+import { FramedText } from './FramedText';
 
 const meta = {
   title: 'Translator/Primitives/FramedText',
   component: FramedText,
   decorators: [
-    (Story): React.ReactNode => (
+    (Story) => (
       <div className="flex max-w-150 justify-center">
         <Story />
       </div>

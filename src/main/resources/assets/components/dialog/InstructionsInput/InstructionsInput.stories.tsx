@@ -2,7 +2,8 @@ import type { Meta, StoryObj } from '@storybook/preact-vite';
 import { useEffect } from 'react';
 
 import { setDialogInstructions } from '@/store/dialog';
-import InstructionsInput from '@/components/dialog/InstructionsInput/InstructionsInput';
+
+import { InstructionsInput } from './InstructionsInput';
 
 const useSeededInstructions = (value: string): void => {
   useEffect(() => {
@@ -16,7 +17,7 @@ const meta = {
   title: 'Translator/Dialog/InstructionsInput',
   component: InstructionsInput,
   decorators: [
-    (Story): React.ReactNode => (
+    (Story) => (
       <div className="w-120">
         <Story />
       </div>
