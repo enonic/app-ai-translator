@@ -45,11 +45,12 @@ describe('GeminiProxy', () => {
       ],
       generationConfig: {
         candidateCount: 1,
-        temperature: 0.2,
-        topP: 0.9,
+        temperature: 0.1,
+        topP: 0.8,
+        topK: 1,
         responseMimeType: 'text/plain',
         thinkingConfig: {
-          thinkingBudget: 0,
+          thinkingLevel: 'minimal',
         },
       },
       safetySettings: [

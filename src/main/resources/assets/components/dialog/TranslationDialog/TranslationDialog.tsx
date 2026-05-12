@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 
 import { useShadowHost } from '@/shadow/ShadowHostContext';
 import { $dialog, setDialogVisible } from '@/store/dialog';
-import { stopTranslation } from '@/store/websocket';
 
 import { DialogBody } from './DialogBody/DialogBody';
 import { DialogFooter } from './DialogFooter/DialogFooter';
@@ -27,7 +26,6 @@ export function TranslationDialog({ className }: TranslationDialogProps): React.
       open={visible}
       onOpenChange={(open) => {
         if (!open) {
-          stopTranslation();
           setDialogVisible(false);
         }
       }}
