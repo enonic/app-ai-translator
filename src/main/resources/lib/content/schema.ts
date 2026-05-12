@@ -1,22 +1,24 @@
 import * as schemaLib from '/lib/xp/schema';
-import type {MixinSchema, XDataSchema} from '/lib/xp/schema';
+import type {FormFragmentSchema, MixinSchema} from '/lib/xp/schema';
 
 import {runAsAdmin} from '../utils/context';
 import {PropertyValue} from './property';
 
-function getXDataSchema(xDataPath: string): Optional<XDataSchema> {
+function getXDataSchema(xDataPath: string): Optional<MixinSchema> {
     const pathParts = xDataPath.split('/');
     const schemaKey = `${pathParts[0].replace(/-/g, '.')}:${pathParts[1]}`; // replace dashes with dots
-    return runAsAdmin(() => schemaLib.getSchema({name: schemaKey, type: 'XDATA'}));
+    const schema = runAsAdmin(() => schemaLib.getSchema({name: schemaKey, type: 'MIXIN'}));
+    return schema && schema.type === 'MIXIN' ? (schema as MixinSchema) : undefined;
 }
 
-export function getMixinSchema(name: string): Optional<MixinSchema> {
-    return runAsAdmin(() => schemaLib.getSchema({name, type: 'MIXIN'}));
+export function getMixinSchema(name: string): Optional<FormFragmentSchema> {
+    const schema = runAsAdmin(() => schemaLib.getSchema({name, type: 'FORM_FRAGMENT'}));
+    return schema && schema.type === 'FORM_FRAGMENT' ? (schema as FormFragmentSchema) : undefined;
 }
 
 // Grouping x data schemas by appName/xDataName key
-export function getXDataSchemas(xData: Record<string, PropertyValue>): Record<string, XDataSchema> {
-    const schemas: Record<string, XDataSchema> = {};
+export function getXDataSchemas(xData: Record<string, PropertyValue>): Record<string, MixinSchema> {
+    const schemas: Record<string, MixinSchema> = {};
 
     for (const path in xData) {
         const schemaPrefix = makeSchemaPrefix(path);
