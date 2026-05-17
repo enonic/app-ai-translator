@@ -4,27 +4,29 @@ import * as schemaLib from '/lib/xp/schema';
 import { runAsAdmin } from '../utils/context';
 import type { PropertyValue } from './property';
 
-function getFormFragmentSchema(xDataPath: string): Optional<FormFragmentSchema> {
-  const pathParts = xDataPath.split('/');
+function getMixinSchema(mixinPath: string): Optional<MixinSchema> {
+  const pathParts = mixinPath.split('/');
   const schemaKey = `${pathParts[0].replace(/-/g, '.')}:${pathParts[1]}`; // replace dashes with dots
-  return runAsAdmin(() => schemaLib.getSchema({ name: schemaKey, type: 'FORM_FRAGMENT' }));
+  return runAsAdmin(
+    () => schemaLib.getSchema({ name: schemaKey, type: 'MIXIN' }),
+  ) as Optional<MixinSchema>;
 }
 
-export function getMixinSchema(name: string): Optional<MixinSchema> {
-  return runAsAdmin(() => schemaLib.getSchema({ name, type: 'MIXIN' })) as Optional<MixinSchema>;
+export function getFormFragmentSchema(name: string): Optional<FormFragmentSchema> {
+  return runAsAdmin(() => schemaLib.getSchema({ name, type: 'FORM_FRAGMENT' }));
 }
 
-// Grouping x data schemas by appName/xDataName key
-export function getFormFragmentSchemas(
-  xData: Record<string, PropertyValue>,
-): Record<string, FormFragmentSchema> {
-  const schemas: Record<string, FormFragmentSchema> = {};
+// Grouping mixin schemas by appName/mixinName key
+export function getMixinSchemas(
+  mixinData: Record<string, PropertyValue>,
+): Record<string, MixinSchema> {
+  const schemas: Record<string, MixinSchema> = {};
 
-  for (const path in xData) {
+  for (const path in mixinData) {
     const schemaPrefix = makeSchemaPrefix(path);
 
     if (schemaPrefix && !schemas[schemaPrefix] && !isBuiltInSchema(schemaPrefix)) {
-      const schema = getFormFragmentSchema(schemaPrefix);
+      const schema = getMixinSchema(schemaPrefix);
 
       if (schema) {
         schemas[schemaPrefix] = schema;

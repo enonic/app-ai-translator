@@ -26,7 +26,7 @@ import { getPathsToTranslatableFields, isInput } from './form';
 import { isLayoutComponent, isPageComponent, isPartComponent, isTextComponent } from './page';
 import { pathToString } from './path';
 import type { Property, PropertyValue } from './property';
-import { getFormFragmentSchemas } from './schema';
+import { getMixinSchemas } from './schema';
 
 type ContextUser = Pick<User, 'login' | 'idProvider'> | undefined;
 
@@ -177,7 +177,7 @@ function getXDataFieldsToTranslate(
   xData: Record<string, PropertyValue>,
 ): Record<string, DataEntry> {
   const result: Record<string, DataEntry> = {};
-  const schemas = getFormFragmentSchemas(xData);
+  const schemas = getMixinSchemas(xData);
 
   for (const schemaPrefix in schemas) {
     const entriesByXData = getXDataEntriesBySchemaPrefix(xData, schemaPrefix);

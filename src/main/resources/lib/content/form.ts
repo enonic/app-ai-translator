@@ -2,7 +2,7 @@ import type { FormItem, FormItemFormFragment, FormItemInput } from '/lib/xp/cont
 import type { FormItemLayout, FormItemOptionSet, FormItemSet } from '/lib/xp/core';
 
 import type { Path } from './path';
-import { getMixinSchema } from './schema';
+import { getFormFragmentSchema } from './schema';
 
 export type FormOptionSetOption = {
   name: string;
@@ -140,6 +140,6 @@ function getFormOptionSetOptionPathEntries(
 }
 
 function getFormFragmentPathEntries(item: FormItemFormFragment, path: Path): FormItemWithPath[] {
-  const schema = getMixinSchema(item.name);
+  const schema = getFormFragmentSchema(item.name);
   return schema ? getPathsOfMentionableItems(schema.form, { elements: path.elements }) : [];
 }
