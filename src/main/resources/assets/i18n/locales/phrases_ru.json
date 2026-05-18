@@ -1,6 +1,5 @@
 {
   "action.addInstructions": "Добавить инструкции для перевода",
-  "action.cancel": "Отмена",
   "action.close": "Закрыть",
   "action.translate": "Перевести",
   "field.instructions.placeholder": "Напишите инструкции для перевода текста. Общие инструкции, настроенные через сайт, также будут добавлены сюда.",

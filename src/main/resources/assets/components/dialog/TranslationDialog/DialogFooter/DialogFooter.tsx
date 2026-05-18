@@ -26,7 +26,7 @@ export function DialogFooter(): React.ReactNode {
         <Button
           variant="outline"
           size="md"
-          label={t(view === 'completed' ? 'action.close' : 'action.cancel')}
+          label={t('action.close')}
         />
       </Dialog.Close>
       {isPreparing && (

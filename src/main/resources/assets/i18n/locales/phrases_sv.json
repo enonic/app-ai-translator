@@ -1,6 +1,5 @@
 {
   "action.addInstructions": "Lägg till översättningsinstruktioner",
-  "action.cancel": "Avbryt",
   "action.close": "Stäng",
   "action.translate": "Översätt",
   "field.instructions.placeholder": "Skriv instruktioner för textöversättning. De allmänna instruktionerna som konfigureras via webbplatsen kommer också att läggas till här.",

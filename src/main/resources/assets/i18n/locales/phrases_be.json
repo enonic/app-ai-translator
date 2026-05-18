@@ -1,6 +1,6 @@
 {
   "action.addInstructions": "Дадаць інструкцыі для перакладу",
-  "action.cancel": "Адмена",
+  "action.close": "Закрыць",
   "action.translate": "Перакласці",
   "field.instructions.placeholder": "Напішыце інструкцыі для перакладу тэксту. Агульныя інструкцыі, наладжаныя праз сайт, таксама будуць дададзены сюды.",
   "field.instructions.title": "Інструкцыі для перакладу",

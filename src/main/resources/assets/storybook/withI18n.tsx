@@ -6,7 +6,6 @@ import type { Decorator } from '@storybook/preact-vite';
 // Mirrors phrases_en.json so stories render real English strings instead of bare keys.
 const phrases: Record<string, string> = {
   'action.translate': 'Translate',
-  'action.cancel': 'Cancel',
   'action.close': 'Close',
   'action.addInstructions': 'Add translation instructions',
   'field.title': 'AI Automated Translation',

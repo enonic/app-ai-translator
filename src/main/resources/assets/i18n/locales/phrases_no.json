@@ -1,6 +1,5 @@
 {
   "action.addInstructions": "Legg til oversettingsinstruksjoner",
-  "action.cancel": "Avbryt",
   "action.close": "Lukk",
   "action.translate": "Oversett",
   "field.instructions.placeholder": "Skriv instruksjoner for tekstoversetting. De generelle instruksjonene konfigurert via nettstedet vil også bli lagt til her.",

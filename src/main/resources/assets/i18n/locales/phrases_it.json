@@ -1,6 +1,6 @@
 {
   "action.addInstructions": "Aggiungere le istruzioni per la traduzione",
-  "action.cancel": "Annulla",
+  "action.close": "Chiudi",
   "action.translate": "Traduci",
   "field.instructions.placeholder": "Scrivi le istruzioni per la traduzione del testo. Qui verranno aggiunte anche le istruzioni generali configurate tramite il sito.",
   "field.instructions.title": "Istruzioni per la traduzione",
