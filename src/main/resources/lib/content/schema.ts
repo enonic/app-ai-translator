@@ -18,11 +18,11 @@ export function getFormFragmentSchema(name: string): Optional<FormFragmentSchema
 
 // Grouping mixin schemas by appName/mixinName key
 export function getMixinSchemas(
-  mixinData: Record<string, PropertyValue>,
+  mixins: Record<string, PropertyValue>,
 ): Record<string, MixinSchema> {
   const schemas: Record<string, MixinSchema> = {};
 
-  for (const path in mixinData) {
+  for (const path in mixins) {
     const schemaPrefix = makeSchemaPrefix(path);
 
     if (schemaPrefix && !schemas[schemaPrefix] && !isBuiltInSchema(schemaPrefix)) {

@@ -64,11 +64,11 @@ export function getTranslatableDataFromContent(
       );
     }
 
-    const flatXData = flattenData(content.x as Record<string, Property>);
-    const xDataToTranslate = getXDataFieldsToTranslate(flatXData);
+    const flatMixins = flattenData(content.x as Record<string, Property>);
+    const mixinFieldsToTranslate = getMixinFieldsToTranslate(flatMixins);
 
-    for (const xDataPath in xDataToTranslate) {
-      result[`__xdata__/${xDataPath}`] = xDataToTranslate[xDataPath];
+    for (const mixinPath in mixinFieldsToTranslate) {
+      result[`__mixins__/${mixinPath}`] = mixinFieldsToTranslate[mixinPath];
     }
 
     const pageDataToTranslate = getPageDataEntries(content);
@@ -170,37 +170,37 @@ function makeDisplayNameDataEntry(displayName: string, context: string): DataEnt
 }
 
 /*
- * XData fields are stored with a prefix that includes the app name and the xData name.
- * Meanwhile the schema form that we fetch has no such prefix. We need to match the schema form fields with the actual xData fields.
+ * Mixin fields are stored with a prefix that includes the app name and the mixin name.
+ * Meanwhile the schema form that we fetch has no such prefix. We need to match the schema form fields with the actual mixin fields.
  */
-function getXDataFieldsToTranslate(
-  xData: Record<string, PropertyValue>,
+function getMixinFieldsToTranslate(
+  mixins: Record<string, PropertyValue>,
 ): Record<string, DataEntry> {
   const result: Record<string, DataEntry> = {};
-  const schemas = getMixinSchemas(xData);
+  const schemas = getMixinSchemas(mixins);
 
   for (const schemaPrefix in schemas) {
-    const entriesByXData = getXDataEntriesBySchemaPrefix(xData, schemaPrefix);
-    const xDataItemsToTranslate = getTranslatableFields(entriesByXData, schemas[schemaPrefix].form);
+    const entriesByMixins = getMixinEntriesBySchemaPrefix(mixins, schemaPrefix);
+    const mixinItemsToTranslate = getTranslatableFields(entriesByMixins, schemas[schemaPrefix].form);
 
-    for (const path in xDataItemsToTranslate) {
-      result[`${schemaPrefix}${path}`] = xDataItemsToTranslate[path];
+    for (const path in mixinItemsToTranslate) {
+      result[`${schemaPrefix}${path}`] = mixinItemsToTranslate[path];
     }
   }
 
   return result;
 }
 
-function getXDataEntriesBySchemaPrefix(
-  xData: Record<string, PropertyValue>,
+function getMixinEntriesBySchemaPrefix(
+  mixins: Record<string, PropertyValue>,
   schemaPrefix: string,
 ): Record<string, PropertyValue> {
   const result: Record<string, PropertyValue> = {};
   const schemaPrefixWithSeparator = `${schemaPrefix}/`;
 
-  for (const path in xData) {
+  for (const path in mixins) {
     if (path.startsWith(schemaPrefixWithSeparator)) {
-      result[path.replace(schemaPrefixWithSeparator, '')] = xData[path];
+      result[path.replace(schemaPrefixWithSeparator, '')] = mixins[path];
     }
   }
 
