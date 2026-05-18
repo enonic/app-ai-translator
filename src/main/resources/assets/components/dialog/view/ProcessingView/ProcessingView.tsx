@@ -5,7 +5,7 @@ import { Trans } from 'react-i18next';
 import { AssistantMessage } from '@/components/dialog/AssistantMessage/AssistantMessage';
 import { $content } from '@/store/content';
 import { $items } from '@/store/items';
-import { FramedText } from '@/ui/primitives/FramedText';
+import { FramedText } from '@/ui/primitives/FramedText/FramedText';
 
 const PROCESSING_VIEW_NAME = 'ProcessingView';
 

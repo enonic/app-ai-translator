@@ -1,7 +1,7 @@
 import { Avatar, cn } from '@enonic/ui';
 import { useTranslation } from 'react-i18next';
 
-import { JukeIcon } from '@/ui/primitives/JukeIcon';
+import { JukeIcon } from '@/ui/primitives/JukeIcon/JukeIcon';
 
 const ASSISTANT_MESSAGE_NAME = 'AssistantMessage';
 

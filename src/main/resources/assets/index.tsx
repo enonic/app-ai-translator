@@ -4,9 +4,9 @@ import { createRoot } from 'react-dom/client';
 import { dispatchNoLicense } from '@/common/events';
 import { App } from '@/components/App/App';
 import { fetchLicenseState } from '@/requests/license';
-import { injectStyles } from '@/shadow/inject-styles';
+import { injectStyles } from '@/shadow/injectStyles';
 import { ShadowHostContext } from '@/shadow/ShadowHostContext';
-import { registerThemeHost } from '@/shadow/theme-sync';
+import { registerThemeHost } from '@/shadow/themeSync';
 import { $config, setLicenseServiceUrl, setWsServiceUrl } from '@/store/config';
 
 import './i18n/i18n';

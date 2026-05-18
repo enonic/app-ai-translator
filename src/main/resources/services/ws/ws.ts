@@ -14,7 +14,7 @@ import type {
 } from '../../shared/types/websocket';
 
 import { getTranslatableDataFromContent } from '../../lib/content/content';
-import * as licenseManager from '../../lib/license/license-manager';
+import * as licenseManager from '../../lib/license/licenseManager';
 import { logDebug, LogDebugGroups, logError } from '../../lib/logger';
 import { respondError } from '../../lib/requests';
 import { translateFields } from '../../lib/translate/translate';

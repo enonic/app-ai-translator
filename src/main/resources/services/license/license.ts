@@ -1,6 +1,6 @@
 import type { LicenseResponse } from '../../shared/types/license';
 
-import * as licenseManager from '../../lib/license/license-manager';
+import * as licenseManager from '../../lib/license/licenseManager';
 
 export function get(): LicenseResponse {
   const [licenseState, error] = licenseManager.getLicenseState();

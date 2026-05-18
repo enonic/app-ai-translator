@@ -1,7 +1,7 @@
 import { withThemeByClassName } from '@storybook/addon-themes';
 import { themes } from 'storybook/theming';
 
-import { withI18n } from '@/storybook/I18nDecorator';
+import { withI18n } from '@/storybook/withI18n';
 
 import type { Preview } from '@storybook/preact-vite';
 

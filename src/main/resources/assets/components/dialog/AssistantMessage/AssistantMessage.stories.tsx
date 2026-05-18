@@ -1,6 +1,6 @@
 import { Trans } from 'react-i18next';
 
-import { FramedText } from '@/ui/primitives/FramedText';
+import { FramedText } from '@/ui/primitives/FramedText/FramedText';
 
 import type { Meta, StoryObj } from '@storybook/preact-vite';
 
