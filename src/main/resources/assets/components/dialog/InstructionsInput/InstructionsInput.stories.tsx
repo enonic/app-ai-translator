@@ -1,7 +1,8 @@
-import type { Meta, StoryObj } from '@storybook/preact-vite';
 import { useEffect } from 'react';
 
 import { setDialogInstructions } from '@/store/dialog';
+
+import type { Meta, StoryObj } from '@storybook/preact-vite';
 
 import { InstructionsInput } from './InstructionsInput';
 

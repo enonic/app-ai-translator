@@ -116,31 +116,13 @@ export function JukeIcon({ className }: JukeIconProps): React.ReactNode {
           <stop offset={1} stopColor="#05000c" />
         </linearGradient>
         <filter id={softDrop} x="-20%" y="-20%" width="140%" height="140%">
-          <feDropShadow
-            dx={0}
-            dy={18}
-            stdDeviation={16}
-            floodColor="#08000f"
-            floodOpacity={0.58}
-          />
+          <feDropShadow dx={0} dy={18} stdDeviation={16} floodColor="#08000f" floodOpacity={0.58} />
         </filter>
         <filter id={eyeShadow} x="-25%" y="-25%" width="150%" height="150%">
-          <feDropShadow
-            dx={0}
-            dy={18}
-            stdDeviation={14}
-            floodColor="#040006"
-            floodOpacity={0.55}
-          />
+          <feDropShadow dx={0} dy={18} stdDeviation={14} floodColor="#040006" floodOpacity={0.55} />
         </filter>
         <filter id={lidShadow} x="-20%" y="-30%" width="140%" height="160%">
-          <feDropShadow
-            dx={0}
-            dy={15}
-            stdDeviation={12}
-            floodColor="#050008"
-            floodOpacity={0.65}
-          />
+          <feDropShadow dx={0} dy={15} stdDeviation={12} floodColor="#050008" floodOpacity={0.65} />
         </filter>
         <filter id={innerSoft} x="-20%" y="-20%" width="140%" height="140%">
           <feGaussianBlur in="SourceAlpha" stdDeviation={8} result="blur" />

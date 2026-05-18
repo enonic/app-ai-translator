@@ -1,14 +1,15 @@
-import type { FormFragmentSchema, MixinSchema } from '/lib/xp/schema';
 import * as schemaLib from '/lib/xp/schema';
 
-import { runAsAdmin } from '../utils/context';
 import type { PropertyValue } from './property';
+import type { FormFragmentSchema, MixinSchema } from '/lib/xp/schema';
+
+import { runAsAdmin } from '../utils/context';
 
 function getMixinSchema(mixinPath: string): Optional<MixinSchema> {
   const pathParts = mixinPath.split('/');
   const schemaKey = `${pathParts[0].replace(/-/g, '.')}:${pathParts[1]}`; // replace dashes with dots
-  return runAsAdmin(
-    () => schemaLib.getSchema({ name: schemaKey, type: 'MIXIN' }),
+  return runAsAdmin(() =>
+    schemaLib.getSchema({ name: schemaKey, type: 'MIXIN' }),
   ) as Optional<MixinSchema>;
 }
 

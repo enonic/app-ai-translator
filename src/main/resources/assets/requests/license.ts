@@ -1,5 +1,7 @@
-import { $config } from '@/store/config';
 import { CustomAiError } from '@shared/errors';
+
+import { $config } from '@/store/config';
+
 import type { LicenseResponseState, LicenseState } from '@shared/types/license';
 
 export async function fetchLicenseState(): Promise<LicenseState | AiError> {

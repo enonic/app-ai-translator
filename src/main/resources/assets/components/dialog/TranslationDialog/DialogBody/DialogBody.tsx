@@ -1,11 +1,10 @@
 import { Dialog } from '@enonic/ui';
 import { useStore } from '@nanostores/react';
 
-import { $dialog, type DialogView } from '@/store/dialog';
-
 import { CompletedView } from '@/components/dialog/view/CompletedView/CompletedView';
 import { PreparationView } from '@/components/dialog/view/PreparationView/PreparationView';
 import { ProcessingView } from '@/components/dialog/view/ProcessingView/ProcessingView';
+import { $dialog, type DialogView } from '@/store/dialog';
 
 const DIALOG_BODY_NAME = 'DialogBody';
 

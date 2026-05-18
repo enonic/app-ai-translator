@@ -1,7 +1,7 @@
+import type { Path } from './path';
 import type { FormItem, FormItemFormFragment, FormItemInput } from '/lib/xp/content';
 import type { FormItemLayout, FormItemOptionSet, FormItemSet } from '/lib/xp/core';
 
-import type { Path } from './path';
 import { getFormFragmentSchema } from './schema';
 
 export type FormOptionSetOption = {

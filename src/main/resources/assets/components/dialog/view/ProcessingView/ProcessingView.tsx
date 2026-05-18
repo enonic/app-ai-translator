@@ -2,11 +2,10 @@ import { cn } from '@enonic/ui';
 import { useStore } from '@nanostores/react';
 import { Trans } from 'react-i18next';
 
+import { AssistantMessage } from '@/components/dialog/AssistantMessage/AssistantMessage';
 import { $content } from '@/store/content';
 import { $items } from '@/store/items';
 import { FramedText } from '@/ui/primitives/FramedText';
-
-import { AssistantMessage } from '@/components/dialog/AssistantMessage/AssistantMessage';
 
 const PROCESSING_VIEW_NAME = 'ProcessingView';
 

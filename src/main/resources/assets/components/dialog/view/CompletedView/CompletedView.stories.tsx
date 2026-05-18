@@ -1,8 +1,9 @@
-import type { Meta, StoryObj } from '@storybook/preact-vite';
 import { useEffect } from 'react';
 
 import { setLanguage } from '@/store/content';
 import { addFailed, addSucceeded, resetItems, setGlobalFailure, setPaths } from '@/store/items';
+
+import type { Meta, StoryObj } from '@storybook/preact-vite';
 
 import { CompletedView } from './CompletedView';
 

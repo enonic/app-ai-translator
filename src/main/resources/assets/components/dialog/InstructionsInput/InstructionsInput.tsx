@@ -1,7 +1,8 @@
-import { $instructions, setDialogInstructions } from '@/store/dialog';
 import { TextArea } from '@enonic/ui';
 import { useStore } from '@nanostores/react';
 import { useTranslation } from 'react-i18next';
+
+import { $instructions, setDialogInstructions } from '@/store/dialog';
 
 const INSTRUCTIONS_INPUT_NAME = 'InstructionsInput';
 

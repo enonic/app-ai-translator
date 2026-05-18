@@ -1,10 +1,11 @@
-import { ERRORS } from '../../shared/errors';
-import { createTranslationPrompt } from '../../shared/prompts';
 import type { Message } from '../../shared/types/model';
 import type { TextType } from '../../shared/types/text';
 import type { DataEntry } from '../content/data';
-import { logError } from '../logger';
 import type { ModelProxy } from '../proxy/model';
+
+import { ERRORS } from '../../shared/errors';
+import { createTranslationPrompt } from '../../shared/prompts';
+import { logError } from '../logger';
 import { connect } from '../proxy/proxy';
 import { addTask } from './queue';
 

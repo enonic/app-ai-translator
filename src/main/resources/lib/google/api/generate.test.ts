@@ -1,10 +1,11 @@
 import { createResponse } from '/tests/testUtils/testHelpers';
 import { describe, expect, it, vi } from 'vitest';
 
+import type { GenerateContentRequest } from '../types';
+
 import { content } from '../../../../../../tests/testUtils/fixtures/google';
 import { ERRORS } from '../../../shared/errors';
 import * as Client from '../client';
-import type { GenerateContentRequest } from '../types';
 import { generate } from './generate';
 
 vi.mock('../client', async (importOriginal) => {

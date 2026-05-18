@@ -1,9 +1,9 @@
+import type { CustomAiError } from '../../shared/errors';
+import type { RequestParams } from '../requests';
 import type { HttpClientResponse } from '/lib/http-client';
 
-import type { CustomAiError } from '../../shared/errors';
 import { ERRORS } from '../../shared/errors';
 import { logDebug, LogDebugGroups, logError } from '../logger';
-import type { RequestParams } from '../requests';
 import { request } from '../requests';
 import { getOptions } from './options';
 
@@ -89,7 +89,9 @@ function parseError(response: HttpClientResponse): CustomAiError {
   }
 
   try {
-    const parsed = (JSON.parse(body) ?? { error: {} }) as GoogleErrorResponseBody | GoogleErrorResponseBody[];
+    const parsed = (JSON.parse(body) ?? { error: {} }) as
+      | GoogleErrorResponseBody
+      | GoogleErrorResponseBody[];
     // ? Vertex AI sometimes wraps the error response in an array; unwrap before reading
     const wrapper = Array.isArray(parsed) ? parsed[0] : parsed;
     const { error } = wrapper ?? { error: {} };

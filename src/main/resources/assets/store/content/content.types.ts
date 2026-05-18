@@ -1,3 +1,14 @@
+export type Language = {
+  tag: string;
+  name: string;
+};
+
+export type ContentData = {
+  contentId: string;
+  project: string;
+  topic: string;
+};
+
 export type Schema = {
   name: string;
   form: {
@@ -54,3 +65,17 @@ export type FormOptionSetData = FormItemNameAndLabel &
   FormItemOccurrences & {
     options: FormOptionSetOption[];
   };
+
+export type EventData = {
+  payload: {
+    language?: Language;
+    data?: ContentData;
+    schema?: Schema;
+  };
+};
+
+export type Content = {
+  language: Language;
+  persisted: Optional<ContentData>;
+  schema: Optional<Schema>;
+};

@@ -1,9 +1,9 @@
-export type { Dialog, DialogView } from './dialog.store';
+export { $dialog, $instructions } from './dialog.store';
 export {
-  $dialog,
-  $instructions,
   setDialogVisible,
   setDialogInstructions,
   toggleDialog,
   setDialogView,
-} from './dialog.store';
+} from './dialog.utils';
+
+export type { Dialog, DialogView } from './dialog.types';

@@ -1,6 +1,7 @@
+import type { GenerateContentRequest, GenerateContentResponse } from '../types';
+
 import { logDebug, LogDebugGroups } from '../../logger';
 import { parseResponse, sendPostRequest } from '../client';
-import type { GenerateContentRequest, GenerateContentResponse } from '../types';
 
 export function generate(params: GenerateContentRequest): Try<GenerateContentResponse> {
   logDebug(LogDebugGroups.GOOGLE, `generate.generate(${JSON.stringify(params)})`);

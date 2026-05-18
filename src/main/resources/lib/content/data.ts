@@ -1,7 +1,6 @@
-import type { InputType } from '/lib/xp/core';
-
 import type { TextType } from '../../shared/types/text';
 import type { Property, PropertyValue } from './property';
+import type { InputType } from '/lib/xp/core';
 
 export type DataEntry = {
   value: PropertyValue;

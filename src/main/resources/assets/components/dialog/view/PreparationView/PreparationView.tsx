@@ -1,9 +1,10 @@
+import { useStore } from '@nanostores/react';
+import { Trans } from 'react-i18next';
+
 import { AssistantMessage } from '@/components/dialog/AssistantMessage/AssistantMessage';
 import { InstructionsInput } from '@/components/dialog/InstructionsInput/InstructionsInput';
 import { $content } from '@/store/content';
 import { FramedText } from '@/ui/primitives/FramedText';
-import { useStore } from '@nanostores/react';
-import { Trans } from 'react-i18next';
 
 const PREPARATION_VIEW_NAME = 'PreparationView';
 

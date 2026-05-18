@@ -1,8 +1,18 @@
-export type { Content } from './content.store';
-export type { ContentData } from './ContentData';
-export type { EventData } from './EventData';
-export type { Language } from './Language';
+export { $content } from './content.store';
+export {
+  getContentId,
+  getProject,
+  getLanguage,
+  setLanguage,
+  setPersistedData,
+  setSchema,
+} from './content.utils';
+
 export type {
+  Content,
+  ContentData,
+  EventData,
+  Language,
   Schema,
   FormItem,
   Input,
@@ -17,13 +27,4 @@ export type {
   FormItemSetData,
   InputData,
   FormOptionSetData,
-} from './Schema';
-export {
-  $content,
-  getContentId,
-  getProject,
-  getLanguage,
-  setLanguage,
-  setPersistedData,
-  setSchema,
-} from './content.store';
+} from './content.types';

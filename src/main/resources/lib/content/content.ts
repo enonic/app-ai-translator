@@ -1,7 +1,13 @@
-import type { Content, FormItem } from '/lib/xp/content';
 import * as contentLib from '/lib/xp/content';
-import type { User } from '/lib/xp/context';
 import * as contextLib from '/lib/xp/context';
+import * as schemaLib from '/lib/xp/schema';
+
+import type { TextType } from '../../shared/types/text';
+import type { DataEntry } from './data';
+import type { FormItemWithPath, InputWithPath } from './form';
+import type { Property, PropertyValue } from './property';
+import type { Content, FormItem } from '/lib/xp/content';
+import type { User } from '/lib/xp/context';
 import type {
   FragmentComponent,
   LayoutComponent,
@@ -11,21 +17,16 @@ import type {
   TextComponent,
 } from '/lib/xp/core';
 import type { ComponentDescriptor, ComponentDescriptorType } from '/lib/xp/schema';
-import * as schemaLib from '/lib/xp/schema';
 
 import { TOPIC_NAME } from '../../shared/constants';
 import { ERRORS } from '../../shared/errors';
-import type { TextType } from '../../shared/types/text';
 import { logError } from '../logger';
 import { runAsAdmin } from '../utils/context';
 import { isRecordEmpty } from '../utils/objects';
-import type { DataEntry } from './data';
 import { flattenData } from './data';
-import type { FormItemWithPath, InputWithPath } from './form';
 import { getPathsToTranslatableFields, isInput } from './form';
 import { isLayoutComponent, isPageComponent, isPartComponent, isTextComponent } from './page';
 import { pathToString } from './path';
-import type { Property, PropertyValue } from './property';
 import { getMixinSchemas } from './schema';
 
 type ContextUser = Pick<User, 'login' | 'idProvider'> | undefined;
@@ -181,7 +182,10 @@ function getMixinFieldsToTranslate(
 
   for (const schemaPrefix in schemas) {
     const entriesByMixins = getMixinEntriesBySchemaPrefix(mixins, schemaPrefix);
-    const mixinItemsToTranslate = getTranslatableFields(entriesByMixins, schemas[schemaPrefix].form);
+    const mixinItemsToTranslate = getTranslatableFields(
+      entriesByMixins,
+      schemas[schemaPrefix].form,
+    );
 
     for (const path in mixinItemsToTranslate) {
       result[`${schemaPrefix}${path}`] = mixinItemsToTranslate[path];

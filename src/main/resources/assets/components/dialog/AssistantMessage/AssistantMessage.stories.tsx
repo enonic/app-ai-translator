@@ -1,7 +1,8 @@
-import type { Meta, StoryObj } from '@storybook/preact-vite';
 import { Trans } from 'react-i18next';
 
 import { FramedText } from '@/ui/primitives/FramedText';
+
+import type { Meta, StoryObj } from '@storybook/preact-vite';
 
 import { AssistantMessage, type AssistantMessageProps } from './AssistantMessage';
 

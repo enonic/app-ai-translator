@@ -47,11 +47,11 @@ log.debug.groups=all
 
 The model URL has three flavours, each with a different host and `locations/` segment. Pick one based on data-residency and model availability. Reference: [Vertex AI locations — Multi-region](https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/locations#multi-region_1).
 
-| Flavour | Host | `locations/` | When to use |
-| --- | --- | --- | --- |
-| **Multi-region (EU)** — default | `aiplatform.eu.rep.googleapis.com` | `eu` | Data stays inside the EU, capacity pooled across EU data centres. Required for models not yet rolled out to single regions (e.g. `gemini-3.1-flash-lite`). |
-| **Single region** | `<region>-aiplatform.googleapis.com` (e.g. `europe-west1-aiplatform.googleapis.com`) | `<region>` (e.g. `europe-west1`) | Strict single-region data residency. Some preview/newer models may not be available. |
-| **Global** | `aiplatform.googleapis.com` | `global` | Best availability and lowest latency. **No data-residency guarantee** — requests may be routed anywhere. |
+| Flavour                         | Host                                                                                 | `locations/`                     | When to use                                                                                                                                                |
+| ------------------------------- | ------------------------------------------------------------------------------------ | -------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Multi-region (EU)** — default | `aiplatform.eu.rep.googleapis.com`                                                   | `eu`                             | Data stays inside the EU, capacity pooled across EU data centres. Required for models not yet rolled out to single regions (e.g. `gemini-3.1-flash-lite`). |
+| **Single region**               | `<region>-aiplatform.googleapis.com` (e.g. `europe-west1-aiplatform.googleapis.com`) | `<region>` (e.g. `europe-west1`) | Strict single-region data residency. Some preview/newer models may not be available.                                                                       |
+| **Global**                      | `aiplatform.googleapis.com`                                                          | `global`                         | Best availability and lowest latency. **No data-residency guarantee** — requests may be routed anywhere.                                                   |
 
 URL template:
 

@@ -1,15 +1,8 @@
 import { computed, map } from 'nanostores';
 
-import { addGlobalOpenDialogHandler, AiEvents, dispatch } from '@/common/events';
 import { $config } from '@/store/config';
 
-export type DialogView = 'preparation' | 'processing' | 'completed';
-
-export type Dialog = {
-  visible: boolean;
-  instructions?: string;
-  view: DialogView;
-};
+import type { Dialog } from './dialog.types';
 
 export const $dialog = map<Dialog>({
   visible: false,
@@ -18,32 +11,4 @@ export const $dialog = map<Dialog>({
 
 export const $instructions = computed([$dialog, $config], (dialog, config) => {
   return dialog.instructions ?? config.instructions ?? '';
-});
-
-export const setDialogVisible = (visible: boolean): void => {
-  $dialog.setKey('visible', visible);
-  if (!visible) {
-    $dialog.setKey('instructions', undefined);
-  }
-};
-
-export const setDialogInstructions = (instructions: string): void => {
-  $dialog.setKey('instructions', instructions);
-};
-
-export const toggleDialog = (): void => {
-  const { visible } = $dialog.get();
-  dispatch(visible ? AiEvents.DIALOG_HIDDEN : AiEvents.DIALOG_SHOWN);
-  $dialog.setKey('visible', !visible);
-};
-
-export const setDialogView = (view: DialogView): void => {
-  $dialog.setKey('view', view);
-};
-
-addGlobalOpenDialogHandler(() => {
-  if (!$dialog.get().visible) {
-    setDialogView('preparation');
-    toggleDialog();
-  }
 });

@@ -1,8 +1,9 @@
-import type { Meta, StoryObj } from '@storybook/preact-vite';
 import { useEffect } from 'react';
 
 import { setLanguage } from '@/store/content';
 import { addSucceeded, resetItems, setPaths } from '@/store/items';
+
+import type { Meta, StoryObj } from '@storybook/preact-vite';
 
 import { ProcessingView } from './ProcessingView';
 

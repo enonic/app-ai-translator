@@ -1,9 +1,4 @@
-export type { Config } from './config.store';
-export type { ConfigData } from './ConfigData';
-export {
-  $config,
-  setLicenseServiceUrl,
-  setWsServiceUrl,
-  setUser,
-  setInstructions,
-} from './config.store';
+export { $config } from './config.store';
+export { setLicenseServiceUrl, setWsServiceUrl, setUser, setInstructions } from './config.utils';
+
+export type { Config, ConfigData } from './config.types';

@@ -1,8 +1,9 @@
-import type { Meta, StoryObj } from '@storybook/preact-vite';
 import { useEffect } from 'react';
 
 import { setLanguage } from '@/store/content';
 import { setDialogInstructions } from '@/store/dialog';
+
+import type { Meta, StoryObj } from '@storybook/preact-vite';
 
 import { PreparationView } from './PreparationView';
 

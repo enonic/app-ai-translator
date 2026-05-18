@@ -1,17 +1,8 @@
+import cron from '/lib/cron';
 import * as taskLib from '/lib/xp/task';
 import * as websocketLib from '/lib/xp/websocket';
-import cron from '/lib/cron';
 
-import * as licenseManager from '../../lib/license/license-manager';
-import { getTranslatableDataFromContent } from '../../lib/content/content';
 import type { DataEntry } from '../../lib/content/data';
-import { logDebug, LogDebugGroups, logError } from '../../lib/logger';
-import { respondError } from '../../lib/requests';
-import { translateFields } from '../../lib/translate/translate';
-import { runAsAdmin } from '../../lib/utils/context';
-import { unsafeUUIDv4 } from '../../lib/utils/uuid';
-import { WS_PROTOCOL } from '../../shared/constants';
-import { ERRORS } from '../../shared/errors';
 import type {
   AcceptedMessage,
   ClientMessage,
@@ -21,6 +12,16 @@ import type {
   ServerMessage,
   TranslateMessage,
 } from '../../shared/types/websocket';
+
+import { getTranslatableDataFromContent } from '../../lib/content/content';
+import * as licenseManager from '../../lib/license/license-manager';
+import { logDebug, LogDebugGroups, logError } from '../../lib/logger';
+import { respondError } from '../../lib/requests';
+import { translateFields } from '../../lib/translate/translate';
+import { runAsAdmin } from '../../lib/utils/context';
+import { unsafeUUIDv4 } from '../../lib/utils/uuid';
+import { WS_PROTOCOL } from '../../shared/constants';
+import { ERRORS } from '../../shared/errors';
 import { MessageType } from '../../shared/types/websocket';
 
 export function get(request: Enonic.Request): Enonic.Response {
@@ -161,7 +162,9 @@ function startTranslation(session: Enonic.WebSocketSession, message: TranslateMe
       (path, result) => {
         const [, error] = result;
         if (error != null) {
-          logError(`translation failed: path=${path}, code=${error.code}, message=${error.message}`);
+          logError(
+            `translation failed: path=${path}, code=${error.code}, message=${error.message}`,
+          );
         }
         wsMessagesMap.put(path, result);
       },

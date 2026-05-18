@@ -1,11 +1,12 @@
+import type { FinishReason, ModelResponseGenerateData } from '../../shared/types/model';
+import type { Content, GenerateContentRequest, Role } from '../google/types';
+import type { ModelProxy, ModelProxyConfig } from './model';
+
 import { HarmBlockThreshold, HarmCategory } from '../../shared/enums';
 import { ERRORS } from '../../shared/errors';
 import { TRANSLATION_INSTRUCTIONS } from '../../shared/prompts';
-import type { FinishReason, ModelResponseGenerateData } from '../../shared/types/model';
 import { generate } from '../google/api/generate';
-import type { Content, GenerateContentRequest, Role } from '../google/types';
 import { logDebug, LogDebugGroups } from '../logger';
-import type { ModelProxy, ModelProxyConfig } from './model';
 
 export class GeminiProxy implements ModelProxy {
   private readonly params: GenerateContentRequest;
