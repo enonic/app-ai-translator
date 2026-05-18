@@ -5,8 +5,14 @@ import { $config } from '@/store/config';
 import type { LicenseResponseState, LicenseState } from '@shared/types/license';
 
 export async function fetchLicenseState(): Promise<LicenseState | AiError> {
+  const licenseServiceUrl = $config.get().licenseServiceUrl;
+
+  if (!licenseServiceUrl) {
+    return new CustomAiError(500, 'License service URL is not configured.');
+  }
+
   try {
-    const response = await fetch($config.get().licenseServiceUrl);
+    const response = await fetch(licenseServiceUrl);
     const responseBody = (await response.json()) as LicenseResponseState | AiError;
 
     if (response.status === 200) {

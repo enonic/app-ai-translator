@@ -1,3 +1,5 @@
+import type { AiFieldPath } from '../ai-protocol';
+
 export type MessageMetadata = {
   id: string;
   timestamp: number;
@@ -50,7 +52,7 @@ export type AcceptedMessage = MessageWithPayload<
   MessageType.ACCEPTED,
   {
     contentId: string;
-    paths: string[];
+    paths: AiFieldPath[];
   }
 >;
 
@@ -59,7 +61,7 @@ export type CompletedMessage = MessageWithPayload<
   MessageType.COMPLETED,
   {
     contentId: string;
-    path: string;
+    path: AiFieldPath;
     text: string;
   }
 >;
@@ -69,7 +71,7 @@ export type FailedMessage = MessageWithPayload<
   MessageType.FAILED,
   {
     contentId: string;
-    path?: string;
+    path?: AiFieldPath;
     code: string;
     message: string;
     details?: unknown;

@@ -2,6 +2,7 @@ import * as contentLib from '/lib/xp/content';
 import * as contextLib from '/lib/xp/context';
 import * as schemaLib from '/lib/xp/schema';
 
+import type { AiFieldPath } from '../../shared/ai-protocol';
 import type { TextType } from '../../shared/types/text';
 import type { DataEntry } from './data';
 import type { FormItemWithPath, InputWithPath } from './form';
@@ -18,7 +19,6 @@ import type {
 } from '/lib/xp/core';
 import type { ComponentDescriptor, ComponentDescriptorType } from '/lib/xp/schema';
 
-import { TOPIC_NAME } from '../../shared/constants';
 import { ERRORS } from '../../shared/errors';
 import { logError } from '../logger';
 import { runAsAdmin } from '../utils/context';
@@ -31,11 +31,22 @@ import { getMixinSchemas } from './schema';
 
 type ContextUser = Pick<User, 'login' | 'idProvider'> | undefined;
 
+export type TranslatableEntry = {
+  path: AiFieldPath;
+  entry: DataEntry;
+};
+
+// Normalizes a flattened data key into an AiFieldPath `field`: strips a leading
+// slash (if any) and converts `/` separators into `.`.
+export function toFieldName(path: string): string {
+  return path.replace(/^\//, '').replace(/\//g, '.');
+}
+
 export function getTranslatableDataFromContent(
   contentId: string,
   project: string,
   user: ContextUser | undefined,
-): Try<Record<string, DataEntry>> {
+): Try<TranslatableEntry[]> {
   try {
     const content = getContent(contentId, project, user);
     if (!content) {
@@ -52,33 +63,28 @@ export function getTranslatableDataFromContent(
 
     const flatData = flattenData(content.data);
     const dataToTranslate = getTranslatableFields(flatData, contentType.form);
-    const result: Record<string, DataEntry> = {};
+    const result: TranslatableEntry[] = [];
 
     for (const dataPath in dataToTranslate) {
-      result[`__data__${dataPath}`] = dataToTranslate[dataPath];
+      result.push({
+        path: { kind: 'data', field: toFieldName(dataPath) },
+        entry: dataToTranslate[dataPath],
+      });
     }
 
     if (content.displayName) {
-      result[`__data__/${TOPIC_NAME}`] = makeDisplayNameDataEntry(
-        content.displayName,
-        contentType.description,
-      );
+      result.push({
+        path: { kind: 'topic' },
+        entry: makeDisplayNameDataEntry(content.displayName, contentType.description),
+      });
     }
 
     const flatMixins = flattenData(content.x as Record<string, Property>);
-    const mixinFieldsToTranslate = getMixinFieldsToTranslate(flatMixins);
+    result.push(...getMixinEntriesToTranslate(flatMixins));
 
-    for (const mixinPath in mixinFieldsToTranslate) {
-      result[`__mixins__/${mixinPath}`] = mixinFieldsToTranslate[mixinPath];
-    }
+    result.push(...getPageEntriesToTranslate(content));
 
-    const pageDataToTranslate = getPageDataEntries(content);
-
-    for (const pagePath in pageDataToTranslate) {
-      result[`__page__${pagePath}`] = pageDataToTranslate[pagePath];
-    }
-
-    if (isRecordEmpty(result)) {
+    if (result.length === 0) {
       return [null, ERRORS.FUNC_NO_TRANSLATABLE_FIELDS];
     }
 
@@ -174,10 +180,10 @@ function makeDisplayNameDataEntry(displayName: string, context: string): DataEnt
  * Mixin fields are stored with a prefix that includes the app name and the mixin name.
  * Meanwhile the schema form that we fetch has no such prefix. We need to match the schema form fields with the actual mixin fields.
  */
-function getMixinFieldsToTranslate(
+function getMixinEntriesToTranslate(
   mixins: Record<string, PropertyValue>,
-): Record<string, DataEntry> {
-  const result: Record<string, DataEntry> = {};
+): TranslatableEntry[] {
+  const result: TranslatableEntry[] = [];
   const schemas = getMixinSchemas(mixins);
 
   for (const schemaPrefix in schemas) {
@@ -188,11 +194,27 @@ function getMixinFieldsToTranslate(
     );
 
     for (const path in mixinItemsToTranslate) {
-      result[`${schemaPrefix}${path}`] = mixinItemsToTranslate[path];
+      result.push({
+        path: makeMixinFieldPath(schemaPrefix, path),
+        entry: mixinItemsToTranslate[path],
+      });
     }
   }
 
   return result;
+}
+
+// `schemaPrefix` is exactly `appName/mixinName`; the app name keeps its dots
+// because it contains no slashes at this point.
+export function makeMixinFieldPath(schemaPrefix: string, path: string): AiFieldPath {
+  const separatorIndex = schemaPrefix.indexOf('/');
+  const appName = schemaPrefix.slice(0, separatorIndex);
+  const mixinName = schemaPrefix.slice(separatorIndex + 1);
+  return {
+    kind: 'mixin',
+    mixin: `${appName}:${mixinName}`,
+    field: toFieldName(path),
+  };
 }
 
 function getMixinEntriesBySchemaPrefix(
@@ -211,7 +233,7 @@ function getMixinEntriesBySchemaPrefix(
   return result;
 }
 
-function getPageDataEntries(content: Content): Record<string, DataEntry> {
+function getPageEntriesToTranslate(content: Content): TranslatableEntry[] {
   if (content.page) {
     return getFieldsToTranslateFromComponent(content.page);
   }
@@ -220,7 +242,7 @@ function getPageDataEntries(content: Content): Record<string, DataEntry> {
     return getFieldsToTranslateFromComponent(content.fragment);
   }
 
-  return {};
+  return [];
 }
 
 function getComponent(key: string, type: ComponentDescriptorType): ComponentDescriptor {
@@ -229,15 +251,11 @@ function getComponent(key: string, type: ComponentDescriptorType): ComponentDesc
 
 function getRegionFieldsToTranslate(
   region: Region<(FragmentComponent | LayoutComponent | PartComponent | TextComponent)[]>,
-): Record<string, DataEntry> {
-  const result: Record<string, DataEntry> = {};
+): TranslatableEntry[] {
+  const result: TranslatableEntry[] = [];
 
   region.components.forEach((component) => {
-    const componentFields = getFieldsToTranslateFromComponent(component);
-
-    for (const path in componentFields) {
-      result[path] = componentFields[path];
-    }
+    result.push(...getFieldsToTranslateFromComponent(component));
   });
 
   return result;
@@ -245,13 +263,13 @@ function getRegionFieldsToTranslate(
 
 function getFieldsToTranslateFromComponent(
   component: PageComponent | FragmentComponent | LayoutComponent | PartComponent | TextComponent,
-): Record<string, DataEntry> {
+): TranslatableEntry[] {
   if (isPageComponent(component)) {
     return getFieldsToTranslateFromRegionsBasedComponent(component);
   }
 
   if (isTextComponent(component)) {
-    return makeTextComponentField(component);
+    return makeTextComponentEntry(component);
   }
 
   if (isPartComponent(component)) {
@@ -262,26 +280,29 @@ function getFieldsToTranslateFromComponent(
     return getFieldsToTranslateFromRegionsBasedComponent(component);
   }
 
-  return {};
+  return [];
 }
 
-function makeTextComponentField(component: TextComponent): Record<string, DataEntry> {
-  return {
-    [component.path]: {
-      value: component.text,
-      type: 'html',
-      schemaType: 'HtmlArea',
-      schemaLabel: '',
+function makeTextComponentEntry(component: TextComponent): TranslatableEntry[] {
+  return [
+    {
+      path: { kind: 'componentText', component: component.path },
+      entry: {
+        value: component.text,
+        type: 'html',
+        schemaType: 'HtmlArea',
+        schemaLabel: '',
+      },
     },
-  };
+  ];
 }
 
 function getDescriptorBasedComponentConfigFields(
   component: PartComponent | LayoutComponent | PageComponent,
   type: 'PART' | 'LAYOUT' | 'PAGE',
-): Record<string, DataEntry> {
+): TranslatableEntry[] {
   if (!component.descriptor) {
-    return {};
+    return [];
   }
 
   const descriptor = getComponent(component.descriptor, type);
@@ -289,37 +310,43 @@ function getDescriptorBasedComponentConfigFields(
   const flatConfig = flattenData(config);
 
   const fields = getTranslatableFields(flatConfig, descriptor.form);
-  const result: Record<string, DataEntry> = {};
+  const result: TranslatableEntry[] = [];
 
   for (const path in fields) {
-    result[makeConfigDataEntryKey(component, path)] = fields[path];
+    result.push({
+      path: makeConfigFieldPath(component, path),
+      entry: fields[path],
+    });
   }
 
   return result;
 }
 
-function makeConfigDataEntryKey(
+// When the component is the page component itself the config belongs to the
+// page; otherwise it belongs to the addressed part/layout component.
+export function makeConfigFieldPath(
   component: PartComponent | LayoutComponent | PageComponent,
   path: string,
-): string {
-  const pathToConfigPrefix = isPageComponent(component) ? '' : component.path || '';
-  return `${pathToConfigPrefix}/__config__${path}`;
+): AiFieldPath {
+  const field = toFieldName(path);
+
+  if (isPageComponent(component)) {
+    return { kind: 'pageConfig', field };
+  }
+
+  return { kind: 'componentConfig', component: component.path || '', field };
 }
 
 function getFieldsToTranslateFromRegionsBasedComponent(
   component: PageComponent | LayoutComponent,
-): Record<string, DataEntry> {
-  const result: Record<string, DataEntry> = getDescriptorBasedComponentConfigFields(
+): TranslatableEntry[] {
+  const result: TranslatableEntry[] = getDescriptorBasedComponentConfigFields(
     component,
     isPageComponent(component) ? 'PAGE' : 'LAYOUT',
   );
 
   for (const regionName in component.regions) {
-    const regionComponents = getRegionFieldsToTranslate(component.regions[regionName]);
-
-    for (const path in regionComponents) {
-      result[path] = regionComponents[path];
-    }
+    result.push(...getRegionFieldsToTranslate(component.regions[regionName]));
   }
 
   return result;

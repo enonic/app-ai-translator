@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
 
+import type { AiFieldPath } from '@shared/ai-protocol';
+
 import { setLanguage } from '@/store/content';
 import { addSucceeded, resetItems, setPaths } from '@/store/items';
 
@@ -7,7 +9,9 @@ import type { Meta, StoryObj } from '@storybook/preact-vite';
 
 import { ProcessingView } from './ProcessingView';
 
-const useSeeded = (paths: string[] = [], succeeded: string[] = []): void => {
+const field = (name: string): AiFieldPath => ({ kind: 'data', field: name });
+
+const useSeeded = (paths: AiFieldPath[] = [], succeeded: AiFieldPath[] = []): void => {
   useEffect(() => {
     setLanguage({ tag: 'no', name: 'Norwegian (Norway, Nynorsk)' });
     setPaths(paths);
@@ -44,7 +48,10 @@ export const Preparing: Story = {
 export const Progress: Story = {
   name: 'States / Progress',
   render: function Progress() {
-    useSeeded(['/a', '/b', '/c', '/d', '/e'], ['/a', '/b']);
+    useSeeded(
+      ['a', 'b', 'c', 'd', 'e'].map(field),
+      ['a', 'b'].map(field),
+    );
     return <ProcessingView />;
   },
 };

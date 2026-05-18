@@ -1,78 +1,14 @@
-export type Language = {
-  tag: string;
-  name: string;
-};
+import type {
+  AiContentSnapshot,
+  AiLanguageSnapshot,
+  AiSchemaSnapshot,
+} from '@shared/ai-protocol';
 
-export type ContentData = {
-  contentId: string;
-  project: string;
-  topic: string;
-};
+export type Language = AiLanguageSnapshot;
 
-export type Schema = {
-  name: string;
-  form: {
-    formItems: FormItem[];
-  };
-};
+export type ContentData = AiContentSnapshot;
 
-export type FormItem = FieldSet | FormItemSet | FormOptionSet | Input | FormOptionSetOption;
-
-export type Input = {
-  Input: InputData;
-};
-
-export type FieldSet = {
-  FieldSet: FieldSetData;
-};
-
-export type FormItemSet = {
-  FormItemSet: FormItemSetData;
-};
-
-export type FormOptionSet = {
-  FormOptionSet: FormOptionSetData;
-};
-
-export type FormOptionSetOption = FormItemNameAndLabel & FormItems;
-
-export type FormItemNameAndLabel = {
-  name: string;
-  label: string;
-};
-
-export type FormItems = {
-  items: FormItem[];
-};
-
-export type FormItemOccurrences = {
-  occurrences: {
-    minimum: number;
-    maximum: number;
-  };
-};
-
-export type FieldSetData = FormItemNameAndLabel & FormItems;
-
-export type FormItemSetData = FormItemNameAndLabel & FormItems & FormItemOccurrences;
-
-export type InputData = FormItemNameAndLabel &
-  FormItemOccurrences & {
-    inputType: string;
-  };
-
-export type FormOptionSetData = FormItemNameAndLabel &
-  FormItemOccurrences & {
-    options: FormOptionSetOption[];
-  };
-
-export type EventData = {
-  payload: {
-    language?: Language;
-    data?: ContentData;
-    schema?: Schema;
-  };
-};
+export type Schema = AiSchemaSnapshot;
 
 export type Content = {
   language: Language;

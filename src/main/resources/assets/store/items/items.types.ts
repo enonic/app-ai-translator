@@ -1,14 +1,16 @@
+import type { AiFieldPath } from '@shared/ai-protocol';
+
 export type ItemsState = 'initial' | 'processing' | 'completed' | 'failed';
 
 export type FailedItem = {
-  path: string;
+  path: AiFieldPath;
   reason: string;
 };
 
 export type Items = {
-  paths: string[];
-  remaining: string[];
-  succeeded: string[];
+  paths: AiFieldPath[];
+  remaining: AiFieldPath[];
+  succeeded: AiFieldPath[];
   failed: FailedItem[];
   globalFailure?: string;
 };

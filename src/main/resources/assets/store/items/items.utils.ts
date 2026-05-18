@@ -1,6 +1,9 @@
+import { toKey } from '@shared/ai-field-path';
+import type { AiFieldPath } from '@shared/ai-protocol';
+
 import { $items } from './items.store';
 
-export function setPaths(paths: string[]): void {
+export function setPaths(paths: AiFieldPath[]): void {
   $items.set({
     paths,
     remaining: paths,
@@ -13,18 +16,20 @@ export function resetItems(): void {
   setPaths([]);
 }
 
-export function addSucceeded(path: string): void {
+export function addSucceeded(path: AiFieldPath): void {
   const { succeeded, remaining } = $items.get();
-  const newRemaining = remaining.filter((p) => p !== path);
+  const key = toKey(path);
+  const newRemaining = remaining.filter((p) => toKey(p) !== key);
   if (newRemaining.length < remaining.length) {
     $items.setKey('succeeded', [...succeeded, path]);
     $items.setKey('remaining', newRemaining);
   }
 }
 
-export function addFailed(path: string, reason: string): void {
+export function addFailed(path: AiFieldPath, reason: string): void {
   const { failed, remaining } = $items.get();
-  const newRemaining = remaining.filter((p) => p !== path);
+  const key = toKey(path);
+  const newRemaining = remaining.filter((p) => toKey(p) !== key);
   if (newRemaining.length < remaining.length) {
     $items.setKey('failed', [...failed, { path, reason }]);
     $items.setKey('remaining', newRemaining);

@@ -1,8 +1,11 @@
+import type { AiFieldPath } from '../../shared/ai-protocol';
 import type { Message } from '../../shared/types/model';
 import type { TextType } from '../../shared/types/text';
 import type { DataEntry } from '../content/data';
+import type { TranslatableEntry } from '../content/content';
 import type { ModelProxy } from '../proxy/model';
 
+import { toKey } from '../../shared/ai-field-path';
 import { ERRORS } from '../../shared/errors';
 import { createTranslationPrompt } from '../../shared/prompts';
 import { logError } from '../logger';
@@ -23,10 +26,12 @@ type TranslationData = {
 };
 
 type TranslationConfig = TranslationData & {
-  fields: Record<string, DataEntry>;
+  fields: TranslatableEntry[];
 };
 
-type Callback = (path: string, result: Try<string>) => void;
+// The callback keys results by `toKey(path)` so they can be stored in the Java
+// ConcurrentHashMap; `ws.ts` keeps a parallel map back to the `AiFieldPath`.
+type Callback = (key: string, result: Try<string>) => void;
 
 export function translateFields(
   config: TranslationConfig,
@@ -34,24 +39,26 @@ export function translateFields(
   sessionId: string,
 ): void {
   const { fields, contentId, project, targetLanguage, customInstructions } = config;
-  for (const path in fields) {
+  fields.forEach((field: TranslatableEntry): void => {
+    const path: AiFieldPath = field.path;
+    const key = toKey(path);
     const params: TranslateContentParams = {
-      entry: fields[path],
+      entry: field.entry,
       language: targetLanguage,
       instructions: customInstructions,
     };
     addTask(
       {
-        description: `Translating content '${contentId}' in repo '${project}', field: ${path}`,
-        func: () => callback(path, translate(params)),
+        description: `Translating content '${contentId}' in repo '${project}', field: ${key}`,
+        func: () => callback(key, translate(params)),
         onError: () => {
-          logError(`translateFields.onError: queue reported FAILED for path=${path}`);
-          callback(path, [null, ERRORS.UNKNOWN_ERROR.withMsg('Translation task execution failed')]);
+          logError(`translateFields.onError: queue reported FAILED for path=${key}`);
+          callback(key, [null, ERRORS.UNKNOWN_ERROR.withMsg('Translation task execution failed')]);
         },
       },
       sessionId,
     );
-  }
+  });
 }
 
 export function translate(item: TranslateContentParams): Try<string> {

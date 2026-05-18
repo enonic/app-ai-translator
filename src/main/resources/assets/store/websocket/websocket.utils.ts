@@ -8,10 +8,10 @@ import {
 } from '@shared/types/websocket';
 import { t } from 'i18next';
 
-import { dispatchAllCompleted, dispatchCompleted, dispatchStarted } from '@/common/events';
 import { $config } from '@/store/config';
 import { $content, getLanguage } from '@/store/content';
 import { $dialog, $instructions, setDialogView } from '@/store/dialog';
+import { getHostApi } from '@/store/host';
 import {
   $items,
   $itemsState,
@@ -133,7 +133,7 @@ function handleMessage(event: MessageEvent<string>): void {
       const { paths } = msg.payload;
       setPaths(paths);
       paths.forEach((path) => {
-        dispatchStarted({ path });
+        getHostApi().setFieldState(path, 'processing');
       });
       abortOnNextLongRunningTask();
       break;
@@ -142,7 +142,8 @@ function handleMessage(event: MessageEvent<string>): void {
     case MessageType.COMPLETED: {
       const { path, text } = msg.payload;
       addSucceeded(path);
-      dispatchCompleted({ path, text, success: true });
+      getHostApi().setFieldState(path, 'completed', { text });
+      getHostApi().applyValue(path, text);
       abortOnNextLongRunningTask();
       break;
     }
@@ -155,7 +156,7 @@ function handleMessage(event: MessageEvent<string>): void {
 
       if (path) {
         addFailed(path, message);
-        dispatchCompleted({ path, message, success: false });
+        getHostApi().setFieldState(path, 'failed', { message });
         abortOnNextLongRunningTask();
       } else {
         failGlobally(message);
@@ -173,15 +174,15 @@ function failGlobally(message: string): void {
   const remaining = [...$items.get().remaining];
   $websocket.setKey('success', false);
   setGlobalFailure(message);
-  remaining.forEach((path) => dispatchCompleted({ path, message, success: false }));
-  dispatchAllCompleted({ message, success: false });
+  remaining.forEach((path) => getHostApi().setFieldState(path, 'failed', { message }));
+  getHostApi().notify('error', message);
   closeConnection();
 }
 
 export function stopTranslation(): void {
   const { remaining } = $items.get();
 
-  remaining.forEach((path) => dispatchCompleted({ path, success: true }));
+  remaining.forEach((path) => getHostApi().setFieldState(path, 'completed'));
   skipRemaining();
 
   closeConnection();
@@ -280,15 +281,14 @@ $itemsState.subscribe((state) => {
   if ((state === 'completed' || state === 'failed') && view === 'processing') {
     clearTimeout(completeTimeoutId);
 
-    const { success } = $websocket.get();
-    dispatchAllCompleted({ success });
-
     if (state === 'completed') {
+      getHostApi().requestSave();
       completeTimeoutId = window.setTimeout(() => {
         setDialogView('completed');
         stopTranslation();
       }, 500);
     } else {
+      // Failure already surfaced per-path / globally — do not double-notify.
       setDialogView('completed');
       stopTranslation();
     }

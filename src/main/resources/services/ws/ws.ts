@@ -2,7 +2,8 @@ import cron from '/lib/cron';
 import * as taskLib from '/lib/xp/task';
 import * as websocketLib from '/lib/xp/websocket';
 
-import type { DataEntry } from '../../lib/content/data';
+import type { TranslatableEntry } from '../../lib/content/content';
+import type { AiFieldPath } from '../../shared/ai-protocol';
 import type {
   AcceptedMessage,
   ClientMessage,
@@ -20,6 +21,7 @@ import { respondError } from '../../lib/requests';
 import { translateFields } from '../../lib/translate/translate';
 import { runAsAdmin } from '../../lib/utils/context';
 import { unsafeUUIDv4 } from '../../lib/utils/uuid';
+import { toKey } from '../../shared/ai-field-path';
 import { WS_PROTOCOL } from '../../shared/constants';
 import { ERRORS } from '../../shared/errors';
 import { MessageType } from '../../shared/types/websocket';
@@ -142,11 +144,19 @@ function startTranslation(session: Enonic.WebSocketSession, message: TranslateMe
     'java.util.concurrent.ConcurrentHashMap',
   );
 
+  // `AiFieldPath` objects cannot key a Java map; results are keyed by `toKey(path)`.
+  // This parallel object bridges each string key back to its `AiFieldPath` so the
+  // poll loop can attach the union to outgoing COMPLETED/FAILED messages.
+  const pathsByKey: Record<string, AiFieldPath> = {};
+  fields.forEach((field: TranslatableEntry): void => {
+    pathsByKey[toKey(field.path)] = field.path;
+  });
+
   // sending messages to the client in a separate task/thread to make sending synchronous to avoid ws backend error, see XP-10759
   taskLib.executeFunction({
     description: 'ai-translator-task-ws',
     func: () => {
-      pollAndSendMessages(session.id, contentId, wsMessagesMap);
+      pollAndSendMessages(session.id, contentId, wsMessagesMap, pathsByKey);
     },
   });
 
@@ -159,14 +169,14 @@ function startTranslation(session: Enonic.WebSocketSession, message: TranslateMe
         targetLanguage,
         customInstructions,
       },
-      (path, result) => {
+      (key, result) => {
         const [, error] = result;
         if (error != null) {
           logError(
-            `translation failed: path=${path}, code=${error.code}, message=${error.message}`,
+            `translation failed: path=${key}, code=${error.code}, message=${error.message}`,
           );
         }
-        wsMessagesMap.put(path, result);
+        wsMessagesMap.put(key, result);
       },
       session.id,
     );
@@ -183,20 +193,20 @@ function startTranslation(session: Enonic.WebSocketSession, message: TranslateMe
 
 function makeAcceptedMessage(
   contentId: string,
-  itemsToTranslate: Record<string, DataEntry>,
+  itemsToTranslate: TranslatableEntry[],
 ): Omit<AcceptedMessage, 'metadata'> {
   return {
     type: MessageType.ACCEPTED,
     payload: {
       contentId,
-      paths: Object.keys(itemsToTranslate),
+      paths: itemsToTranslate.map((entry: TranslatableEntry): AiFieldPath => entry.path),
     },
   };
 }
 
 function makeCompletedMessage(
   contentId: string,
-  path: string,
+  path: AiFieldPath,
   text: string,
 ): Omit<CompletedMessage, 'metadata'> {
   return {
@@ -212,7 +222,7 @@ function makeCompletedMessage(
 function makeFailedMessage(
   err: AiError,
   contentId: string,
-  path?: string,
+  path?: AiFieldPath,
 ): Omit<FailedMessage, 'metadata'> {
   return {
     type: MessageType.FAILED,
@@ -229,6 +239,7 @@ function pollAndSendMessages(
   sessionId: string,
   contentId: string,
   messages: ConcurrentHashMap<string, Try<string>>,
+  pathsByKey: Record<string, AiFieldPath>,
 ): void {
   const taskName = getTaskName(sessionId);
   try {
@@ -241,8 +252,9 @@ function pollAndSendMessages(
         times: 960, // 500ms * 960 = 480s, run for 8 minutes
         callback: () => {
           try {
-            messages.forEach((path, result) => {
+            messages.forEach((key, result) => {
               const [text, err] = result;
+              const path = pathsByKey[key];
 
               if (err) {
                 sendMessage(sessionId, makeFailedMessage(err, contentId, path));
@@ -250,7 +262,7 @@ function pollAndSendMessages(
                 sendMessage(sessionId, makeCompletedMessage(contentId, path, text));
               }
 
-              messages.remove(path);
+              messages.remove(key);
             });
           } catch (e) {
             logError(`pollAndSendMessages.tick failed for session=${sessionId}:`);

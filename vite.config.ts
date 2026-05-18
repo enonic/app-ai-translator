@@ -49,7 +49,6 @@ export default defineConfig({
     rollupOptions: {
       output: {
         entryFileNames: '[name].js',
-        extend: true,
       },
     },
     outDir: 'build/resources/main/assets',
@@ -136,6 +135,9 @@ export default defineConfig({
       '@': assetsPath,
       '@shared': sharedPath,
       '/lib/http-client': new URL('./tests/stubs/http-client.js', import.meta.url).pathname,
+      '/lib/xp/content': new URL('./tests/stubs/xp-content.js', import.meta.url).pathname,
+      '/lib/xp/context': new URL('./tests/stubs/xp-context.js', import.meta.url).pathname,
+      '/lib/xp/schema': new URL('./tests/stubs/xp-schema.js', import.meta.url).pathname,
     },
   },
 });
