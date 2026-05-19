@@ -2,8 +2,15 @@
 http-client = "3.2.2"
 cron = "2.0.0-SNAPSHOT"
 license = "4.0.0-SNAPSHOT"
+enonicDefaults = "2.1.6"
+nodeGradle = "7.1.0"
 
 [libraries]
 lib-http-client = { module = "com.enonic.lib:lib-http-client", version.ref = "http-client" }
 lib-cron = { module = "com.enonic.lib:lib-cron", version.ref = "cron" }
 lib-license = { module = "com.enonic.lib:lib-license", version.ref = "license" }
+
+[plugins]
+enonic-defaults = { id = "com.enonic.defaults", version.ref = "enonicDefaults" }
+enonic-xp-app = { id = "com.enonic.xp.app" }
+node-gradle = { id = "com.github.node-gradle.node", version.ref = "nodeGradle" }
