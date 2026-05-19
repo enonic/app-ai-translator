@@ -84,10 +84,6 @@ export function getTranslatableDataFromContent(
 
     result.push(...getPageEntriesToTranslate(content));
 
-    if (result.length === 0) {
-      return [null, ERRORS.FUNC_NO_TRANSLATABLE_FIELDS];
-    }
-
     return [result, null];
   } catch (e) {
     logError(e);

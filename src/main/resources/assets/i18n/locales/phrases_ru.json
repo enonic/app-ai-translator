@@ -25,6 +25,7 @@
   "text.error.websocket.protocol": "Неверный протокол WebSocket.",
   "text.greeting": "Привет! Хотите, чтобы я перевел тексты на <0\/> ?",
   "text.result.completed": "Все переводы завершены! Теперь вы можете смело закрыть этот диалог.",
+  "text.result.nothingToTranslate": "В этом контенте нечего переводить.",
   "text.result.failed.all": "Не удалось завершить перевод. Причина: <italic>{{reason}}<\/italic>",
   "text.result.failed.some": "Перевод завершен с ошибками (<bold>{{count}} <\/bold>). Обратитесь к администратору или повторите попытку позже.",
   "text.translating.preparing": "Начинаю перевод...",

@@ -25,6 +25,7 @@
   "text.error.websocket.protocol": "Ogiltigt WebSocket-protokoll.",
   "text.greeting": "Hej! Vill du att jag ska översätta texter till <0\/> ?",
   "text.result.completed": "Alla översättningar är klara! Du kan stänga den här dialogrutan nu.",
+  "text.result.nothingToTranslate": "Det finns inget att översätta i det här innehållet.",
   "text.result.failed.all": "Det gick inte att slutföra översättningen. Orsak: <italic>{{reason}}<\/italic>",
   "text.result.failed.some": "Översättningen slutförd med <bold>{{count}}<\/bold> fel. Kontakta administratören eller försök igen senare.",
   "text.translating.preparing": "Initierar översättning...",

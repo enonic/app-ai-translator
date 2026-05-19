@@ -132,6 +132,11 @@ function handleMessage(event: MessageEvent<string>): void {
     case MessageType.ACCEPTED: {
       const { paths } = msg.payload;
       setPaths(paths);
+      if (paths.length === 0) {
+        setDialogView('completed');
+        closeConnection();
+        break;
+      }
       paths.forEach((path) => {
         getHostApi().setFieldState(path, 'processing');
       });
@@ -238,7 +243,6 @@ function getErrorMessageByCode(code: number): string {
       return t('text.error.query.notFound');
     case ERRORS.FUNC_INSUFFICIENT_DATA.code:
     case ERRORS.FUNC_UNKNOWN_MODE.code:
-    case ERRORS.FUNC_NO_TRANSLATABLE_FIELDS.code:
       return t('text.error.function');
     case ERRORS.FUNC_TRANSLATION_EMPTY.code:
       return t('text.error.function.translationEmpty');

@@ -140,6 +140,10 @@ function startTranslation(session: Enonic.WebSocketSession, message: TranslateMe
 
   sendMessage(session.id, makeAcceptedMessage(contentId, fields));
 
+  if (fields.length === 0) {
+    return;
+  }
+
   const wsMessagesMap = __.newBean<ConcurrentHashMap<string, Try<string>>>(
     'java.util.concurrent.ConcurrentHashMap',
   );

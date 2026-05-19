@@ -6,18 +6,22 @@ import { $items } from '@/store/items';
 const TRANSLATION_RESULT_NAME = 'TranslationResult';
 
 export function TranslationResult(): React.ReactNode {
-  const { failed, globalFailure } = useStore($items);
+  const { paths, failed, globalFailure } = useStore($items);
 
   return (
     <span data-component={TRANSLATION_RESULT_NAME}>
-      {renderResult(globalFailure, failed.length)}
+      {renderResult(globalFailure, failed.length, paths.length)}
     </span>
   );
 }
 
 TranslationResult.displayName = TRANSLATION_RESULT_NAME;
 
-function renderResult(globalFailure: string | undefined, failedCount: number): React.ReactNode {
+function renderResult(
+  globalFailure: string | undefined,
+  failedCount: number,
+  totalCount: number,
+): React.ReactNode {
   if (globalFailure) {
     return (
       <Trans
@@ -26,6 +30,10 @@ function renderResult(globalFailure: string | undefined, failedCount: number): R
         components={{ italic: <span className="italic" /> }}
       />
     );
+  }
+
+  if (totalCount === 0) {
+    return <Trans i18nKey="text.result.nothingToTranslate" />;
   }
 
   if (failedCount === 0) {
