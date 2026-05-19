@@ -12,7 +12,6 @@ export function DialogFooter(): React.ReactNode {
   const ref = useRef<HTMLButtonElement | null>(null);
   const isTranslating = useStore($translating);
   const { view } = useStore($dialog, { keys: ['view'] });
-  const isPreparing = view === 'preparation';
 
   const { t } = useTranslation();
 
@@ -20,28 +19,21 @@ export function DialogFooter(): React.ReactNode {
     ref.current?.focus();
   }, []);
 
+  if (view !== 'preparation') return null;
+
   return (
     <Dialog.Footer data-component={DIALOG_FOOTER_NAME} className="gap-2.5 px-2.5">
-      <Dialog.Close asChild>
-        <Button
-          variant="outline"
-          size="md"
-          label={t('action.close')}
-        />
-      </Dialog.Close>
-      {isPreparing && (
-        <Button
-          ref={ref}
-          variant="solid"
-          size="md"
-          label={t('action.translate')}
-          disabled={isTranslating}
-          onClick={() => {
-            startTranslation();
-            setDialogView('processing');
-          }}
-        />
-      )}
+      <Button
+        ref={ref}
+        variant="solid"
+        size="md"
+        label={t('action.translate')}
+        disabled={isTranslating}
+        onClick={() => {
+          startTranslation();
+          setDialogView('processing');
+        }}
+      />
     </Dialog.Footer>
   );
 }

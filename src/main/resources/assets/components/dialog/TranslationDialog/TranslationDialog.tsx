@@ -15,11 +15,13 @@ export type TranslationDialogProps = {
 };
 
 export function TranslationDialog({ className }: TranslationDialogProps): React.ReactNode {
-  const { visible } = useStore($dialog, { keys: ['visible'] });
+  const { visible, view } = useStore($dialog, { keys: ['visible', 'view'] });
 
   const { t } = useTranslation();
 
   const shadowHost = useShadowHost();
+
+  const hasFooter = view === 'preparation';
 
   return (
     <Dialog.Root
@@ -34,7 +36,7 @@ export function TranslationDialog({ className }: TranslationDialogProps): React.
         <Dialog.Overlay />
         <Dialog.Content
           data-component={TRANSLATION_DIALOG_NAME}
-          className={cn('TranslationDialog max-w-3xl rounded-lg', className)}
+          className={cn('TranslationDialog max-w-3xl rounded-2xl', !hasFooter && 'pb-16', className)}
         >
           <Dialog.DefaultHeader title={t('field.title')} withClose />
           <DialogBody />
