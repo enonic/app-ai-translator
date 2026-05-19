@@ -4,8 +4,8 @@ export const DEBUG_GROUPS: string[] = parseList(app.config['log.debug.groups']);
 export const TRANSLATION_POOL_SIZE: number = Number(app.config['translation.pool.size']) || 5;
 
 function parseList(value: string | undefined, defaultValue = ''): string[] {
-    return (value ?? defaultValue)
-        .split(',')
-        .map(v => v.trim())
-        .filter(v => v.length > 0);
+  return (value ?? defaultValue)
+    .split(',')
+    .map((v) => v.trim())
+    .filter((v) => v.length > 0);
 }

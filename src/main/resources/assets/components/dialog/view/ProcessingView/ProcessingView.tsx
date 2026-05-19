@@ -1,49 +1,51 @@
-import {useStore} from '@nanostores/react';
-import React from 'react';
-import {Trans} from 'react-i18next';
-import {twJoin} from 'tailwind-merge';
+import { cn } from '@enonic/ui';
+import { useStore } from '@nanostores/react';
+import { Trans } from 'react-i18next';
 
-import {$data} from '../../../../stores/data';
-import {$items} from '../../../../stores/items';
-import FramedText from '../../../shared/FramedText/FramedText';
-import AssistantMessage from '../../AssistantMessage/AssistantMessage';
+import { AssistantMessage } from '@/components/dialog/AssistantMessage/AssistantMessage';
+import { $content } from '@/store/content';
+import { $items } from '@/store/items';
+import { FramedText } from '@/ui/primitives/FramedText/FramedText';
 
-export default function ProcessingView(): React.ReactNode {
-    const {paths, remaining} = useStore($items);
-    const {language} = useStore($data, {keys: ['language']});
+const PROCESSING_VIEW_NAME = 'ProcessingView';
 
-    const countTotal = paths.length;
-    const countRemaining = countTotal - remaining.length;
-    const isPreparing = countTotal === 0;
+export function ProcessingView(): React.ReactNode {
+  const { paths, remaining } = useStore($items);
+  const { language } = useStore($content, { keys: ['language'] });
 
-    return (
-        <AssistantMessage>
-            <p className='inline-block mr-auto px-3 py-2 text-sm rounded-[1.5rem] bg-enonic-gray-100'>
-                <span
-                    className={twJoin([
-                        'bg-gradient-middle bg-text-gradient-size from-black to-enonic-gray-400',
-                        'text-transparent bg-clip-text animate-move-gradient',
-                        'pl-1 text-sm text-left',
-                    ])}
-                >
-                    <Trans
-                        i18nKey={isPreparing ? 'text.translating.preparing' : 'text.translating.progress'}
-                        values={
-                            isPreparing
-                                ? {}
-                                : {
-                                      language: language.name,
-                                      progress: countRemaining,
-                                      total: countTotal,
-                                  }
-                        }
-                        components={{
-                            framed: <FramedText />,
-                            bold: <span className='font-bold' />,
-                        }}
-                    />
-                </span>
-            </p>
-        </AssistantMessage>
-    );
+  const countTotal = paths.length;
+  const countRemaining = countTotal - remaining.length;
+  const isPreparing = countTotal === 0;
+
+  return (
+    <AssistantMessage>
+      <p
+        data-component={PROCESSING_VIEW_NAME}
+        className={cn(
+          'bg-gradient-middle from-main to-muted bg-size-[200%_100%]',
+          'animate-move-gradient bg-clip-text text-transparent',
+          'text-sm',
+        )}
+      >
+        <Trans
+          i18nKey={isPreparing ? 'text.translating.preparing' : 'text.translating.progress'}
+          values={
+            isPreparing
+              ? {}
+              : {
+                  language: language.name,
+                  progress: countRemaining,
+                  total: countTotal,
+                }
+          }
+          components={{
+            framed: <FramedText />,
+            bold: <span className="font-bold" />,
+          }}
+        />
+      </p>
+    </AssistantMessage>
+  );
 }
+
+ProcessingView.displayName = PROCESSING_VIEW_NAME;

@@ -1,67 +1,69 @@
-import libHttpClient, {HttpClientResponse} from '/lib/http-client';
+import libHttpClient from '/lib/http-client';
 
-import {ERRORS} from '../shared/errors';
-import type {ErrorResponse} from '../shared/types/model';
-import {logError} from './logger';
+import type { ErrorResponse } from '../shared/types/model';
+import type { HttpClientResponse } from '/lib/http-client';
+
+import { ERRORS } from '../shared/errors';
+import { logError } from './logger';
 
 export type RequestParams = {
-    url: string;
-    method?: Enonic.HttpMethod;
-    headers?: Enonic.RequestHeaders;
-    body?: unknown;
-    queryParams?: Record<string, string | number>;
+  url: string;
+  method?: Enonic.HttpMethod;
+  headers?: Enonic.RequestHeaders;
+  body?: unknown;
+  queryParams?: Record<string, string | number>;
 };
 
 export function request({
-    url,
-    method = 'GET',
-    headers = {},
-    body,
-    queryParams,
+  url,
+  method = 'GET',
+  headers = {},
+  body,
+  queryParams,
 }: RequestParams): Try<HttpClientResponse> {
-    try {
-        return [
-            libHttpClient.request({
-                url,
-                method,
-                headers: {
-                    accept: 'application/json',
-                    ...headers,
-                },
-                connectionTimeout: 60000,
-                readTimeout: 30000,
-                body: body != null ? JSON.stringify(body) : undefined,
-                queryParams,
-            }) ?? null,
-            null,
-        ];
-    } catch (e) {
-        logError(e);
-        return [null, ERRORS.REST_REQUEST_FAILED];
-    }
+  try {
+    return [
+      libHttpClient.request({
+        url,
+        method,
+        headers: {
+          accept: 'application/json',
+          ...headers,
+        },
+        connectionTimeout: 60000,
+        readTimeout: 30000,
+        body: body != null ? JSON.stringify(body) : undefined,
+        queryParams,
+      }) ?? null,
+      null,
+    ];
+  } catch (e) {
+    logError(e);
+    return [null, ERRORS.REST_REQUEST_FAILED];
+  }
 }
 
 export function respond<T extends Enonic.ResponseBody = Enonic.ResponseBody>(
-    status: number,
-    body: T,
+  status: number,
+  body: T,
 ): Enonic.Response<T> {
-    return {
-        status,
-        contentType: 'application/json',
-        body,
-    };
+  return {
+    status,
+    contentType: 'application/json',
+    body,
+  };
 }
 
 export function respondError(error: AiError, status = 500): Enonic.Response<ErrorResponse> {
-    return respond(status, {error});
+  return respond(status, { error });
 }
 
 export function respondData<T extends Enonic.ResponseBody = Enonic.ResponseBody>(
-    [data, error]: Try<T>,
-    status = 200,
+  [data, error]: Try<T>,
+  status = 200,
 ): Enonic.Response<T | ErrorResponse> {
-    if (error) {
-        return respondError(error);
-    }
-    return respond(status, data);
+  if (error) {
+    return respondError(error);
+  }
+  return respond(status, data);
 }

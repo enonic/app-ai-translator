@@ -1,14 +1,16 @@
-import React from 'react';
+import { AssistantMessage } from '@/components/dialog/AssistantMessage/AssistantMessage';
+import { TranslationResult } from '@/components/dialog/view/TranslationResult/TranslationResult';
 
-import AssistantMessage from '../../AssistantMessage/AssistantMessage';
-import TranslationResult from '../TranslationResult/TranslationResult';
+const COMPLETED_VIEW_NAME = 'CompletedView';
 
-export default function CompletedView(): React.ReactNode {
-    return (
-        <AssistantMessage>
-            <p className='inline-block mr-auto px-3 py-2 text-sm rounded-[1.5rem] bg-enonic-gray-100'>
-                <TranslationResult />
-            </p>
-        </AssistantMessage>
-    );
+export function CompletedView(): React.ReactNode {
+  return (
+    <AssistantMessage>
+      <p data-component={COMPLETED_VIEW_NAME} className="text-sm">
+        <TranslationResult />
+      </p>
+    </AssistantMessage>
+  );
 }
+
+CompletedView.displayName = COMPLETED_VIEW_NAME;

@@ -1,33 +1,41 @@
-import type {TextType} from './types/text';
+import type { TextType } from './types/text';
 
 export const TRANSLATION_INSTRUCTIONS = `
-# INSTRUCTIONS
+# ROLE
+You are an expert, literal translator specializing in HTML/Markdown localization.
 
-You MUST follow the instructions for answering:
+# OBJECTIVE
+Translate the content provided within the <text_to_translate_3f9a2c> tags into the target language requested, while strictly adhering to these rules:
 
-- ALWAYS return ONLY the translated text without any additional explanations or comments.
-- Target language is specified in my first message in format RFC 5646: Tags for Identifying Languages (also known as BCP 47).
-- Translate only the text that goes after 'The text to translate:'.
-- ALWAYS keep the structure and format of the text.
-- ALWAYS keep the links and other HTML tags in the text.
-- DO NOT JUDGE or give your opinion, only translate.
-- Do not alter or remove any formatting elements unless explicitly instructed.
-- DO NOT enclose the translated HTML in any markdown code blocks (e.g., \`\`\`html, \`\`\`). Return only the raw HTML.
+- **Language Format:** Specified in my first message in format RFC 5646: Tags for Identifying Languages (also known as BCP 47).
+- **Zero-Metadata Policy:** Output ONLY the translated string. No introductory text, no "Here is the translation," and no markdown code blocks (e.g., do not use \`\`\`html).
+- **Format Integrity:** Do not modify, escape, or "fix" any HTML tags, component placeholders, or markdown syntax.
+- **Literal Fidelity:** Maintain the exact tone and sentiment. Do not provide opinions or warnings regarding the content.
+- **Encoding:** Return the result as raw text.
 `.trim();
 
 export type TranslateTextParams = {
-    text: string;
-    language: string;
-    type?: TextType;
-    context?: string;
+  text: string;
+  language: string;
+  type?: TextType;
+  context?: string;
 };
 
 export function createTranslationPrompt(params: TranslateTextParams): string {
-    return [
-        `Detect the language of the provided text and translate it into \`${params.language}\`.`,
-        `* The format of the text is \`${params?.type || 'text'}\`, so preserve ALL formatting (e.g., HTML tags, Markdown elements, etc.).`,
-        `* The text is used in the context of "${params.context}". Only use this context if it is MEANINGFUL. If it is unclear or irrelevant, ignore it.`,
-        'The text to translate:',
-        params.text,
-    ].join('\n');
+  const contextInstruction = params.context
+    ? `\n# CONTEXTUAL GUIDANCE\nThe following context is provided for disambiguation only: "${params.context}"`
+    : '';
+
+  return `
+TARGET_LANGUAGE: ${params.language}
+CONTENT_TYPE: ${params.type || 'text'}
+${contextInstruction}
+
+# TASK
+Translate the following content precisely. Preserve all structural elements.
+
+<text_to_translate_3f9a2c>
+${params.text}
+</text_to_translate_3f9a2c>
+`.trim();
 }

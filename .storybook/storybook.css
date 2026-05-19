@@ -1,0 +1,42 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import '@enonic/ui/preset.css';
+
+@source '../.storybook';
+@source '../src/main/resources/assets';
+@source '../node_modules/@enonic/ui/';
+
+@theme {
+  --animate-move-gradient: move-gradient 3000ms linear infinite;
+}
+
+@keyframes move-gradient {
+  0% {
+    background-position: 200% 0%;
+  }
+  100% {
+    background-position: -200% 0%;
+  }
+}
+
+@utility bg-gradient-middle {
+  background-image: linear-gradient(
+    90deg,
+    var(--tw-gradient-from) 25%,
+    var(--tw-gradient-to) 50%,
+    var(--tw-gradient-from) 75%
+  );
+}
+
+@utility grid-cols-fit-1fr {
+  grid-template-columns: minmax(auto, min-content) 1fr;
+}
+
+@layer base {
+  body,
+  .docs-story {
+    background-color: var(--color-surface-neutral);
+    color: var(--color-main);
+    font-family: 'Open Sans', sans-serif;
+  }
+}

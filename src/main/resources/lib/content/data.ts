@@ -1,52 +1,57 @@
-import type {InputType} from '/lib/xp/core';
-
-import type {TextType} from '../../shared/types/text';
-import type {Property, PropertyValue} from './property';
+import type { TextType } from '../../shared/types/text';
+import type { Property, PropertyValue } from './property';
+import type { InputType } from '/lib/xp/core';
 
 export type DataEntry = {
-    value: PropertyValue;
-    type: TextType;
-    schemaType: InputType;
-    schemaLabel: string;
-    schemaHelpText?: string;
+  value: PropertyValue;
+  type: TextType;
+  schemaType: InputType;
+  schemaLabel: string;
+  schemaHelpText?: string;
 };
 
 export function flattenData(data: Record<string, Property>): Record<string, PropertyValue> {
-    return flattenJson(data);
+  return flattenJson(data);
 }
 
-function flattenJson(nestedJson: Record<string, Property>, parentKey = ''): Record<string, PropertyValue> {
-    const flattened: Record<string, PropertyValue> = {};
+function flattenJson(
+  nestedJson: Record<string, Property>,
+  parentKey = '',
+): Record<string, PropertyValue> {
+  const flattened: Record<string, PropertyValue> = {};
 
-    for (const key in nestedJson) {
-        if (Object.prototype.hasOwnProperty.call(nestedJson, key)) {
-            const newKey = parentKey ? `${parentKey}/${key}` : key;
-            const value = nestedJson[key];
+  for (const key in nestedJson) {
+    if (Object.prototype.hasOwnProperty.call(nestedJson, key)) {
+      const newKey = parentKey ? `${parentKey}/${key}` : key;
+      const value = nestedJson[key];
 
-            if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
-                overwrite(flattened, flattenJson(value as Record<string, Property>, newKey));
-            } else if (Array.isArray(value)) {
-                value?.forEach((item, index) => {
-                    const arrayKey = `${newKey}[${index}]`;
-                    if (typeof item === 'object' && item !== null) {
-                        overwrite(flattened, flattenJson(item as Record<string, Property>, arrayKey));
-                    } else {
-                        flattened[arrayKey] = item;
-                    }
-                });
-            } else {
-                flattened[newKey] = value;
-            }
-        }
+      if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+        overwrite(flattened, flattenJson(value as Record<string, Property>, newKey));
+      } else if (Array.isArray(value)) {
+        value?.forEach((item, index) => {
+          const arrayKey = `${newKey}[${index}]`;
+          if (typeof item === 'object' && item !== null) {
+            overwrite(flattened, flattenJson(item as Record<string, Property>, arrayKey));
+          } else {
+            flattened[arrayKey] = item;
+          }
+        });
+      } else {
+        flattened[newKey] = value;
+      }
     }
+  }
 
-    return flattened;
+  return flattened;
 }
 
-function overwrite(target: Record<string, PropertyValue>, source: Record<string, PropertyValue>): void {
-    for (const key in source) {
-        if (Object.prototype.hasOwnProperty.call(source, key)) {
-            target[key] = source[key];
-        }
+function overwrite(
+  target: Record<string, PropertyValue>,
+  source: Record<string, PropertyValue>,
+): void {
+  for (const key in source) {
+    if (Object.prototype.hasOwnProperty.call(source, key)) {
+      target[key] = source[key];
     }
+  }
 }

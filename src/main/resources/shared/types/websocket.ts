@@ -1,79 +1,81 @@
+import type { AiFieldPath } from '../ai-protocol';
+
 export type MessageMetadata = {
-    id: string;
-    timestamp: number;
+  id: string;
+  timestamp: number;
 };
 
 type BaseMessage<T extends MessageType> = {
-    type: T;
-    metadata: MessageMetadata;
+  type: T;
+  metadata: MessageMetadata;
 };
 
 type MessageWithPayload<T extends MessageType, P = unknown> = BaseMessage<T> & {
-    payload: P;
+  payload: P;
 };
 
 export enum MessageType {
-    // Connection lifecycle (client → server)
-    CONNECT = 'connect',
-    DISCONNECT = 'disconnect',
+  // Connection lifecycle (client → server)
+  CONNECT = 'connect',
+  DISCONNECT = 'disconnect',
 
-    // Connection lifecycle (server → client)
-    CONNECTED = 'connected',
-    DISCONNECTED = 'disconnected',
+  // Connection lifecycle (server → client)
+  CONNECTED = 'connected',
+  DISCONNECTED = 'disconnected',
 
-    // Connection health
-    PING = 'ping',
-    PONG = 'pong',
+  // Connection health
+  PING = 'ping',
+  PONG = 'pong',
 
-    // Translation flow (client → server)
-    TRANSLATE = 'translate',
+  // Translation flow (client → server)
+  TRANSLATE = 'translate',
 
-    // Translation flow (server → client)
-    ACCEPTED = 'accepted',
-    COMPLETED = 'completed',
-    FAILED = 'failed',
+  // Translation flow (server → client)
+  ACCEPTED = 'accepted',
+  COMPLETED = 'completed',
+  FAILED = 'failed',
 }
 
 // Client requests translation
 export type TranslateMessage = MessageWithPayload<
-    MessageType.TRANSLATE,
-    {
-        contentId: string;
-        project: string;
-        targetLanguage: string;
-        customInstructions?: string;
-    }
+  MessageType.TRANSLATE,
+  {
+    contentId: string;
+    project: string;
+    targetLanguage: string;
+    customInstructions?: string;
+  }
 >;
 
 // Server accepts translation request
 export type AcceptedMessage = MessageWithPayload<
-    MessageType.ACCEPTED,
-    {
-        contentId: string;
-        paths: string[];
-    }
+  MessageType.ACCEPTED,
+  {
+    contentId: string;
+    paths: AiFieldPath[];
+  }
 >;
 
 // Server completed translation for a field
 export type CompletedMessage = MessageWithPayload<
-    MessageType.COMPLETED,
-    {
-        contentId: string;
-        path: string;
-        text: string;
-    }
+  MessageType.COMPLETED,
+  {
+    contentId: string;
+    path: AiFieldPath;
+    text: string;
+  }
 >;
 
 // Server reports translation failure
 export type FailedMessage = MessageWithPayload<
-    MessageType.FAILED,
-    {
-        contentId: string;
-        path?: string;
-        code: string;
-        message: string;
-        details?: unknown;
-    }
+  MessageType.FAILED,
+  {
+    contentId: string;
+    path?: AiFieldPath;
+    code: string;
+    message: string;
+    details?: unknown;
+  }
 >;
 
 // Connection messages
@@ -89,9 +91,9 @@ export type PongMessage = BaseMessage<MessageType.PONG>;
 export type ClientMessage = ConnectMessage | DisconnectMessage | PingMessage | TranslateMessage;
 
 export type ServerMessage =
-    | ConnectedMessage
-    | DisconnectedMessage
-    | PongMessage
-    | AcceptedMessage
-    | CompletedMessage
-    | FailedMessage;
+  | ConnectedMessage
+  | DisconnectedMessage
+  | PongMessage
+  | AcceptedMessage
+  | CompletedMessage
+  | FailedMessage;

@@ -1,7 +1,7 @@
 declare interface Synchronizer {
-    sync(scriptValue: ScriptValue): void;
+  sync(scriptValue: ScriptValue): void;
 }
 
 interface XpBeans {
-    'com.enonic.app.ai.translator.internal.Synchronizer': Synchronizer;
+  'com.enonic.app.ai.translator.internal.Synchronizer': Synchronizer;
 }

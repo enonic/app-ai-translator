@@ -1,42 +1,50 @@
-import {useStore} from '@nanostores/react';
-import {twMerge} from 'tailwind-merge';
+import { cn, Dialog } from '@enonic/ui';
+import { useStore } from '@nanostores/react';
+import { useTranslation } from 'react-i18next';
 
-import {$dialog, setDialogVisible} from '../../../stores/dialog';
-import ModalWrapper from '../../shared/ModalWrapper/ModalWrapper';
-import DialogContent from '../DialogContent/DialogContent';
-import DialogFooter from '../DialogFooter/DialogFooter';
-import DialogHeader from '../DialogHeader/DialogHeader';
+import { useShadowHost } from '@/shadow/ShadowHostContext';
+import { $dialog, setDialogVisible } from '@/store/dialog';
 
-export type Props = {
-    className?: string;
+import { DialogBody } from './DialogBody/DialogBody';
+import { DialogFooter } from './DialogFooter/DialogFooter';
+
+const TRANSLATION_DIALOG_NAME = 'TranslationDialog';
+
+export type TranslationDialogProps = {
+  className?: string;
 };
 
-export default function TranslationDialog({className = ''}: Props): React.ReactNode {
-    const {visible} = useStore($dialog, {keys: ['visible']});
+export function TranslationDialog({ className }: TranslationDialogProps): React.ReactNode {
+  const { visible, view } = useStore($dialog, { keys: ['visible', 'view'] });
 
-    return (
-        <ModalWrapper
-            className={twMerge('TranslationDialog', !visible && 'hidden')}
-            closeHandler={() => setDialogVisible(false)}
-            trapFocus={visible}
+  const { t } = useTranslation();
+
+  const shadowHost = useShadowHost();
+
+  const hasFooter = view === 'preparation';
+
+  return (
+    <Dialog.Root
+      open={visible}
+      onOpenChange={(open) => {
+        if (!open) {
+          setDialogVisible(false);
+        }
+      }}
+    >
+      <Dialog.Portal container={shadowHost ?? undefined}>
+        <Dialog.Overlay />
+        <Dialog.Content
+          data-component={TRANSLATION_DIALOG_NAME}
+          className={cn('TranslationDialog max-w-3xl rounded-2xl', !hasFooter && 'pb-16', className)}
         >
-            <div
-                className={twMerge(
-                    'w-full sm2:max-w-2xl',
-                    'h-dvh sm2:h-auto',
-                    'flex flex-col',
-                    'bg-white',
-                    'sm2:shadow-xl',
-                    'rounded-sm',
-                    className,
-                )}
-                role='dialog'
-                aria-modal='true'
-            >
-                <DialogHeader />
-                <DialogContent className='sm2:max-h-[calc(100vh-8.5rem)]' />
-                <DialogFooter className='mt-auto sm2:mt-0' />
-            </div>
-        </ModalWrapper>
-    );
+          <Dialog.DefaultHeader title={t('field.title')} withClose />
+          <DialogBody />
+          <DialogFooter />
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
+  );
 }
+
+TranslationDialog.displayName = TRANSLATION_DIALOG_NAME;
