@@ -74,8 +74,8 @@ importers:
         specifier: 8.0.0-B4
         version: 8.0.0-B4
       '@enonic-types/lib-schema':
-        specifier: 8.0.0-B4
-        version: 8.0.0-B4
+        specifier: 8.0.0-B5
+        version: 8.0.0-B5
       '@enonic-types/lib-task':
         specifier: 8.0.0-B4
         version: 8.0.0-B4
@@ -327,6 +327,9 @@ packages:
   '@enonic-types/core@8.0.0-B4':
     resolution: {integrity: sha512-UGq6ixxLMOEQm5NYdjilWUIXugcGiEKAmzuzM1vBCltdJLJfqgJYjVgrziXhbiulpYdxcMoDTe0N8uF7R6j25w==}
 
+  '@enonic-types/core@8.0.0-B5':
+    resolution: {integrity: sha512-kN17TYr6pNqqggdo4/k5sMLoDPJ2SYM6DjXJq1u3jOMshr1tjOl90wvcefg65leBwLcvyqlrdcSmYdiB2G3rCQ==}
+
   '@enonic-types/global@8.0.0-B4':
     resolution: {integrity: sha512-CC7OQvPOtxMBfOhnLcDYaMxfdSIaYkbDQ8WnDmXPEPDHMNkraZhirLpdvAnS/7PObS/yEuS94x9GEAqmEd+YFQ==}
 
@@ -339,8 +342,8 @@ packages:
   '@enonic-types/lib-context@8.0.0-B4':
     resolution: {integrity: sha512-iFu7mW1w98Hw1HTea5x/b6q/aTPKhUFCfLgwIbQnoE6hgNTEUwx0Vd5qjrSY1tEIKKIioQ9w6VQnyOA/AMwQBw==}
 
-  '@enonic-types/lib-schema@8.0.0-B4':
-    resolution: {integrity: sha512-1SPqd8qAmlX+yv5CTGtHdvW10A1k8MGkXi3hB/omMjArI2gUbJ4wT+Xyw12Iwn6XmEF3cxiqsMRfhDQLvGqrEw==}
+  '@enonic-types/lib-schema@8.0.0-B5':
+    resolution: {integrity: sha512-WpKLBcFoy3ngcIhYpJ+YFeTOVc4hcHuWpRCfuUdo95+Gc2wOb4WvADclTc/Gwi0Ejis91zwXjOVRnKAShez0IQ==}
 
   '@enonic-types/lib-task@8.0.0-B4':
     resolution: {integrity: sha512-9wCc4h9oHWuCJIt9ak0MAyBDj0M+w2gcXI3spmxzuQ+WbUTQsB2BAsBDtOm1kWQtRS7C5ns69SDGixKqQeUaUQ==}
@@ -2943,6 +2946,8 @@ snapshots:
 
   '@enonic-types/core@8.0.0-B4': {}
 
+  '@enonic-types/core@8.0.0-B5': {}
+
   '@enonic-types/global@8.0.0-B4':
     dependencies:
       '@enonic-types/core': 8.0.0-B4
@@ -2959,9 +2964,9 @@ snapshots:
     dependencies:
       '@enonic-types/core': 8.0.0-B4
 
-  '@enonic-types/lib-schema@8.0.0-B4':
+  '@enonic-types/lib-schema@8.0.0-B5':
     dependencies:
-      '@enonic-types/core': 8.0.0-B4
+      '@enonic-types/core': 8.0.0-B5
 
   '@enonic-types/lib-task@8.0.0-B4':
     dependencies:
