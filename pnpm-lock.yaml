@@ -86,8 +86,8 @@ importers:
         specifier: ~0.50.1
         version: 0.50.1(@radix-ui/react-slot@1.2.4(@types/react@19.2.14)(react@19.2.6))(focus-trap-react@12.0.2(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(lucide-react@1.16.0(react@19.2.6))(preact@10.29.2)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(tw-animate-css@1.4.0)
       '@google/genai':
-        specifier: ~2.4.0
-        version: 2.4.0
+        specifier: ~2.5.0
+        version: 2.5.0
       '@preact/preset-vite':
         specifier: ~2.10.5
         version: 2.10.5(@babel/core@7.29.0)(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(typescript@6.0.3))(preact@10.29.2)
@@ -696,8 +696,8 @@ packages:
       '@noble/hashes':
         optional: true
 
-  '@google/genai@2.4.0':
-    resolution: {integrity: sha512-q5q26X/yNKjbzrRdVVDIM9KEmN4dhezmhyliCDIn8mPGT0AlfzOqQfZ5iNCGRCEHSPd86oUdhpNpuzAkEZ5LQg==}
+  '@google/genai@2.5.0':
+    resolution: {integrity: sha512-qDi3LLh9I3llJK0f9uV8kZ8EdT9oHPxGJJ9yOJ/i5YXYrVwRCs8jHo9x4e99uOeKYDvD3TZwT70p/H/LS3BixQ==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
       '@modelcontextprotocol/sdk': ^1.25.2
@@ -2461,8 +2461,8 @@ packages:
     resolution: {integrity: sha512-Qb1gy5OrP5+zDf2Bvnzdl3jsTf1qXVMazbvCoKhtKqVs4/YK4ozX4gKQJJVyNe+cajNPn0KoC0MC3FUmaHWEmQ==}
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
 
-  protobufjs@7.5.9:
-    resolution: {integrity: sha512-Od4muIm3HW1AouyHF5lONOf1FWo3hY1NbFDoy191X9GzhpgW1clCoaFjfVs2rKJNFYpTNJbje4cbAIDBZJ63ZA==}
+  protobufjs@7.6.0:
+    resolution: {integrity: sha512-LtESOsMPTZgyYtwxhvdgdjGL0HmXEaRA/hVD6sol4zA60hVXXXP/SGmxnqDbgGE8gy7pYex7cym+5vYPcmaXBQ==}
     engines: {node: '>=12.0.0'}
 
   punycode@2.3.1:
@@ -3146,11 +3146,11 @@ snapshots:
 
   '@exodus/bytes@1.15.0': {}
 
-  '@google/genai@2.4.0':
+  '@google/genai@2.5.0':
     dependencies:
       google-auth-library: 10.6.2
       p-retry: 4.6.2
-      protobufjs: 7.5.9
+      protobufjs: 7.6.0
       ws: 8.20.1
     transitivePeerDependencies:
       - bufferutil
@@ -4600,7 +4600,7 @@ snapshots:
       ansi-styles: 5.2.0
       react-is: 17.0.2
 
-  protobufjs@7.5.9:
+  protobufjs@7.6.0:
     dependencies:
       '@protobufjs/aspromise': 1.1.2
       '@protobufjs/base64': 1.1.2
