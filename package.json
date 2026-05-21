@@ -51,7 +51,7 @@
   "devDependencies": {
     "@enonic-types/core": "8.0.0-B4",
     "@enonic-types/global": "8.0.0-B4",
-    "@enonic-types/lib-auth": "8.0.0-B4",
+    "@enonic-types/lib-auth": "8.0.0-B5",
     "@enonic-types/lib-content": "8.0.0-B4",
     "@enonic-types/lib-context": "8.0.0-B4",
     "@enonic-types/lib-schema": "8.0.0-B4",
