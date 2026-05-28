@@ -55,7 +55,7 @@
     "@enonic-types/lib-content": "8.0.0-B5",
     "@enonic-types/lib-context": "8.0.0-B5",
     "@enonic-types/lib-schema": "8.0.0-B5",
-    "@enonic-types/lib-task": "8.0.0-B5",
+    "@enonic-types/lib-task": "8.0.0-RC1",
     "@enonic-types/lib-websocket": "8.0.0-B5",
     "@enonic/ui": "~0.50.1",
     "@google/genai": "~2.5.0",
