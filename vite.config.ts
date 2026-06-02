@@ -50,6 +50,10 @@ export default defineConfig({
       output: {
         entryFileNames: '[name].js',
       },
+      // ? Silence ineffective `/* @__PURE__ */` annotations in @enonic/ui's prebuilt dist
+      checks: {
+        invalidAnnotation: false,
+      },
     },
     outDir: 'build/resources/main/assets',
     emptyOutDir: false,
