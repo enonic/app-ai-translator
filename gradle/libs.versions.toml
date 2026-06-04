@@ -2,7 +2,7 @@
 http-client = "4.0.0-B1"
 cron = "2.0.0-B1"
 license = "4.0.0-B1"
-enonicDefaults = "2.1.6"
+enonicDefaults = "2.1.7"
 nodeGradle = "7.1.0"
 
 [libraries]

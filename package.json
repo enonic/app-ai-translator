@@ -7,7 +7,7 @@
   "bugs": {
     "url": "https://github.com/enonic/app-ai-translator/issues"
   },
-  "license": "Apache-2.0",
+  "license": "Enonic License 2.0",
   "author": "Enonic",
   "contributors": [
     "Mikita Taukachou <edloidas@gmail.com>"
@@ -54,7 +54,7 @@
     "@enonic-types/lib-schema": "^8",
     "@enonic-types/lib-task": "^8",
     "@enonic-types/lib-websocket": "^8",
-    "@enonic/ui": "~0.50.1",
+    "@enonic/ui": "^1.0.0",
     "@google/genai": "~2.5.0",
     "@preact/preset-vite": "~2.10.5",
     "@storybook/addon-docs": "~10.4.0",
