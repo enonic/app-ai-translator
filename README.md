@@ -2,6 +2,8 @@
 
 Translator, one of the Enonic Juke AI skills, is designed to enhance your productivity by leveraging advanced Large Language Models for translation tasks.
 
+Requires [Enonic License 2.0](LICENSE.txt).
+
 ## Installation
 
 ```shell
