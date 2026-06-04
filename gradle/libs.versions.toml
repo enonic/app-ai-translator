@@ -2,7 +2,7 @@
 http-client = "4.1.0-SNAPSHOT"
 cron = "2.1.0-SNAPSHOT"
 license = "4.1.0-SNAPSHOT"
-enonicDefaults = "2.1.6"
+enonicDefaults = "2.1.7"
 nodeGradle = "7.1.0"
 
 [libraries]
