@@ -65,7 +65,7 @@
     "@testing-library/jest-dom": "~6.9.1",
     "@types/lodash.clonedeep": "~4.5.9",
     "@types/node": "^25.9.1",
-    "@types/react": "~19.2.15",
+    "@types/react": "~19.2.16",
     "@types/react-dom": "~19.2.3",
     "@typescript/native-preview": "7.0.0-dev.20260604.1",
     "esbuild": "~0.28.0",
