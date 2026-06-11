@@ -51,7 +51,7 @@ importers:
     devDependencies:
       '@enonic-types/core':
         specifier: ^8
-        version: 8.0.0
+        version: 8.0.1
       '@enonic-types/global':
         specifier: ^8
         version: 8.0.0
@@ -314,6 +314,9 @@ packages:
 
   '@enonic-types/core@8.0.0':
     resolution: {integrity: sha512-t93pLDJbyoJGRJ1Qlm+EWpRyClRo2sA5cn+mDS9zoN5687zqroUr2+kAlX0FarHx5bwnRqZq8Pdf1nRnEaVDNw==}
+
+  '@enonic-types/core@8.0.1':
+    resolution: {integrity: sha512-HXZazCFr3P58t5aLvHQukU3Qiz3QZBV33lXAVuKk5a0nkg9Irur4zOdJINrxUkxezs4l7KGVb4rP8KTrppeECQ==}
 
   '@enonic-types/global@8.0.0':
     resolution: {integrity: sha512-RYPrl8RN20qNnCBSUUZaiHNEnjxVTz7XSpd5INKzbTzKDXz576JkOEVxr9EKe/i1lOVlzoKl+hBRvQS2aELecg==}
@@ -3027,6 +3030,8 @@ snapshots:
     optional: true
 
   '@enonic-types/core@8.0.0': {}
+
+  '@enonic-types/core@8.0.1': {}
 
   '@enonic-types/global@8.0.0':
     dependencies:
