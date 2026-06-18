@@ -57,7 +57,7 @@ importers:
         version: 8.0.1
       '@enonic-types/lib-auth':
         specifier: ^8
-        version: 8.0.1
+        version: 8.0.2
       '@enonic-types/lib-content':
         specifier: ^8
         version: 8.0.1
@@ -318,11 +318,14 @@ packages:
   '@enonic-types/core@8.0.1':
     resolution: {integrity: sha512-HXZazCFr3P58t5aLvHQukU3Qiz3QZBV33lXAVuKk5a0nkg9Irur4zOdJINrxUkxezs4l7KGVb4rP8KTrppeECQ==}
 
+  '@enonic-types/core@8.0.2':
+    resolution: {integrity: sha512-UTOB1AeuVRhY/M+l+dGsduAnVzBrWlgPSdw4PHMIKrJbuAUmZxCl8DBeSB8a+CJzlFmsM5CVK6150UDgdW1zpA==}
+
   '@enonic-types/global@8.0.1':
     resolution: {integrity: sha512-3IAqjBLPy/MooEL3f2IHZHeirEhkjASbbTZpY8cvTNY5FR34+QfxcjaZZtV8wpJppZIfZH6t1vnkV1blWlKNhw==}
 
-  '@enonic-types/lib-auth@8.0.1':
-    resolution: {integrity: sha512-UVbqpLDQdO7U8PH1jtXE36s/RDAptdf53BujG7ZyMOPEAbToQ9jEx5d7zzIjoAHROwZ/163hoYJjqZQmlFTzNg==}
+  '@enonic-types/lib-auth@8.0.2':
+    resolution: {integrity: sha512-0nAJJaQTzACrqZLer61GaR1j7/t14fYbMCXfWNxxMa8t9HOSqcr1Hrd2N/aDE2FhA+KcfXjlCUHIwyTALD7ajg==}
 
   '@enonic-types/lib-content@8.0.1':
     resolution: {integrity: sha512-Ren4QMtBVd0YZTIWp0JRccQ2SUBHfb751GsE48QJJ+AxxSsWaIF3H2RFRFnANDRIF2hyUcdrvKqwT6FWiYcjrQ==}
@@ -3033,13 +3036,15 @@ snapshots:
 
   '@enonic-types/core@8.0.1': {}
 
+  '@enonic-types/core@8.0.2': {}
+
   '@enonic-types/global@8.0.1':
     dependencies:
       '@enonic-types/core': 8.0.1
 
-  '@enonic-types/lib-auth@8.0.1':
+  '@enonic-types/lib-auth@8.0.2':
     dependencies:
-      '@enonic-types/core': 8.0.1
+      '@enonic-types/core': 8.0.2
 
   '@enonic-types/lib-content@8.0.1':
     dependencies:
