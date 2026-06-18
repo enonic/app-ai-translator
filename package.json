@@ -61,7 +61,7 @@
     "@storybook/addon-themes": "~10.4.2",
     "@storybook/preact-vite": "~10.4.2",
     "@swc/core": "^1.15.41",
-    "@tailwindcss/vite": "~4.3.0",
+    "@tailwindcss/vite": "~4.3.1",
     "@testing-library/jest-dom": "~6.9.1",
     "@types/lodash.clonedeep": "~4.5.9",
     "@types/node": "^25.9.3",
