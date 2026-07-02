@@ -51,7 +51,7 @@ importers:
     devDependencies:
       '@enonic-types/core':
         specifier: ^8
-        version: 8.0.1
+        version: 8.0.3
       '@enonic-types/global':
         specifier: ^8
         version: 8.0.3
@@ -2509,9 +2509,6 @@ packages:
   tailwind-merge@3.4.1:
     resolution: {integrity: sha512-2OA0rFqWOkITEAOFWSBSApYkDeH9t2B3XSJuI4YztKBzK3mX0737A2qtxDZ7xkw9Zfh0bWl+r34sF3HXV+Ig7Q==}
 
-  tailwindcss@4.3.1:
-    resolution: {integrity: sha512-hk+TB1m+K8CYNrP6rjQaq/Y+4Zylwpa87mLYBKCunwnnQ9p+fHb7kmSfGqyEJoxF/O6CDyABWVFEafNSYKll+Q==}
-
   tailwindcss@4.3.2:
     resolution: {integrity: sha512-WtctNNSH8A9jlMIqxzuYumOHU5uGZyRv0Q5svQl+oEPy5w84YpBxdb7MdqyiSPQge5jTJ6zFQLq0PFygdccSBA==}
 
@@ -4595,8 +4592,6 @@ snapshots:
   tabbable@6.4.0: {}
 
   tailwind-merge@3.4.1: {}
-
-  tailwindcss@4.3.1: {}
 
   tailwindcss@4.3.2: {}
 
