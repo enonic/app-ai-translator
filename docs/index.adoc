@@ -1,0 +1,110 @@
+= Juke AI Translator
+:toc: right
+
+== Introduction
+
+NOTE: Versions 2.x target XP 8+.
+
+Juke AI Translator is one of the Enonic Juke AI skills. It uses large language models to translate content from within Content Studio, letting editors localize copy without leaving the editor.
+
+== Installation
+
+The application is available in the https://market.enonic.com/vendors/enonic/ai-translator[Enonic Market]. Install it from the Applications XP tool, or build it locally with the Enonic SDK:
+
+[source,shell]
+----
+enonic project deploy
+----
+
+== Requirements
+
+Juke AI Translator relies on the Google Cloud Vertex AI API for access to large language models.
+
+NOTE: Enonic provisions access to AI services for subscription customers at no additional charge. https://support.enonic.com[Create a support ticket] to get in touch.
+
+== Configuration
+
+=== Create a Google Cloud Service Account
+
+The application authenticates against Vertex AI with a Google Service Account Key (SAK) in JSON format.
+
+. *Activate the Vertex API* in the Google Cloud console.
+. *Create a Service Account* in Google Cloud IAM and grant it the role `Vertex AI User (roles/aiplatform.user)`.
+. *Create a Service Account Key* for that account and download the JSON key file.
+
+=== Configure the application
+
+. *Place the SAK JSON file* in your `$XP_HOME/config` directory (or any subdirectory).
+. *Create* `com.enonic.app.ai.translator.cfg` in `$XP_HOME/config` and point `google.api.sak.path` at the SAK file.
+
+TIP: Use Unix-style paths, or properly escape backslashes on Windows.
+
+.Example `com.enonic.app.ai.translator.cfg`
+[source,properties]
+----
+# Path to Google's Service Account Key (a JSON file)
+google.api.sak.path=${xp.home}/config/playground-123456-e13cb1841f87.json
+
+# (Optional) Override the full Vertex AI generateContent endpoint URL.
+# See "Vertex AI endpoint" below for guidance on regional vs multi-region vs global endpoints.
+# google.api.gemini.url=https://aiplatform.eu.rep.googleapis.com/v1/projects/playground-123456/locations/eu/publishers/google/models/gemini-3.1-flash-lite
+
+# (Optional) Comma-separated list of debug groups to limit debug output.
+# Possible values: all, none, google, func, ws
+# Leaving empty or including "all" logs every debug group.
+log.debug.groups=all
+----
+
+[%header,cols="2,1,4"]
+|===
+| Key | Default | Description
+
+| `google.api.sak.path`
+| _(required)_
+| Absolute path to the Google Service Account Key JSON file.
+
+| `google.api.gemini.url`
+| _(see below)_
+| Full Vertex AI `generateContent` endpoint URL. Defaults to the multi-region EU endpoint for `gemini-3.1-flash-lite`. Supply the URL without the `:generateContent` suffix — the application appends it automatically.
+
+| `log.debug.groups`
+| `all`
+| Comma-separated list of debug groups to include in the log output. Valid groups: `all`, `none`, `google`, `func`, `ws`.
+|===
+
+== Vertex AI endpoint
+
+The model URL has three flavours, each with a different host and `locations/` segment. Pick one based on data-residency and model availability. Reference: https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/locations#multi-region_1[Vertex AI locations — Multi-region].
+
+[%header,cols="1,2,1,3"]
+|===
+| Flavour | Host | `locations/` | When to use
+
+| *Multi-region (EU)* — default
+| `aiplatform.eu.rep.googleapis.com`
+| `eu`
+| Data stays inside the EU, capacity pooled across EU data centres. Required for models not yet rolled out to single regions (e.g. `gemini-3.1-flash-lite`).
+
+| *Single region*
+| `<region>-aiplatform.googleapis.com` (e.g. `europe-west1-aiplatform.googleapis.com`)
+| `<region>` (e.g. `europe-west1`)
+| Strict single-region data residency. Some preview/newer models may not be available.
+
+| *Global*
+| `aiplatform.googleapis.com`
+| `global`
+| Best availability and lowest latency. *No data-residency guarantee* — requests may be routed anywhere.
+|===
+
+URL template:
+
+[source]
+----
+https://<host>/v1/projects/<projectId>/locations/<location>/publishers/google/models/<modelId>
+----
+
+If the chosen model isn't served at the chosen location the API returns a `404 Not Found` with an empty body. Either switch endpoint flavour or pick a model published at that location — see https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions[Generative AI on Vertex AI: model versions].
+
+== License
+
+Requires Enonic License 2.0. See the `LICENSE.txt` file at the root of the repository for the full text.
