@@ -14,7 +14,7 @@ val xpVersion: String by project
 dependencies {
     implementation(xplibs.api.script)
 
-    include("com.google.auth:google-auth-library-oauth2-http:1.48.0")
+    include("com.google.auth:google-auth-library-oauth2-http:1.49.0")
     include(xplibs.auth)
     include(xplibs.websocket)
     include(libs.lib.http.client)
