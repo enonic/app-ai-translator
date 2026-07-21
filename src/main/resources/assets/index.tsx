@@ -1,6 +1,5 @@
 import { StrictMode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
-import { t } from 'i18next';
 
 import type {
   AiPlugin,
@@ -34,9 +33,10 @@ async function mount(container: HTMLElement, context: AiPluginContext): Promise<
   if (context.initial.schema != null) applySchema(context.initial.schema);
   if (context.initial.language != null) applyLanguage(context.initial.language);
 
-  if ((await fetchLicenseState()) !== 'OK') {
-    context.api.notify('warn', t('text.error.license.invalid'));
-    throw new Error('[ai.translator] license check failed');
+  const licenseState = await fetchLicenseState();
+  if (licenseState !== 'OK') {
+    const reason = typeof licenseState === 'string' ? licenseState : licenseState.message;
+    throw new Error(`[ai.translator] license check failed: ${reason}`);
   }
 
   const shadow = container.shadowRoot ?? container.attachShadow({ mode: 'open' });
