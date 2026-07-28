@@ -1,16 +1,15 @@
-import type { AiFieldPath } from '../../shared/ai-protocol';
 import type { Message } from '../../shared/types/model';
 import type { TextType } from '../../shared/types/text';
 import type { DataEntry } from '../content/data';
-import type { TranslatableEntry } from '../content/content';
 import type { ModelProxy } from '../proxy/model';
+import type { TranslateFieldPayload } from './results';
 
 import { toKey } from '../../shared/ai-field-path';
 import { ERRORS } from '../../shared/errors';
 import { createTranslationPrompt } from '../../shared/prompts';
 import { logError } from '../logger';
 import { connect } from '../proxy/proxy';
-import { addTask } from './queue';
+import { putOutcome } from './results';
 
 export type TranslateContentParams = {
   language: string;
@@ -18,47 +17,38 @@ export type TranslateContentParams = {
   instructions?: string | undefined;
 };
 
-type TranslationData = {
-  contentId: string;
-  project: string;
-  targetLanguage: string;
-  customInstructions?: string;
-};
+export function runTranslateField(payload: TranslateFieldPayload): void {
+  const { sessionId, path, entry, targetLanguage, customInstructions } = payload;
+  const key = toKey(path);
 
-type TranslationConfig = TranslationData & {
-  fields: TranslatableEntry[];
-};
-
-// The callback keys results by `toKey(path)` so they can be stored in the Java
-// ConcurrentHashMap; `ws.ts` keeps a parallel map back to the `AiFieldPath`.
-type Callback = (key: string, result: Try<string>) => void;
-
-export function translateFields(
-  config: TranslationConfig,
-  callback: Callback,
-  sessionId: string,
-): void {
-  const { fields, contentId, project, targetLanguage, customInstructions } = config;
-  fields.forEach((field: TranslatableEntry): void => {
-    const path: AiFieldPath = field.path;
-    const key = toKey(path);
-    const params: TranslateContentParams = {
-      entry: field.entry,
+  try {
+    const [text, err] = translate({
+      entry,
       language: targetLanguage,
       instructions: customInstructions,
-    };
-    addTask(
-      {
-        description: `Translating content '${contentId}' in repo '${project}', field: ${key}`,
-        func: () => callback(key, translate(params)),
-        onError: () => {
-          logError(`translateFields.onError: queue reported FAILED for path=${key}`);
-          callback(key, [null, ERRORS.UNKNOWN_ERROR.withMsg('Translation task execution failed')]);
-        },
-      },
-      sessionId,
-    );
-  });
+    });
+
+    if (err != null || text == null) {
+      const failure = err ?? ERRORS.FUNC_TRANSLATION_EMPTY;
+      putOutcome(sessionId, key, {
+        status: 'failed',
+        path,
+        code: failure.code,
+        message: failure.message,
+      });
+    } else {
+      putOutcome(sessionId, key, { status: 'completed', path, text });
+    }
+  } catch (e) {
+    logError(`runTranslateField threw for path=${key}:`);
+    logError(e);
+    putOutcome(sessionId, key, {
+      status: 'failed',
+      path,
+      code: ERRORS.UNKNOWN_ERROR.code,
+      message: 'Translation task execution failed',
+    });
+  }
 }
 
 export function translate(item: TranslateContentParams): Try<string> {
