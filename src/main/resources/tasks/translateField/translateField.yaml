@@ -1,0 +1,9 @@
+kind: 'Task'
+description: 'Translate a single content field and publish the result'
+form:
+  - type: 'TextArea'
+    name: 'payload'
+    label: 'Serialized translate-field payload'
+    occurrences:
+      min: 1
+      max: 1

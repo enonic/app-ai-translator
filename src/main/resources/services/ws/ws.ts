@@ -1,5 +1,4 @@
 import cron from '/lib/cron';
-import * as taskLib from '/lib/xp/task';
 import * as websocketLib from '/lib/xp/websocket';
 
 import type { TranslatableEntry } from '../../lib/content/content';
@@ -18,10 +17,10 @@ import { getTranslatableDataFromContent } from '../../lib/content/content';
 import * as licenseManager from '../../lib/license/licenseManager';
 import { logDebug, LogDebugGroups, logError } from '../../lib/logger';
 import { respondError } from '../../lib/requests';
-import { translateFields } from '../../lib/translate/translate';
+import { translateFields } from '../../lib/translate/enqueue';
+import { clearSession, drainOutcomes } from '../../lib/translate/results';
 import { runAsAdmin } from '../../lib/utils/context';
 import { unsafeUUIDv4 } from '../../lib/utils/uuid';
-import { toKey } from '../../shared/ai-field-path';
 import { WS_PROTOCOL } from '../../shared/constants';
 import { ERRORS } from '../../shared/errors';
 import { MessageType } from '../../shared/types/websocket';
@@ -144,25 +143,9 @@ function startTranslation(session: Enonic.WebSocketSession, message: TranslateMe
     return;
   }
 
-  const wsMessagesMap = __.newBean<ConcurrentHashMap<string, Try<string>>>(
-    'java.util.concurrent.ConcurrentHashMap',
-  );
-
-  // `AiFieldPath` objects cannot key a Java map; results are keyed by `toKey(path)`.
-  // This parallel object bridges each string key back to its `AiFieldPath` so the
-  // poll loop can attach the union to outgoing COMPLETED/FAILED messages.
-  const pathsByKey: Record<string, AiFieldPath> = {};
-  fields.forEach((field: TranslatableEntry): void => {
-    pathsByKey[toKey(field.path)] = field.path;
-  });
-
-  // sending messages to the client in a separate task/thread to make sending synchronous to avoid ws backend error, see XP-10759
-  taskLib.executeFunction({
-    description: 'ai-translator-task-ws',
-    func: () => {
-      pollAndSendMessages(session.id, contentId, wsMessagesMap, pathsByKey);
-    },
-  });
+  // ! One poll loop per session is the sole sender: outbound ws sends to a connection must stay
+  // serialized to avoid a ws backend error (XP-10759). cron.schedule returns without blocking.
+  pollAndSendMessages(session.id, contentId);
 
   try {
     translateFields(
@@ -172,15 +155,6 @@ function startTranslation(session: Enonic.WebSocketSession, message: TranslateMe
         project,
         targetLanguage,
         customInstructions,
-      },
-      (key, result) => {
-        const [, error] = result;
-        if (error != null) {
-          logError(
-            `translation failed: path=${key}, code=${error.code}, message=${error.message}`,
-          );
-        }
-        wsMessagesMap.put(key, result);
       },
       session.id,
     );
@@ -239,12 +213,7 @@ function makeFailedMessage(
   };
 }
 
-function pollAndSendMessages(
-  sessionId: string,
-  contentId: string,
-  messages: ConcurrentHashMap<string, Try<string>>,
-  pathsByKey: Record<string, AiFieldPath>,
-): void {
+function pollAndSendMessages(sessionId: string, contentId: string): void {
   const taskName = getTaskName(sessionId);
   try {
     // ! lib-cron 2.0 on XP 8 reads the current Jetty request at schedule() time; run inside an XP context so it doesn't NPE on WS/task threads
@@ -256,17 +225,19 @@ function pollAndSendMessages(
         times: 960, // 500ms * 960 = 480s, run for 8 minutes
         callback: () => {
           try {
-            messages.forEach((key, result) => {
-              const [text, err] = result;
-              const path = pathsByKey[key];
-
-              if (err) {
-                sendMessage(sessionId, makeFailedMessage(err, contentId, path));
+            drainOutcomes(sessionId, (outcome) => {
+              if (outcome.status === 'completed') {
+                sendMessage(sessionId, makeCompletedMessage(contentId, outcome.path, outcome.text));
               } else {
-                sendMessage(sessionId, makeCompletedMessage(contentId, path, text));
+                sendMessage(
+                  sessionId,
+                  makeFailedMessage(
+                    { code: outcome.code, message: outcome.message },
+                    contentId,
+                    outcome.path,
+                  ),
+                );
               }
-
-              messages.remove(key);
             });
           } catch (e) {
             logError(`pollAndSendMessages.tick failed for session=${sessionId}:`);
@@ -282,12 +253,15 @@ function pollAndSendMessages(
 }
 
 function handleClose(event: Enonic.WebSocketEvent): void {
-  const taskName = getTaskName(event.session.id);
+  const sessionId = event.session.id;
+  const taskName = getTaskName(sessionId);
   try {
     runAsAdmin(() => cron.unschedule({ name: taskName }));
   } catch (e) {
     logError(`handleClose: cron.unschedule threw for '${taskName}':`);
     logError(e);
+  } finally {
+    clearSession(sessionId);
   }
 }
 
