@@ -20,7 +20,7 @@ importers:
     dependencies:
       '@nanostores/react':
         specifier: ~1.1.0
-        version: 1.1.0(nanostores@1.4.0)(react@19.2.8)
+        version: 1.1.0(nanostores@1.4.1)(react@19.2.8)
       focus-trap-react:
         specifier: ~12.0.3
         version: 12.0.3(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -37,8 +37,8 @@ importers:
         specifier: ~1.27.0
         version: 1.27.0(react@19.2.8)
       nanostores:
-        specifier: ~1.4.0
-        version: 1.4.0
+        specifier: ~1.4.1
+        version: 1.4.1
       preact:
         specifier: ~10.29.7
         version: 10.29.7
@@ -2387,8 +2387,8 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
-  nanostores@1.4.0:
-    resolution: {integrity: sha512-i0tloweeudshAEuddpDxcg9Ik6pkPfVsHIgKyf143JrgG7/MOh0+q7BypdLXZPoOP7fOYt1eTcwGkyiVmhJFkA==}
+  nanostores@1.4.1:
+    resolution: {integrity: sha512-PGd3uPojJB9Z07d5NX3Db/SOSBbyy3wLMUGq0GpnEEJfVzY9mq7daPMAZ3jObV5D3Jn+YKND636eI5ULg7F80Q==}
     engines: {node: ^20.0.0 || >=22.0.0}
 
   node-domexception@1.0.0:
@@ -3168,9 +3168,9 @@ snapshots:
       '@types/react': 19.2.17
       react: 19.2.8
 
-  '@nanostores/react@1.1.0(nanostores@1.4.0)(react@19.2.8)':
+  '@nanostores/react@1.1.0(nanostores@1.4.1)(react@19.2.8)':
     dependencies:
-      nanostores: 1.4.0
+      nanostores: 1.4.1
       react: 19.2.8
 
   '@napi-rs/wasm-runtime@1.1.6(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2)':
@@ -4492,7 +4492,7 @@ snapshots:
 
   nanoid@3.3.12: {}
 
-  nanostores@1.4.0: {}
+  nanostores@1.4.1: {}
 
   node-domexception@1.0.0: {}
 
