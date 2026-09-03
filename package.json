@@ -39,7 +39,7 @@
     "i18next": "~26.4.0",
     "i18next-http-backend": "~4.0.1",
     "lodash.clonedeep": "~4.5.0",
-    "lucide-react": "~1.34.0",
+    "lucide-react": "~1.38.0",
     "nanostores": "~1.5.2",
     "preact": "~10.29.8",
     "react-i18next": "~17.0.12",
