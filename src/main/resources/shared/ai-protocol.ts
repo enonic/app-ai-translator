@@ -90,6 +90,10 @@ export type AiCommands = {
     // Headless generation (voice): produce values for the given fields and
     // apply them without opening the dialog; answer with reportResult.
     'generate:fields': AiFieldsRequest;
+    // Headless translation (voice): translate the persisted content into the
+    // language, apply the given fields (all translatable fields when omitted)
+    // without opening the dialog; answer with reportResult.
+    'translate:fields': AiTranslateRequest;
 };
 
 // ---- Field requests and results (headless commands) -------------------------
@@ -98,6 +102,12 @@ export type AiFieldsRequest = {
     requestId:     string;
     paths:         AiFieldPath[];
     instructions?: string;
+};
+
+export type AiTranslateRequest = {
+    requestId: string;
+    language:  AiLanguageSnapshot;
+    paths?:    AiFieldPath[];
 };
 
 export type AiFieldsResult = {

@@ -1,11 +1,6 @@
 import { StrictMode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 
-import type {
-  AiPlugin,
-  AiPluginContext,
-  AiPluginInstance,
-} from '@shared/ai-protocol';
 import { App } from '@/components/App/App';
 import { fetchLicenseState } from '@/requests/license';
 import { injectStyles } from '@/shadow/injectStyles';
@@ -20,6 +15,9 @@ import {
   openDialog,
   setPluginContext,
 } from '@/store/host';
+import { startHeadlessTranslation } from '@/store/websocket';
+
+import type { AiPlugin, AiPluginContext, AiPluginInstance } from '@shared/ai-protocol';
 
 import './i18n/i18n';
 
@@ -53,6 +51,7 @@ async function mount(container: HTMLElement, context: AiPluginContext): Promise<
     context.api.on('language:change', applyLanguage),
     context.api.on('config:change', applyConfig),
     context.api.on('dialog:open', openDialog),
+    context.api.on('translate:fields', startHeadlessTranslation),
   ];
 
   root.render(
@@ -76,7 +75,7 @@ async function mount(container: HTMLElement, context: AiPluginContext): Promise<
 const plugin: AiPlugin = {
   id: 'ai.translator',
   version: VERSION,
-  commands: ['dialog:open'],
+  commands: ['dialog:open', 'translate:fields'],
   mount,
 };
 

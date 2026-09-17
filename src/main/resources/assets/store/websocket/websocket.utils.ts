@@ -1,3 +1,4 @@
+import { toKey } from '@shared/ai-field-path';
 import { WS_PROTOCOL } from '@shared/constants';
 import { ERRORS } from '@shared/errors';
 import {
@@ -23,6 +24,8 @@ import {
   skipRemaining,
 } from '@/store/items';
 
+import type { AiFieldPath, AiFieldsResult, AiTranslateRequest } from '@shared/ai-protocol';
+
 import { $translating, $websocket } from './websocket.store';
 
 export function startTranslation(): void {
@@ -33,10 +36,13 @@ export function startTranslation(): void {
     return;
   }
 
+  const { tag, name } = getLanguage();
+  translateInto(contentId, project, `${tag} (${name})`);
+}
+
+function translateInto(contentId: string, project: string, targetLanguage: string): void {
   resetItems();
 
-  const { tag, name } = getLanguage();
-  const targetLanguage = `${tag} (${name})`;
   const customInstructions = $instructions.get();
 
   connect();
@@ -47,6 +53,81 @@ export function startTranslation(): void {
       unsubscribe();
     }
   });
+}
+
+//
+//* Headless translation (voice)
+//
+// Content Studio's voice assistant asks for a translation without the dialog:
+// the same server flow runs, only the requested fields are applied (all when
+// none are named) and the outcome is reported back through the host API.
+
+type HeadlessRequest = {
+  requestId: string;
+  requested: AiFieldPath[] | null;
+  only: Set<string> | null;
+  notAccepted: AiFieldPath[];
+};
+
+let headless: HeadlessRequest | null = null;
+
+export function startHeadlessTranslation(request: AiTranslateRequest): void {
+  const api = getHostApi();
+  const contentId = $content.get().persisted?.contentId;
+  const project = $content.get().persisted?.project;
+  const paths = request.paths ?? [];
+
+  if ($translating.get() || headless != null || !contentId || !project) {
+    api.reportResult({
+      requestId: request.requestId,
+      applied: [],
+      failed: paths.map((path) => ({ path, message: 'busy' })),
+    });
+    return;
+  }
+
+  console.info(
+    '[ai.translator] voice request',
+    request.requestId,
+    request.language.tag,
+    paths.length || 'all',
+  );
+  headless = {
+    requestId: request.requestId,
+    requested: request.paths ?? null,
+    only: request.paths ? new Set(request.paths.map(toKey)) : null,
+    notAccepted: [],
+  };
+  translateInto(contentId, project, `${request.language.tag} (${request.language.name})`);
+}
+
+function isRequested(path: AiFieldPath): boolean {
+  return headless?.only == null || headless.only.has(toKey(path));
+}
+
+function finishHeadless(): void {
+  const request = headless;
+  if (request == null) {
+    return;
+  }
+  headless = null;
+  const { succeeded, failed } = $items.get();
+  const result: AiFieldsResult = {
+    requestId: request.requestId,
+    applied: succeeded,
+    failed: [
+      ...failed.map(({ path, reason }) => ({ path, message: reason })),
+      ...request.notAccepted.map((path) => ({ path, message: 'not translatable' })),
+    ],
+  };
+  console.info(
+    '[ai.translator] voice result',
+    result.applied.length,
+    'applied,',
+    result.failed.length,
+    'failed',
+  );
+  getHostApi().reportResult(result);
 }
 
 //
@@ -130,10 +211,19 @@ function handleMessage(event: MessageEvent<string>): void {
       break;
 
     case MessageType.ACCEPTED: {
-      const { paths } = msg.payload;
+      const accepted = msg.payload.paths;
+      const paths = accepted.filter(isRequested);
+      if (headless?.requested != null) {
+        const acceptedKeys = new Set(accepted.map(toKey));
+        headless.notAccepted = headless.requested.filter((path) => !acceptedKeys.has(toKey(path)));
+      }
       setPaths(paths);
       if (paths.length === 0) {
-        setDialogView('completed');
+        if (headless != null) {
+          finishHeadless();
+        } else {
+          setDialogView('completed');
+        }
         closeConnection();
         break;
       }
@@ -146,6 +236,9 @@ function handleMessage(event: MessageEvent<string>): void {
 
     case MessageType.COMPLETED: {
       const { path, text } = msg.payload;
+      if (!isRequested(path)) {
+        break;
+      }
       addSucceeded(path);
       getHostApi().setFieldState(path, 'completed', { text });
       getHostApi().applyValue(path, text);
@@ -160,8 +253,10 @@ function handleMessage(event: MessageEvent<string>): void {
       console.error(`AI <${code}> error: ${msg.payload.message}`);
 
       if (path) {
-        addFailed(path, message);
-        getHostApi().setFieldState(path, 'failed', { message });
+        if (isRequested(path)) {
+          addFailed(path, message);
+          getHostApi().setFieldState(path, 'failed', { message });
+        }
         abortOnNextLongRunningTask();
       } else {
         failGlobally(message);
@@ -280,6 +375,15 @@ function getErrorMessageByCode(code: number): string {
 let completeTimeoutId: number;
 
 $itemsState.subscribe((state) => {
+  if (headless != null && (state === 'completed' || state === 'failed')) {
+    if (state === 'completed') {
+      getHostApi().requestSave();
+    }
+    finishHeadless();
+    stopTranslation();
+    return;
+  }
+
   const { view } = $dialog.get();
 
   if ((state === 'completed' || state === 'failed') && view === 'processing') {
