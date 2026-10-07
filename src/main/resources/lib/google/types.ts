@@ -5,7 +5,7 @@ export type {Content, Part};
 export type Role = 'user' | 'model' | 'system';
 
 export type ThinkingConfig = {
-    thinkingBudget?: number;
+    thinkingLevel?: 'minimal' | 'low' | 'medium' | 'high';
 };
 
 export type GenerationConfig = {

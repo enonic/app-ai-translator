@@ -26,7 +26,7 @@ export class GeminiProxy implements ModelProxy {
                 topP: 0.9,
                 responseMimeType: 'text/plain',
                 thinkingConfig: {
-                    thinkingBudget: 0,
+                    thinkingLevel: 'minimal',
                 },
             },
             safetySettings: [
