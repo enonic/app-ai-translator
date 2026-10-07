@@ -60,13 +60,13 @@ export function parseOptions(): Try<ClientOptions> {
 
 function createModelGenerateUrl(projectId: string): string {
   // ? EU multi-region (`eu`) keeps data inside the EU while pooling capacity across EU data centres
-  // ? — required for models not yet available in single-region endpoints (e.g. gemini-3.1-flash-lite).
+  // ? — required for models not yet available in single-region endpoints (e.g. gemini-3.5-flash-lite).
   // ? Multi-region uses a dedicated host: `aiplatform.eu.rep.googleapis.com` with `locations/eu`.
   // ? Single region alternative: `europe-west1-aiplatform.googleapis.com` with `locations/europe-west1`.
   // ? Global (no data residency): `aiplatform.googleapis.com` with `locations/global`.
   // ? See https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/locations
   const baseUrl =
     GOOGLE_GEMINI_URL ||
-    `https://aiplatform.eu.rep.googleapis.com/v1/projects/${projectId}/locations/eu/publishers/google/models/gemini-3.1-flash-lite`;
+    `https://aiplatform.eu.rep.googleapis.com/v1/projects/${projectId}/locations/eu/publishers/google/models/gemini-3.5-flash-lite`;
   return `${baseUrl}:generateContent`;
 }

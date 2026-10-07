@@ -36,8 +36,8 @@ google.api.sak.path=${xp.home}/config/playground-123456-e13cb1841f87.json
 
 # (Optional) Override the full Vertex AI generateContent endpoint URL.
 # See "Vertex AI endpoint" below for guidance on regional vs multi-region vs global endpoints.
-# Default: https://aiplatform.eu.rep.googleapis.com/v1/projects/<projectId>/locations/eu/publishers/google/models/gemini-3.1-flash-lite
-# google.api.gemini.url=https://aiplatform.eu.rep.googleapis.com/v1/projects/playground-123456/locations/eu/publishers/google/models/gemini-3.1-flash-lite
+# Default: https://aiplatform.eu.rep.googleapis.com/v1/projects/<projectId>/locations/eu/publishers/google/models/gemini-3.5-flash-lite
+# google.api.gemini.url=https://aiplatform.eu.rep.googleapis.com/v1/projects/playground-123456/locations/eu/publishers/google/models/gemini-3.5-flash-lite
 
 # (Optional) (Default: "all") A comma separated list of debug groups to limit the debug output, not enforce it.
 # Possible values: all, none, google, func, ws
@@ -51,7 +51,7 @@ The model URL has three flavours, each with a different host and `locations/` se
 
 | Flavour                         | Host                                                                                 | `locations/`                     | When to use                                                                                                                                                |
 | ------------------------------- | ------------------------------------------------------------------------------------ | -------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Multi-region (EU)** — default | `aiplatform.eu.rep.googleapis.com`                                                   | `eu`                             | Data stays inside the EU, capacity pooled across EU data centres. Required for models not yet rolled out to single regions (e.g. `gemini-3.1-flash-lite`). |
+| **Multi-region (EU)** — default | `aiplatform.eu.rep.googleapis.com`                                                   | `eu`                             | Data stays inside the EU, capacity pooled across EU data centres. Required for models not yet rolled out to single regions (e.g. `gemini-3.5-flash-lite`). |
 | **Single region**               | `<region>-aiplatform.googleapis.com` (e.g. `europe-west1-aiplatform.googleapis.com`) | `<region>` (e.g. `europe-west1`) | Strict single-region data residency. Some preview/newer models may not be available.                                                                       |
 | **Global**                      | `aiplatform.googleapis.com`                                                          | `global`                         | Best availability and lowest latency. **No data-residency guarantee** — requests may be routed anywhere.                                                   |
 
