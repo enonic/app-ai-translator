@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vite-plus/test';
 
 import { content } from '../../../../../tests/testUtils/fixtures/google';
 import { TRANSLATION_INSTRUCTIONS } from '../../shared/prompts';
