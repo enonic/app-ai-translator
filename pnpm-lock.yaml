@@ -27,11 +27,11 @@ importers:
         specifier: ~12.0.3
         version: 12.0.3(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       i18next:
-        specifier: ~26.5.3
-        version: 26.5.12(typescript@7.0.2)
+        specifier: ~27.2.7
+        version: 27.2.7(typescript@7.0.2)
       i18next-http-backend:
-        specifier: ~4.0.4
-        version: 4.0.10
+        specifier: ~4.1.1
+        version: 4.1.1
       lodash.clonedeep:
         specifier: ~4.5.0
         version: 4.5.0
@@ -45,8 +45,8 @@ importers:
         specifier: ~10.29.8
         version: 10.29.8
       react-i18next:
-        specifier: ~17.0.16
-        version: 17.0.16(i18next@26.5.12(typescript@7.0.2))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(typescript@7.0.2)
+        specifier: ~18.0.3
+        version: 18.0.3(@types/react@19.3.0)(i18next@27.2.7(typescript@7.0.2))(react@19.3.0)(typescript@7.0.2)
       tw-animate-css:
         specifier: ^1.4.0
         version: 1.4.0
@@ -2200,12 +2200,13 @@ packages:
     resolution: {integrity: sha512-vK9P5/iUfdl95AI+JVyUuIcVtd4ofvtrOr3HNtM2yxC9bnMbEdp3x01OhQNnjb8IJYi38VlTE3mBXwcfvywuSw==}
     engines: {node: '>= 14'}
 
-  i18next-http-backend@4.0.10:
-    resolution: {integrity: sha512-CfdQuwIVijbrS/fmiTAQYcYyje4nMbH9aIjKYhhm5bgVmWKWLOM1F7qrA1o63Jl1JxQcRjdtWhKlvDzyqV9aPg==}
+  i18next-http-backend@4.1.1:
+    resolution: {integrity: sha512-YgstcbFO+J9IriPLi36CqO1WxUQlq1mauQD4PED6DEATMwM9prHe/Soz3/CGWxpUyOa8y4WrrfOsWdBKHhk22w==}
     engines: {node: '>=18'}
 
-  i18next@26.5.12:
-    resolution: {integrity: sha512-vTt8tc3y5axoU7wwTYg8vjpILLyP33a5GyGJAVI7FDRx1XueYxZVIkcVeStoftrVnAM/o28hKvK0sslucDI9aQ==}
+  i18next@27.2.7:
+    resolution: {integrity: sha512-q3XlM8YSo6Nmomd+MQ4JPGJGvhgHwfCRXNeFrM8l0F4TuIuoJBqhCxQrdGDHNMjObRuw5O0ReuU968ZeMVlfnw==}
+    engines: {node: '>=22'}
     peerDependencies:
       typescript: ^5 || ^6 || ^7
     peerDependenciesMeta:
@@ -2601,18 +2602,16 @@ packages:
     peerDependencies:
       react: ^19.3.0
 
-  react-i18next@17.0.16:
-    resolution: {integrity: sha512-7uImVD9hG5yUOaP5KHVied1x0A004Di/KU031ULR35Ma+9e9H5GdnNZHgQEIByyAz+IAXBkRDTedNVzjPUH8ZA==}
+  react-i18next@18.0.3:
+    resolution: {integrity: sha512-S84rtVuaKuiRtoCOspbGEaDlFjka+KvK/A5YCOr4LQ41XF3iJOrJ5rqQTD/jJHFVUf6X1i4ZMN5PGGgpz8NN6g==}
+    engines: {node: '>=22'}
     peerDependencies:
-      i18next: '>= 26.2.0'
-      react: '>= 16.8.0'
-      react-dom: '*'
-      react-native: '*'
+      '@types/react': '*'
+      i18next: '>= 27.0.1'
+      react: '>= 18.0.0'
       typescript: ^5 || ^6 || ^7
     peerDependenciesMeta:
-      react-dom:
-        optional: true
-      react-native:
+      '@types/react':
         optional: true
       typescript:
         optional: true
@@ -4502,9 +4501,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  i18next-http-backend@4.0.10: {}
+  i18next-http-backend@4.1.1: {}
 
-  i18next@26.5.12(typescript@7.0.2):
+  i18next@27.2.7(typescript@7.0.2):
     optionalDependencies:
       typescript: 7.0.2
 
@@ -4891,15 +4890,13 @@ snapshots:
       react: 19.3.0
       scheduler: 0.28.0
 
-  react-i18next@17.0.16(i18next@26.5.12(typescript@7.0.2))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(typescript@7.0.2):
+  react-i18next@18.0.3(@types/react@19.3.0)(i18next@27.2.7(typescript@7.0.2))(react@19.3.0)(typescript@7.0.2):
     dependencies:
-      '@babel/runtime': 7.29.10
       html-parse-stringify: 4.0.1
-      i18next: 26.5.12(typescript@7.0.2)
+      i18next: 27.2.7(typescript@7.0.2)
       react: 19.3.0
-      use-sync-external-store: 1.7.0(react@19.3.0)
     optionalDependencies:
-      react-dom: 19.3.0(react@19.3.0)
+      '@types/react': 19.3.0
       typescript: 7.0.2
 
   react-is@17.0.2: {}
