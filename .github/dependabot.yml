@@ -9,15 +9,76 @@ updates:
       - 'rymsha'
     reviewers:
       - 'rymsha'
+
   - package-ecosystem: 'npm'
     directory: '/'
     schedule:
       interval: 'weekly'
+    # Keep above minimumReleaseAge in pnpm-workspace.yaml, with the same exclusions,
+    # so Dependabot never proposes a version pnpm refuses to install.
+    cooldown:
+      default-days: 2
+      exclude:
+        - '@enonic/ui'
+        - '@enonic-types/*'
+        - '@typescript/native-preview*'
     open-pull-requests-limit: 10
     assignees:
       - 'edloidas'
     reviewers:
       - 'edloidas'
+    # The first matching group wins, so the catch-all groups go last.
+    groups:
+      enonic-types:
+        patterns:
+          - '@enonic-types/*'
+      # The `vite` catalog alias resolves to @voidzero-dev/vite-plus-core, whose version
+      # differs from vite-plus; both must move together.
+      vite-plus:
+        patterns:
+          - 'vite-plus'
+          - 'vite'
+          - '@voidzero-dev/*'
+          - 'vitest'
+          - '@vitest/*'
+      storybook:
+        patterns:
+          - 'storybook'
+          - '@storybook/*'
+      i18next:
+        patterns:
+          - 'i18next'
+          - 'i18next-*'
+          - 'react-i18next'
+      tailwindcss:
+        patterns:
+          - 'tailwindcss'
+          - '@tailwindcss/*'
+          - 'tw-animate-css'
+      preact:
+        patterns:
+          - 'preact'
+          - '@preact/*'
+      react-types:
+        patterns:
+          - '@types/react'
+          - '@types/react-dom'
+      typescript:
+        patterns:
+          - 'typescript'
+          - '@typescript/*'
+      dependencies:
+        patterns:
+          - '*'
+        update-types:
+          - 'minor'
+          - 'patch'
+      majors:
+        patterns:
+          - '*'
+        update-types:
+          - 'major'
+
   - package-ecosystem: 'github-actions'
     directory: '/'
     schedule:
@@ -27,3 +88,11 @@ updates:
       - 'rymsha'
     reviewers:
       - 'rymsha'
+    groups:
+      actions:
+        patterns:
+          - '*'
+        update-types:
+          - 'major'
+          - 'minor'
+          - 'patch'
