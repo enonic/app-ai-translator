@@ -31,3 +31,4 @@ tmp.*
 # AI Assistant
 .claude/plans/
 settings.local.json
+.vitest/

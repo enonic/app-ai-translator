@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vite-plus/test';
 
 import type { AiFieldPath } from './ai-protocol';
 import { toKey } from './ai-field-path';
